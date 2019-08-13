@@ -24,7 +24,7 @@ class TemporalFreqs(object):
         # and getting the number of unique replicates and timepoints
         samples, sorted_i = sort_samples(samples)
         replicates, timepoints, nreplicates, ntimepoints = process_samples(freqs, samples)
-        self.samples = samples
+      self.samples = samples
 
         # process frequency matrix, turning into tensor
         self.freqs = reshape_matrix(freqs[sorted_i, :], nreplicates)

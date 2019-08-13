@@ -36,11 +36,10 @@ def sample_depth(freqs, depth, diploids=None, poisson=False):
     return np.random.binomial(depth, freqs, freqs.shape), depth
 
 
-def wright_fisher_sample(N, L, ngens, depth=None, poisson=False,
-                         diploids=False, p0=None, swap=True,
+def wright_fisher_sample(N, L, ngens, depth, poisson=False,
+                         diploids=None, p0=None, swap=True,
                          *args, **kwargs):
-    freqs = wright_fisher(N, L, ngens, p0, swap)
-    if depth is not None:
-        counts, depth = sample_depth(freqs, depth=depth, diploids=diploids, poisson=poisson)
+    freqs = wright_fisher(N, L, ngens, p0=p0, swap=swap)
+    counts, depth = sample_depth(freqs, depth=depth, diploids=diploids, poisson=poisson)
     sample_freqs = counts / depth
     return freqs, sample_freqs, counts, depth

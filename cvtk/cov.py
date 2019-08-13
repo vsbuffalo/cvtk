@@ -226,7 +226,8 @@ def temporal_cov(freqs, depths=None, diploids=None, center=False,
     # create correction matrix
     diag_correction = np.diag(var_correction)
     offdiag_correction = np.diag(covar_correction, k=1) + np.diag(covar_correction, k=-1)
-    return cov / het_denom + diag_correction / het_denom + offdiag_correction / het_denom
+    #return cov / het_denom + diag_correction / het_denom + offdiag_correction / het_denom
+    #return cov / half_het0 + diag_correction / half_het0 + offdiag_correction / half_het0
 
 
 

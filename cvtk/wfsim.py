@@ -1,3 +1,4 @@
+import itertools
 import numpy as np
 
 from cvtk.utils import swap_alleles
@@ -43,3 +44,8 @@ def wright_fisher_sample(N, L, ngens, depth, poisson=False,
     counts, depth = sample_depth(freqs, depth=depth, diploids=diploids, poisson=poisson)
     sample_freqs = counts / depth
     return freqs, sample_freqs, counts, depth
+
+def param_grid(**params):
+    keys, values = zip(*params.items())
+    return [dict(zip(keys, vals)) for vals in itertools.product(*values)]
+

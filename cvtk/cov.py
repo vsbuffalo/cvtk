@@ -8,8 +8,12 @@ def calc_deltas(freqs):
     Calculates the deltas matrix, which is the frequency matrix where
     entry out[n] = x[n+1] - x[n]. This takes a R x T x L frequency array.
     """
-    assert(freqs.ndim == 3)
-    return np.diff(freqs, axis=1)
+    if freqs.ndim == 2:
+        return np.diff(freqs, axis=0)
+    elif freqs.ndim == 3:
+        return np.diff(freqs, axis=1)
+    else:
+        raise ValueError("eqs.ndim must be eitehr 2 or 3")
 
 def calc_hets(freqs, depths=None, diploids=None, bias=False):
     if depths is not None:
@@ -60,6 +64,10 @@ def correct_dimensions(freqs, depths=None, diploids=None):
                 msg = ("diploids must be an integer or a matrix of shape "
                        f"nreplicates x ntimepoints ({R} x {ntimepoints})")
                 raise ValueError(msg)
+    if depths is not None:
+        assert(freqs.shape == depths.shape)
+    if diploids is not None:
+        assert(freqs.shape == diploids.shape)
     return freqs, depths, diploids
 
 
@@ -91,6 +99,7 @@ def replicate_block_matrix_indices(R, T):
     row_bm = np.vstack([np.full((T, R*T), i) for i in range(R)])
     col_bm = row_bm.T
     return (row_bm, col_bm)
+
 
 def replicate_average_het_matrix(hets, R, T, L):
     """
@@ -131,33 +140,37 @@ def replicate_average_het_matrix(hets, R, T, L):
     avehet_min = (A + B).reshape((R*T, R*T)) / 2
     return avehet_min
 
-def temporal_cov(freqs, depths=None, diploids=None, center=False,
-                 N=None, weighted=False):
+def temporal_cov(freqs, depths=None, diploids=None, center=True):
     """
     Notes:
      Some sampled frequnecies can be NaN, since in numpy, 0/0 is NaN. This
      needs to be handled accordingly.
     """
-    freqs[np.isnan(freqs)] = 0
-    # check the dimensions are compatable
+    #freqs[np.isnan(freqs)] = 0
+    # check the dimensions are compatable, padding on a dimension
+    # for R = 1 cases
     freqs, depths, diploids = correct_dimensions(freqs, depths, diploids)
-    hets = calc_hets(freqs, depths, diploids=diploids)
-    #mean_hets = calc_mean_hets(freqs, depths, diploids=diploids)
-    mean_hets = np.nanmean(hets, axis=freqs.ndim-1)
     deltas = calc_deltas(freqs)
 
     R, T, L = deltas.shape
-    deltas = flatten_matrix(deltas, R, T, L)
-    if depths is not None:
-        depths = flatten_matrix(depths, R, T+1, L)
-    if diploids is not None:
-        diploids = diploids.reshape((1, R*(T+1)))
-
+    hets = calc_hets(freqs, depths=depths, diploids=diploids)
+    mean_hets = hets.mean(axis=freqs.ndim-1)
     # Calculate the heterozygosity denominator, which is
     # p_min(t,s) (1-p_min(t,s)). The following function calculates
     # unbiased heterozygosity; we take ½ of it.
     het_denom = replicate_average_het_matrix(mean_hets, R, T, L) / 2.
 
+    # With all the statistics above calculated, we can flatten everything
+    # for the next calculations. This simply rolls replicates and timepoints
+    # into 'samples'.
+    deltas = flatten_matrix(deltas, R, T, L)
+    if depths is not None:
+        depths = flatten_matrix(depths, R, T+1, L)
+    if diploids is not None:
+        diploids = diploids.reshape((1, R*(T+1)))
+    # roll out hets
+    hets = hets.reshape((R * (T+1), L))
+
     # assert that the deltas matrix is 2D (i.e. if it's for replicate
     # temporal design, it's already been flattened to (R x T) x L matrix).
     assert(deltas.ndim == 2)
@@ -167,173 +180,33 @@ def temporal_cov(freqs, depths=None, diploids=None, center=False,
     if diploids is not None:
         assert(mean_hets.shape == diploids.shape)
 
-    half_hets = mean_hets / 2.
+    half_hets = hets / 2.
     # calculate variance-covariance matrix
-    if center:
-        if weighted:
-            raise ValueError("if center=True, weighted must equal False")
-        cov = np.cov(deltas, bias=True)
-    else:
-        # note: no bias correction here because we don't center
-        if weighted:
-            if depths is None:
-                raise ValueError("if weighted=True, depths must specified")
-            w = (depths[1:, :] + depths[:-1, :]) / 2
-            w /=  np.broadcast_to(np.sum(w, axis=1)[:, np.newaxis], deltas.shape)
-            weighted_deltas = np.sqrt(w) * deltas   # TODO DOUBLE CHECK
-            #pdb.set_trace()
-            cov = (weighted_deltas @ weighted_deltas.T)
-        else:
-            cov = (deltas @ deltas.T) / L
+    cov = np.cov(deltas, bias=True)
 
     # correction arrays — these are built up depending on input
+    ave_bias = np.repeat(0., RxT+1)
     var_correction = np.repeat(0., RxT)
     covar_correction = np.repeat(0., RxT-1)
 
-    # the follow are p0(1-p0) and p1(1-p1) for each Δp
-    # NOTE: the ... indexing ensures this works for any R x T x L array
-    # or T x L matrix. Dimensionality of half_hets is R x T since it's been
-    # averaged over loci.
-    half_het0 = half_hets[..., :-1].flatten()
-    half_het1 = half_hets[..., 1:].flatten()
+    # build up correct for any combination of depth / diploid / depth & diploid
+    # data
+    diploid_correction = 0
+    depth_correction = 0
     if depths is not None:
-        depths = np.nanmean(depths, axis=1)  # average over loci
-        depth0 = depths[..., :-1]
-        depth1 = depths[..., 1:]
-        depth_correction = - half_het0 / depth0 - half_het1 / depth1
-        #sample_correction = - np.nanmean(half_hets[:-1, :] / depth[:-1, :], axis=1) - np.nanmean(half_hets[1:, :] / depth[1:, :], axis=1)
-        var_correction += depth_correction
-        # note we use half_het1 and depth1 here: the shared error term of
-        # cov(Δp_{t}, Δp_{t+1}) is the t+1 term
-        covar_correction += half_het1[:-1] / depth1[:-1]
+        depth_correction = 1 / depths
     if diploids is not None:
-        # TODO: comeback to whether flatten is the best thing to do here
-        # NOTE: factor of two is because two chromosomes are sampled
-        # from the population for each diploid.
-        diploids0 = 2 * diploids[..., :-1].flatten()
-        diploids1 = 2 * diploids[..., 1:].flatten()
-        diploid_correction = - half_het0/diploids0 - half_het1/diploids1
-        # TODO DOUBLE CHECK, specifically the time index
-        covar_diploid_correction = half_het1[:-1]/diploids1[:-1]
+        diploid_correction = 1 / (2 * diploids)
         if depths is not None:
-            diploid_correction += - half_het0/(diploids0 * depth0) - half_het1/(diploids1 * depth1)
-            covar_diploid_correction += half_het1[:-1]/(diploids1[:-1] * depth1[:-1])
-        var_correction += diploid_correction
-        covar_correction += covar_diploid_correction
-    if N is not None:
-        var_correction += half_het0 / N
-    #pdb.set_trace()
-    # create correction matrix
-    diag_correction = np.diag(var_correction)
-    offdiag_correction = np.diag(covar_correction, k=1) + np.diag(covar_correction, k=-1)
-    #return cov / het_denom + diag_correction / het_denom + offdiag_correction / het_denom
-    #return cov / half_het0 + diag_correction / half_het0 + offdiag_correction / half_het0
+            diploid_correction += 1 / (2 * depths * diploids)
+    # the bias vector for all timepoints
+    ave_bias += (half_hets * (diploid_correction + depth_correction)).mean(axis=1)
+    var_correction += - ave_bias[:-1] - ave_bias[1:]
+    covar_correction += ave_bias[1:-1]
 
+    cov += (np.diag(var_correction) +
+            np.diag(covar_correction, k=1) +
+            np.diag(covar_correction, k=-1))
 
-
-def corrected_cov(deltas, mean_hets, depths=None, center=False, N=None,
-                  weighted=False, diploids=None):
-    """
-    Calculate a corrected replicate-temporal covariance matrix.
-
-    All corrections *only* apply to the diagonal elements and off-diagonal
-    elements, by the way the block matrices are set up. The block matrices
-    along the diagonal are all temporal covariance matrices.
-
-    TODO:
-      - shared noise on replicate covariance matrices?
-    """
-    # assert that the deltas matrix is 2D (i.e. if it's for replicate
-    # temporal design, it's already been flattened to (R x T) x L matrix).
-    assert(deltas.ndim == 2)
-    RxT, L = deltas.shape
-    if depths is not None:
-        assert(depths.shape[1] == L)
-    if diploids is not None:
-        assert(mean_hets.shape == diploids.shape)
-
-    half_hets = mean_hets / 2.
-    # calculate variance-covariance matrix
-    if center:
-        if weighted:
-            raise ValueError("if center=True, weighted must equal False")
-        cov = np.cov(deltas, bias=True)
-    else:
-        # note: no bias correction here because we don't center
-        if weighted:
-            if depths is None:
-                raise ValueError("if weighted=True, depths must specified")
-            w = (depths[1:, :] + depths[:-1, :]) / 2
-            w /=  np.broadcast_to(np.sum(w, axis=1)[:, np.newaxis], deltas.shape)
-            weighted_deltas = np.sqrt(w) * deltas   # TODO DOUBLE CHECK
-            #pdb.set_trace()
-            cov = (weighted_deltas @ weighted_deltas.T)
-        else:
-            cov = (deltas @ deltas.T) / L
-
-    # correction arrays — these are built up depending on input
-    var_correction = np.repeat(0., RxT)
-    covar_correction = np.repeat(0., RxT-1)
-
-    # the follow are p0(1-p0) and p1(1-p1) for each Δp
-    # NOTE: the ... indexing ensures this works for any R x T x L array
-    # or T x L matrix. Dimensionality of half_hets is R x T since it's been
-    # averaged over loci.
-    half_het0 = half_hets[..., :-1].flatten()
-    half_het1 = half_hets[..., 1:].flatten()
-    if depths is not None:
-        depths = np.nanmean(depths, axis=1)  # average over loci
-        depth0 = depths[..., :-1]
-        depth1 = depths[..., 1:]
-        depth_correction = - half_het0 / depth0 - half_het1 / depth1
-        #sample_correction = - np.nanmean(half_hets[:-1, :] / depth[:-1, :], axis=1) - np.nanmean(half_hets[1:, :] / depth[1:, :], axis=1)
-        var_correction += depth_correction
-        # note we use half_het1 and depth1 here: the shared error term of
-        # cov(Δp_{t}, Δp_{t+1}) is the t+1 term
-        covar_correction += half_het1[:-1] / depth1[:-1]
-    if diploids is not None:
-        # TODO: comeback to whether flatten is the best thing to do here
-        diploids0 = 2 * diploids[..., :-1].flatten()
-        diploids1 = 2 * diploids[..., 1:].flatten()
-        diploid_correction = - half_het0/diploids0 - half_het1/diploids1
-        # TODO DOUBLE CHECK, specifically the time index
-        covar_diploid_correction = half_het1[:-1]/diploids1[:-1]
-        if depths is not None:
-            diploid_correction += - half_het0/(diploids0 * depth0) - half_het1/(diploids1 * depth1)
-            covar_diploid_correction += half_het1[:-1]/(diploids1[:-1] * depth1[:-1])
-        var_correction += diploid_correction
-        covar_correction += covar_diploid_correction
-    if N is not None:
-        var_correction += half_het0 / N
-    #pdb.set_trace()
-    # create correction matrix
-    diag_correction = np.diag(var_correction)
-    offdiag_correction = np.diag(covar_correction, k=1) + np.diag(covar_correction, k=-1)
-    return cov / half_het0 + diag_correction / half_het0 + offdiag_correction / half_het0
-
-
-
-def replicate_temporal_cov(freqs, depths=None, diploids=None, *args, **kwargs):
-    R, T, L = freqs.shape
-
-    freqs[np.isnan(freqs)] = 0
-    freqs, depths, diploids = correct_dimensions(freqs, depths, diploids)
-    ntimepoints, L = freqs.shape
-    hets = calc_hets(freqs, depths, diploids=diploids)
-    deltas = calc_deltas(freqs)
-
-    # validate hets dimensions
-    assert(hets.shape[1] == T+1)
-    het_denom = hets[:,:-1] / 2
-    assert(het_denom.shape[0] == R)
-    assert(het_denom.shape[1] == T)
-
-
-    # we want to calculate covariances across all samples ∈ (timepoints x
-    # replicates), so we first flatten the first dimension. See note on this
-    # above TODO (in old code)
-    M = deltas.reshape((R * T, L))
-
-    return corrected_cov(deltas, hets, depths=depths, diploids=diploids, **kwargs)
-
+    return cov / het_denom
 

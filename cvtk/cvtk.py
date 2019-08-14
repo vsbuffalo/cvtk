@@ -1,7 +1,7 @@
 ## cvtk.py
 
-from cvtk.utils import sort_samples, swap_alleles
-from cvtk.cov import calc_deltas, reshape_matrix
+from cvtk.utils import sort_samples, swap_alleles, reshape_matrix
+from cvtk.cov import temporal_cov
 
 class TemporalFreqs(object):
     """
@@ -24,7 +24,7 @@ class TemporalFreqs(object):
         # and getting the number of unique replicates and timepoints
         samples, sorted_i = sort_samples(samples)
         replicates, timepoints, nreplicates, ntimepoints = process_samples(freqs, samples)
-      self.samples = samples
+        self.samples = samples
 
         # process frequency matrix, turning into tensor
         self.freqs = reshape_matrix(freqs[sorted_i, :], nreplicates)
@@ -40,6 +40,10 @@ class TemporalFreqs(object):
 
 
     def cov(self):
-        pass
+        """
+        Calculate the genome-wide temporal-replicate variance-covariance matrix.
+        """
+        return temporal_cov(self.freqs, self.depths, self.diploids)
+
 
 

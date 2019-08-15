@@ -1,3 +1,4 @@
+from collections import Counter
 import numpy as np
 
 def reshape_matrix(matrix, R):
@@ -84,4 +85,57 @@ def sort_samples(samples):
     sorted_i = sorted(range(len(samples)),
                       key=lambda i: (samples[i][0], samples[i][1]))
     return [samples[i] for i in sorted_i], sorted_i
+
+def process_samples(freqs, samples):
+    """
+    Validate samples, ensuring they are:
+    (1) the right type, a list of tuples, each tuple being
+        (replicate, timepoint).
+    (2) that samples are grouped by replicate and then timepoint.
+    (3) the number of samples is equal to the number of rows of the
+        frequency matrix.
+    (4) the design is balanced (R is same for all timepoints)
+
+    Then, if everything is proper, return a tuple of lists of each replicates
+    and timepoints.
+
+    """
+    samples = list(samples)
+    # check types
+    try:
+        assert(isinstance(samples, list))
+        assert(all(isinstance(x, tuple) and len(x) == 2) for x in samples)
+    except AssertionError:
+        raise ValueError("samples must be a list of tuples, (replicate, timepoint).")
+
+    # check sorting
+    try:
+        assert(sorted(samples, key=lambda x: (x[0], x[1])) == samples)
+    except AssertionError:
+        raise ValueError("samples must sorted by replicate, then timepoint, e.g. "
+                        "(R1, T1), (R1, T2), (R1, T3), (R2, T1), (R2, T2), ...")
+
+    # check dimension compatability
+    if len(samples) != freqs.shape[0]:
+        raise ValueError("len(samples) != number of rows in samples.")
+    replicates, timepoints = zip(*samples)
+
+    # check if design (ntimepoints/nreplicates is balanced)
+    timepoints_counts = Counter(timepoints)
+    replicates_counts = Counter(replicates)
+    timepoints_is_balanced = len(set(timepoints_counts.values())) == 1
+    replicates_is_balanced = len(set(replicates_counts.values())) == 1
+    try:
+        assert(timepoints_is_balanced)
+    except AssertionError:
+        msg = "timepoints are not balanced — equal number of replicates are needed"
+        raise ValueError(msg)
+    try:
+        assert(timepoints_is_balanced)
+    except AssertionError:
+        msg = "replicates are not balanced — equal number of timepoints needed"
+        raise ValueError(msg)
+    return (np.array(replicates), np.array(timepoints),
+            len(replicates_counts), len(timepoints_counts))
+
 

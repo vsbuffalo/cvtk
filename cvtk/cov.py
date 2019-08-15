@@ -180,14 +180,20 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True):
     if diploids is not None:
         assert(mean_hets.shape == diploids.shape)
 
-    half_hets = hets / 2.
+    # we turn the hets, diploids, and depths into 
+    # multidimensional arrays TODO don't convert in first place?
+    half_hets = (hets / 2.).reshape((R, T+1, L))
+    if depths is not None:
+    	depths = depths.reshape((R, T+1, L))
+    if diploids is not None:
+    	diploids = diploids.reshape((R, T+1, L))
     # calculate variance-covariance matrix
     cov = np.cov(deltas, bias=True)
 
     # correction arrays — these are built up depending on input
-    ave_bias = np.repeat(0., RxT+1)
-    var_correction = np.repeat(0., RxT)
-    covar_correction = np.repeat(0., RxT-1)
+    ave_bias = np.zeros((R, (T+1)))
+    var_correction = np.zeros(RxT)
+    covar_correction = np.zeros(R*T-1)
 
     # build up correct for any combination of depth / diploid / depth & diploid
     # data
@@ -200,9 +206,12 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True):
         if depths is not None:
             diploid_correction += 1 / (2 * depths * diploids)
     # the bias vector for all timepoints
-    ave_bias += (half_hets * (diploid_correction + depth_correction)).mean(axis=1)
-    var_correction += - ave_bias[:-1] - ave_bias[1:]
-    covar_correction += ave_bias[1:-1]
+    ave_bias += (half_hets * (diploid_correction + depth_correction)).mean(axis=2)
+    var_correction += (- ave_bias[:, :-1] - ave_bias[:, 1:]).reshape(RxT)
+    # the covariance correction is a bit trickier: it's off diagonal elements, but 
+    # after every Tth entry does not need a correction, as it's a between replicate
+    # covariance. We append a zero column, and then remove the last element.
+    covar_correction += np.hstack((ave_bias[:, 1:-1], np.zeros((R, 1)))).reshape(R*T)[:-1]
 
     cov += (np.diag(var_correction) +
             np.diag(covar_correction, k=1) +

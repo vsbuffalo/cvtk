@@ -3,10 +3,14 @@
 
 from itertools import groupby
 import numpy as np
+import pandas as pd
 
 from cvtk.utils import sort_samples, swap_alleles, reshape_matrix
-from cvtk.utils import process_samples
-from cvtk.cov import temporal_cov
+from cvtk.utils import process_samples, view_along_axis
+from cvtk.cov import temporal_cov, covs_by_group, calc_hets
+from cvtk.cov import stack_temporal_covs_by_group
+from cvtk.bootstrap import block_bootstrap_temporal_covs
+from cvtk.diagnostics import calc_diagnostics
 
 class TemporalFreqs(object):
     """
@@ -72,10 +76,9 @@ class TemporalFreqs(object):
         """
         covs = covs_by_group(groups, self.freqs, depths=self.depths,
                              diploids=self.diploids,
-                             pairwise_complete=pairwise_complete,
-                             binomial_correction=binomial_correction)
+                             bias_correction=bias_correction)
         self.tile_covs = covs
-        return covs, covns
+        return covs
 
 
 
@@ -92,8 +95,6 @@ class TiledTemporalFreqs(TemporalFreqs):
         of each tile, as well as the cummulative midpoint across all chromosomes.
      - self.tile_covs: the covariances for each tile, which is an (RxT) x (RxT)
         matrix.
-     - self.tile_covns: the (biased) denominators of these covariances; the number of complete
-        cases that went into the covariance calculation.
     """
     def __init__(self, tiles, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -128,7 +129,6 @@ class TiledTemporalFreqs(TemporalFreqs):
         self.tile_df = self.tiles.to_df(add_cummidpoint=True, add_midpoint=True)
         self._generate_ids()
         self.tile_covs = None
-        self.tile_covns = None
 
     @property
     def ntiles(self):
@@ -138,3 +138,86 @@ class TiledTemporalFreqs(TemporalFreqs):
         indices = self.tile_indices
         return super().calc_covs_by_group(indices, *args, **kwargs)
 
+    def depth_by_tile(self, average=True):
+        depth = []
+        ave_depth = self.depths.mean(axis=(0, 1))
+        for indices in self.tile_indices:
+            n = view_along_axis(ave_depth, indices, 0)
+            if average:
+                n = n.mean()
+            depth.append(n)
+        return depth
+
+    def calc_het_by_tile(self, average=True, bias=False):
+        """
+        Averages over all replicates and timepoints.
+        """
+        tile_hets = []
+        hets = calc_hets(self.freqs, self.depths, self.diploids, bias=bias)
+        for indices in self.tile_indices:
+            het = view_along_axis(hets, indices, 0)
+            if average:
+                het = het.mean()
+            tile_hets.append(het)
+        return tile_hets
+
+
+
+    def correction_diagnostics(self, exclude_seqids=None, offdiag_k=1):
+        """
+        Return a (DataFrame, models, ypreds) tuple full of diagnostic information that can be 
+        used in diagnostic plots (see
+        cvtk.plots.correction_diagnostic_plot()) to assess the binomial correction procedure.
+        This binomial correction affects the diagonal elements, removing binomial sampling noise,
+        as well as the off-diagonal covariance elements, which share binomial smapling noise which
+        adds a negative bias that is estimated and added back in. The dataframe contains the
+        heterozygosity, the off-diagonal and diagonal elements of the covariance matrices, the depth,
+        and other metadata. The models and ypreds elements are dictionaries with two values: True and False
+        indicating whether the binomial correction has been applied to its values. The ypreds dictionary
+        contains the linear regression predicted y values, while the models dictionary contains
+        the actual regression fits.
+        """
+        dfs = list()
+        models = dict()
+        ypreds = dict()
+        xpreds = dict()
+        # data needed for diagnostics, but not affected by the bias correction
+        tile_depths = self.depth_by_tile()
+        mean_hets = self.calc_het_by_tile()
+        seqids = self.tile_df['seqid'].values
+        for use_correction in [True, False]:
+            covs = self.calc_covs_by_tile(bias_correction=use_correction)
+            res = calc_diagnostics(covs, mean_hets, seqids, tile_depths, exclude_seqids=exclude_seqids)
+            models[use_correction], xpreds[use_correction], ypreds[use_correction], df = res
+            df['correction'] = use_correction
+            dfs.append(df)
+        return pd.concat(dfs, axis=0), models, xpreds, ypreds
+
+    def bootstrap_temporal_covs(self, B, alpha=0.05, bootstrap_replicates=False,
+                                replicate=None, average_replicates=False, 
+                                keep_seqids=None, return_straps=False,
+                                ci_method='pivot', **kwargs):
+        """
+        Wrapper around block_bootstrap_temporal_covs().
+        Params: 
+           - B: number of bootstraps
+           - alpha: α level
+           - bootstrap_replicates: whether the R replicates are resampled as well, and 
+              covariance is averaged over these replicates.
+           - replicate: only bootstrap the covariances for a single replicate (cannot be used 
+              with bootstrap_replicates).
+           - average_replicates: whether to average across all replicates.
+           - keep_seqids: which seqids to include in bootstrap; if None, all are used.
+           - return_straps: whether to return the actual bootstrap vectors.
+           - ci_method: 'pivot' or 'percentile'
+           - **kwargs: based to calc_covs_by_tile()
+ 
+        """
+        covs = stack_temporal_covs_by_group(self.calc_covs_by_tile(**kwargs), self.R, self.T)
+        return block_bootstrap_temporal_covs(covs, 
+                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'],
+                     B=B, alpha=alpha, 
+                     bootstrap_replicates=bootstrap_replicates, 
+                     average_replicates=average_replicates,
+                     keep_seqids=keep_seqids, return_straps=return_straps, 
+                     ci_method=ci_method)

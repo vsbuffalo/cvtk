@@ -128,7 +128,7 @@ def stack_replicate_covariances(covmat, R, T, as_tensor=False, return_tuple=Fals
         return np.stack(layers).T
     return layers
 
-def stack_temporal_covariances(covmat, R, T, as_tensor=True):
+def stack_temporal_covariances(covmat, R, T, stack=True):
     """
     Extracts the block matrices along the diagonal.
     """
@@ -138,7 +138,7 @@ def stack_temporal_covariances(covmat, R, T, as_tensor=True):
         this_block_matrix = np.logical_and(rows == i, cols == i)
         block = covmat[this_block_matrix].reshape(T, T)
         layers.append(block)
-    if as_tensor:
+    if stack:
         return np.stack(layers).T
     return layers
 
@@ -185,17 +185,24 @@ def replicate_average_het_matrix(hets, R, T, L):
 
 def covs_by_group(groups, freqs, depths=None, diploids=None, 
                   bias_correction=True):
+    group_depths, group_diploids = None, None
     covs = []
     for indices in groups:
         group_freqs = view_along_axis(freqs, indices, 2)
-        group_depths = view_along_axis(depths, indices, 2) if depths is not None else None
-        group_diploids = view_along_axis(diploids, indices, 2) if diploids is not None else None
+        if depths is not None:
+            group_depths = view_along_axis(depths, indices, 2)
+        if diploids is not None:
+            group_diploids = view_along_axis(diploids, indices, 2)
         tile_covs = temporal_cov(group_freqs,
                                  depths=group_depths, 
                                  diploids=group_diploids,
                                  bias_correction=bias_correction)
         covs.append(tile_covs)
     return covs
+
+
+def stack_temporal_covs_by_group(covs, R, T):
+    return np.stack([stack_temporal_covariances(c, R, T) for c in covs])
 
 
 def temporal_cov(freqs, depths=None, diploids=None, center=True, 

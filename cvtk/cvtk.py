@@ -39,6 +39,21 @@ class TemporalFreqs(object):
         self.diploids = diploids
         self.gintervals = gintervals
 
+    @property
+    def ntimepoints(self):
+        return self.freqs.shape[1]
+
+    @property
+    def L(self):
+        return self.freqs.shape[2]
+
+    @property
+    def T(self):
+        return self.freqs.shape[1]-1
+
+    @property
+    def R(self):
+        return self.freqs.shape[0]
 
     def calc_covs(self, exlude_seqs=None):
         """

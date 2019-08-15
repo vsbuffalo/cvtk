@@ -100,6 +100,48 @@ def replicate_block_matrix_indices(R, T):
     col_bm = row_bm.T
     return (row_bm, col_bm)
 
+def stack_replicate_covariances(covmat, R, T, as_tensor=False, return_tuple=False,
+                                upper_only=True):
+    """
+    Upper only now.
+    """
+    layers = []
+    rows, cols = replicate_block_matrix_indices(R, T)
+    for i in np.arange(R):
+        for j in np.arange(R):
+            if i == j:
+                # ignore temporal covs
+                continue
+            if upper_only and i < j:
+                continue
+            this_block_matrix = np.logical_and(rows == i, cols == j)
+            block = covmat[this_block_matrix].reshape(T, T)
+            if as_tensor:
+                layers.append(block)
+            else:
+                if return_tuple:
+                    # store i, j
+                    layers.append((i, j, block))
+                else:
+                    layers.append(block)
+    if as_tensor:
+        return np.stack(layers).T
+    return layers
+
+def stack_temporal_covariances(covmat, R, T, as_tensor=True):
+    """
+    Extracts the block matrices along the diagonal.
+    """
+    layers = []
+    rows, cols = replicate_block_matrix_indices(R, T)
+    for i in np.arange(R):
+        this_block_matrix = np.logical_and(rows == i, cols == i)
+        block = covmat[this_block_matrix].reshape(T, T)
+        layers.append(block)
+    if as_tensor:
+        return np.stack(layers).T
+    return layers
+
 
 def replicate_average_het_matrix(hets, R, T, L):
     """
@@ -154,39 +196,30 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True):
 
     R, T, L = deltas.shape
     hets = calc_hets(freqs, depths=depths, diploids=diploids)
-    mean_hets = hets.mean(axis=freqs.ndim-1)
     # Calculate the heterozygosity denominator, which is
     # p_min(t,s) (1-p_min(t,s)). The following function calculates
     # unbiased heterozygosity; we take ½ of it.
+    mean_hets = hets.nanmean(axis=freqs.ndim-1)
     het_denom = replicate_average_het_matrix(mean_hets, R, T, L) / 2.
 
-    # With all the statistics above calculated, we can flatten everything
-    # for the next calculations. This simply rolls replicates and timepoints
-    # into 'samples'.
+    # With all the statistics above calculated, we can flatten the deltas
+    # matrix # for the next calculations. This simply rolls replicates and 
+    # timepoints into 'samples'.
     deltas = flatten_matrix(deltas, R, T, L)
-    if depths is not None:
-        depths = flatten_matrix(depths, R, T+1, L)
-    if diploids is not None:
-        diploids = diploids.reshape((1, R*(T+1)))
-    # roll out hets
-    hets = hets.reshape((R * (T+1), L))
 
-    # assert that the deltas matrix is 2D (i.e. if it's for replicate
-    # temporal design, it's already been flattened to (R x T) x L matrix).
+    # Assert that the deltas matrix is 2D (i.e. if it's for replicate
+    # temporal design, it's already been flattened to (R x T) x L matrix)
+    # and is of right dimension. 
     assert(deltas.ndim == 2)
     RxT, L = deltas.shape
+    # The depths and diploids matrices are kept
+    # in 3D, as thse corrections only affect the temporal covariance 
+    # submatrices along the diagonal.
     if depths is not None:
-        assert(depths.shape[1] == L)
+        assert(depths.shape == (R, T+1, L))
     if diploids is not None:
-        assert(mean_hets.shape == diploids.shape)
+        assert(diploids.shape == (R, T+1, L))
 
-    # we turn the hets, diploids, and depths into 
-    # multidimensional arrays TODO don't convert in first place?
-    half_hets = (hets / 2.).reshape((R, T+1, L))
-    if depths is not None:
-    	depths = depths.reshape((R, T+1, L))
-    if diploids is not None:
-    	diploids = diploids.reshape((R, T+1, L))
     # calculate variance-covariance matrix
     cov = np.cov(deltas, bias=True)
 
@@ -206,7 +239,7 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True):
         if depths is not None:
             diploid_correction += 1 / (2 * depths * diploids)
     # the bias vector for all timepoints
-    ave_bias += (half_hets * (diploid_correction + depth_correction)).mean(axis=2)
+    ave_bias += (hets / 2. * (diploid_correction + depth_correction)).mean(axis=2)
     var_correction += (- ave_bias[:, :-1] - ave_bias[:, 1:]).reshape(RxT)
     # the covariance correction is a bit trickier: it's off diagonal elements, but 
     # after every Tth entry does not need a correction, as it's a between replicate

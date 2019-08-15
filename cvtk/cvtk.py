@@ -1,5 +1,9 @@
 ## cvtk.py
 
+
+from itertools import groupby
+import numpy as np
+
 from cvtk.utils import sort_samples, swap_alleles, reshape_matrix
 from cvtk.utils import process_samples
 from cvtk.cov import temporal_cov
@@ -55,11 +59,25 @@ class TemporalFreqs(object):
     def R(self):
         return self.freqs.shape[0]
 
-    def calc_covs(self, exlude_seqs=None):
+    def calc_covs(self, exlude_seqs=None, bias_correction=True):
         """
         Calculate the genome-wide temporal-replicate variance-covariance matrix.
         """
-        return temporal_cov(self.freqs, self.depths, self.diploids)
+        return temporal_cov(self.freqs, self.depths, self.diploids,
+                            bias_correction=bias_correction)
+
+    def calc_covs_by_group(self, groups, bias_correction=True):
+        """
+        Calculate covariances, grouping loci by the indices in groups.
+        """
+        covs = covs_by_group(groups, self.freqs, depths=self.depths,
+                             diploids=self.diploids,
+                             pairwise_complete=pairwise_complete,
+                             binomial_correction=binomial_correction)
+        self.tile_covs = covs
+        return covs, covns
+
+
 
 class TiledTemporalFreqs(TemporalFreqs):
     """
@@ -82,6 +100,15 @@ class TiledTemporalFreqs(TemporalFreqs):
         self.set_tiles(tiles)
 
     def _generate_ids(self):
+        """
+        Build two attributes: TiledTemporalFreqs.tile_ids and 
+        TiledTemporalFreqs.tile_seqids. Tiles are stored in the 
+        TiledTemporalFreqs.tile_indices atribute, which is a raggest list 
+        with the list containing the tile lists, and each tile lists contains
+        the indices for the variants. This generates the TiledTemporalFreqs.tile_ids
+        and TiledTemporalFreqs.tile_seqids arrays, which indicate which number tile 
+        each SNP is (their length is equal to the total number of variants).
+        """
         tile_ids = list()
         tile_seqids = list()
         for i, b in enumerate(self.tile_indices):
@@ -107,6 +134,7 @@ class TiledTemporalFreqs(TemporalFreqs):
     def ntiles(self):
         return len(self.tile_indices)
 
-
-
+    def calc_covs_by_tile(self, *args, **kwargs):
+        indices = self.tile_indices
+        return super().calc_covs_by_group(indices, *args, **kwargs)
 

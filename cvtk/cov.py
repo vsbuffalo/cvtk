@@ -1,7 +1,7 @@
 ## covmethods.py -- temporal/replicate covariance methods
 import numpy as np
 
-from cvtk.utils import flatten_matrix
+from cvtk.utils import flatten_matrix, view_along_axis
 
 def calc_deltas(freqs):
     """
@@ -182,7 +182,24 @@ def replicate_average_het_matrix(hets, R, T, L):
     avehet_min = (A + B).reshape((R*T, R*T)) / 2
     return avehet_min
 
-def temporal_cov(freqs, depths=None, diploids=None, center=True):
+
+def covs_by_group(groups, freqs, depths=None, diploids=None, 
+                  bias_correction=True):
+    covs = []
+    for indices in groups:
+        group_freqs = view_along_axis(freqs, indices, 2)
+        group_depths = view_along_axis(depths, indices, 2) if depths is not None else None
+        group_diploids = view_along_axis(diploids, indices, 2) if diploids is not None else None
+        tile_covs = temporal_cov(group_freqs,
+                                 depths=group_depths, 
+                                 diploids=group_diploids,
+                                 bias_correction=bias_correction)
+        covs.append(tile_covs)
+    return covs
+
+
+def temporal_cov(freqs, depths=None, diploids=None, center=True, 
+                 bias_correction=True):
     """
     Notes:
      Some sampled frequnecies can be NaN, since in numpy, 0/0 is NaN. This
@@ -199,7 +216,7 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True):
     # Calculate the heterozygosity denominator, which is
     # p_min(t,s) (1-p_min(t,s)). The following function calculates
     # unbiased heterozygosity; we take ½ of it.
-    mean_hets = hets.nanmean(axis=freqs.ndim-1)
+    mean_hets = np.nanmean(hets, axis=freqs.ndim-1)
     het_denom = replicate_average_het_matrix(mean_hets, R, T, L) / 2.
 
     # With all the statistics above calculated, we can flatten the deltas
@@ -222,6 +239,9 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True):
 
     # calculate variance-covariance matrix
     cov = np.cov(deltas, bias=True)
+
+    if not bias_correction:
+        return cov / het_denom
 
     # correction arrays — these are built up depending on input
     ave_bias = np.zeros((R, (T+1)))

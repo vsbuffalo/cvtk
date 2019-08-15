@@ -138,4 +138,26 @@ def process_samples(freqs, samples):
     return (np.array(replicates), np.array(timepoints),
             len(replicates_counts), len(timepoints_counts))
 
+def is_slice(l):
+    return sorted(l) == list(range(min(l), max(l)+1))
+
+def sliceify(indices):
+    """
+    If a series of indices are consecutive, turn them into a slice to use as and
+    index, since this would result in a view (not a copy).
+    """
+    if len(indices) == 0:
+        return indices
+    if is_slice(indices):
+        return slice(min(indices), max(indices)+1)
+    return np.array(indices)
+
+def view_along_axis(arr, indices, axis):
+    """
+    Equivalent to numpy's np.take_along_axis() but returns a view.
+    """
+    slices = [slice(None)] * arr.ndim
+    slices[axis] = sliceify(indices)
+    return arr[tuple(slices)]
+
 

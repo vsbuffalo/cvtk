@@ -4,6 +4,7 @@
 from itertools import groupby
 import numpy as np
 import pandas as pd
+from tqdm import tnrange
 
 from cvtk.utils import sort_samples, swap_alleles, reshape_matrix
 from cvtk.utils import process_samples, view_along_axis
@@ -39,8 +40,15 @@ class TemporalFreqs(object):
 
         # process frequency matrix, turning into tensor
         self.freqs = reshape_matrix(freqs[sorted_i, :], nreplicates)
-        self.depths = reshape_matrix(depths[sorted_i, :], nreplicates)
-
+        if depths is not None:
+            # depths can be stored much more efficiently as a uint16
+            assert(np.all(depths.max() < np.iinfo(np.uint16).max))
+            depths = depths.astype('uint16')
+            self.depths = reshape_matrix(depths[sorted_i, :], nreplicates)
+        if diploids is not None:
+            if np.all(diploids < np.iinfo(np.uint8.max)):
+                diploids = diploids.astype('uint8')
+ 
         self.swapped_alleles = None
         if swap:
             self.freqs, self.swapped_alleles = swap_alleles(self.freqs)
@@ -225,11 +233,9 @@ class TiledTemporalFreqs(TemporalFreqs):
                      ci_method=ci_method)
 
 
-    def _bootstrap_Gs(self, B, end=None, abs=False, alpha=0.05, 
-                               bootstrap_replicates=False,
-                               replicate=None, average_replicates=False, 
-                               keep_seqids=None, return_straps=False,
-                               ci_method='pivot', **kwargs):
+    def bootstrap_Gs(self, B, abs=False, alpha=0.05, bootstrap_replicates=False,
+                      replicate=None, average_replicates=False, keep_seqids=None, 
+                      return_straps=False, ci_method='pivot', progress_bar=False, **kwargs):
         """
         Wrapper around block_bootstrap_temporal_covs(), with the estimator function
         block_estimate_G().
@@ -247,7 +253,9 @@ class TiledTemporalFreqs(TemporalFreqs):
            - **kwargs: based to calc_covs_by_tile()
  
         """
-        covs = stack_temporal_covs_by_group(self.calc_covs_by_tile(**kwargs), self.R, self.T)
+        covs = stack_temporal_covs_by_group(self.calc_covs_by_tile(**kwargs), 
+                                            self.R, self.T)
+ 
         return block_bootstrap_temporal_covs(covs, 
                      block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'],
                      B=B, 
@@ -256,20 +264,7 @@ class TiledTemporalFreqs(TemporalFreqs):
                      bootstrap_replicates=bootstrap_replicates, 
                      average_replicates=average_replicates,
                      keep_seqids=keep_seqids, return_straps=return_straps, 
-                     ci_method=ci_method)
-
-
-    def bootstrap_Gs(self, *args, **kwargs):
-        """
-        Like TemporalFreqs.G(), this calls the TemporalFreqs._bootstrap_G() method for each
-        timepoint, constructing a block bootstrapped G, blocked by tile.
-
-        This returns a 3 x (T+1) x R array, where the first dimension is lower-CI, mean, upper CI of
-        G.
-        """
-        G = np.stack([self._bootstrap_Gs(*args, end=t, **kwargs) for t in np.arange(self.T+1)])
-        return G.swapaxes(0, 1)
-
+                     ci_method=ci_method, progress_bar=progress_bar)
 
     def empirical_null(self, B=100, exlude_seqs=None, 
                        sign_permute_blocks='tile', 

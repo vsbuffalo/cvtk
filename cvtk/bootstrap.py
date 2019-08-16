@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tnrange
 
 def bootstrap_ci(estimate, straps, alpha=0.05, method='pivot', stack=True):
     """
@@ -40,7 +41,9 @@ def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B,
                                   bootstrap_replicates=False,
                                   replicate=None, average_replicates=False, 
                                   keep_seqids=None, return_straps=False, 
-                                  ci_method='pivot', **kwargs):
+                                  ci_method='pivot', 
+                                  progress_bar=False,
+                                  **kwargs):
     """
     Bootstrap the temporal covariances. This procedure bootstraps the temporal sub-block 
     covariance matrices (there are R of these, and each is TxT).
@@ -91,9 +94,13 @@ def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B,
     covs = covs[covs_idx, ...]
     nblocks = covs.shape[0]
     
+    if progress_bar:
+        B_range = tnrange(int(B), desc="bootstraps")
+    else:
+        B_range = range(int(B))
     # number of samples in resample
     straps = list()
-    for b in np.arange(B):
+    for b in B_range:
         bidx = np.random.randint(0, nblocks, size=nblocks)
         # get the windows of the resampled indices
         mat = covs[bidx, ...]
@@ -103,10 +110,13 @@ def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B,
             mat = mat[:, :, :, ridx]
         # calculate the estimated function on the temporal covariance matrices
         # this should average over the first axis, the blocks
-        avecovs = estimator(mat, weights, **kwargs)
+        est = estimator(mat, weights, **kwargs)
+        #import pdb; pdb.set_trace()
         if average_replicates:
-            avecovs = avecovs.mean(axis=2)
-        straps.append(avecovs)
+            # The last dimension should always be the replicate dimension
+            assert(est.shape[-1] == R)
+            est = est.mean(axis=est.ndim-1)
+        straps.append(est)
     straps = np.stack(straps)
     That = np.mean(straps, axis=0)
     if return_straps:

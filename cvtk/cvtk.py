@@ -12,6 +12,7 @@ from cvtk.cov import stack_temporal_covs_by_group
 from cvtk.bootstrap import block_bootstrap_temporal_covs
 from cvtk.G import calc_G, block_estimate_G
 from cvtk.diagnostics import calc_diagnostics
+from cvtk.empirical_null import calc_covs_empirical_null
 
 class TemporalFreqs(object):
     """
@@ -270,3 +271,20 @@ class TiledTemporalFreqs(TemporalFreqs):
         return G.swapaxes(0, 1)
 
 
+    def empirical_null(self, B=100, by_tile=False, exlude_seqs=None, 
+                       sign_permute_blocks='tile', 
+                       bias_correction=True, progress_bar=False):
+
+        return calc_covs_empirical_null(tile_indices=self.tile_indices, 
+                                        tile_seqids=self.tile_df['seqid'], 
+                                        tile_ids=self.tile_ids, 
+                                        gintervals=self.gintervals,
+                                        B=B,
+                                        depths=self.depths, 
+                                        diploids=self.diploids,
+                                        by_tile=by_tile, 
+                                        exclude_seqids=exlude_seqs, 
+                                        sign_permute_blocks=sign_permute_blocks, 
+                                        bias_correction=bias_correction,
+                                        progress_bar=progress_bar)
+ 

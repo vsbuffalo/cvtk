@@ -184,7 +184,7 @@ def replicate_average_het_matrix(hets, R, T, L):
 
 
 def covs_by_group(groups, freqs, depths=None, diploids=None, 
-                  bias_correction=True):
+                  bias_correction=True, deltas=None):
     group_depths, group_diploids = None, None
     covs = []
     for indices in groups:
@@ -196,7 +196,8 @@ def covs_by_group(groups, freqs, depths=None, diploids=None,
         tile_covs = temporal_cov(group_freqs,
                                  depths=group_depths, 
                                  diploids=group_diploids,
-                                 bias_correction=bias_correction)
+                                 bias_correction=bias_correction, 
+                                 deltas=deltas)
         covs.append(tile_covs)
     return covs
 
@@ -206,8 +207,12 @@ def stack_temporal_covs_by_group(covs, R, T):
 
 
 def temporal_cov(freqs, depths=None, diploids=None, center=True, 
-                 bias_correction=True):
+                 bias_correction=True, deltas=None):
     """
+    Params:
+      ...
+      - deltas: optional deltas matrix (e.g. if permuted deltas are used). If
+          this is None, it's calculated in this function.
     Notes:
      Some sampled frequnecies can be NaN, since in numpy, 0/0 is NaN. This
      needs to be handled accordingly.
@@ -216,7 +221,8 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True,
     # check the dimensions are compatable, padding on a dimension
     # for R = 1 cases
     freqs, depths, diploids = correct_dimensions(freqs, depths, diploids)
-    deltas = calc_deltas(freqs)
+    if deltas is None:
+        deltas = calc_deltas(freqs)
 
     R, T, L = deltas.shape
     hets = calc_hets(freqs, depths=depths, diploids=diploids)

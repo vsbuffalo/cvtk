@@ -271,11 +271,13 @@ class TiledTemporalFreqs(TemporalFreqs):
         return G.swapaxes(0, 1)
 
 
-    def empirical_null(self, B=100, by_tile=False, exlude_seqs=None, 
+    def empirical_null(self, B=100, exlude_seqs=None, 
                        sign_permute_blocks='tile', 
+                       by_tile=False,
                        bias_correction=True, progress_bar=False):
 
-        return calc_covs_empirical_null(tile_indices=self.tile_indices, 
+        return calc_covs_empirical_null(self.freqs, 
+                                        tile_indices=self.tile_indices, 
                                         tile_seqids=self.tile_df['seqid'], 
                                         tile_ids=self.tile_ids, 
                                         gintervals=self.gintervals,

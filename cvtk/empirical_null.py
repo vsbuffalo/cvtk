@@ -1,7 +1,10 @@
+from itertools import groupby
 import numpy as np
 from tqdm import tnrange
 
-from cvtk.cov import stack_temporal_covariances
+from cvtk.cov import stack_temporal_covariances, calc_deltas
+from cvtk.cov import covs_by_group, temporal_cov
+from cvtk.utils import sliceify
 
 
 def slice_loci(seqids, loci_indices=None, exclude_seqids=None):
@@ -30,7 +33,6 @@ def sign_permute_delta_matrix(deltas, blocks=None):
     assert(deltas.ndim == 3)
     R, T, L = deltas.shape
     resampled_deltas = np.array(deltas)  # copy
-    all_covs = list()
     if blocks is None:
         flips = np.tile(np.random.choice((-1, 1), size=(T, 1)), L)
     else:
@@ -54,31 +56,39 @@ def reshape_empirical_null(empnull, R, T):
     return np.stack(empcovs)
 
 
-def calc_covs_empirical_null(tile_indices, tile_seqids, tile_ids, gintervals, 
+def calc_covs_empirical_null(freqs, tile_indices, tile_seqids, 
+                             tile_ids, gintervals, 
                              B=100, 
                              depths=None, diploids=None,
-                             by_tile=False, exclude_seqids=None, 
+                             by_tile=False,
+                             exclude_seqids=None, 
                              sign_permute_blocks='seqid', bias_correction=True, 
                              progress_bar=True):
     """
     Params:
-           - by_tile: whether to sign-flip by whole chromosomes (a conservative approach,
-               since no dependencies will be broken up) or by tile (less conservative).
-
+           - sign_permute_blockse: either 'seqid' or 'tile', whether to sign-flip by
+              whole chromosomes or by tile (less conservative).
+           - by_tile: whether to run the empirical null on the tile covariance matrices
+               (True) or the genome-wide covariance matrix.
     """
     permuted_covs = list()
     # If we are doing things by tiles, we need to only include the loci in all
     # tiles, e.g. if some tiles drop certain loci at the ends.
-    if by_tile:
+    if sign_permute_blocks == 'tile':
         tile_loci = [locus for tile in tile_indices for locus in tile]
         loci_slice = slice_loci(gintervals.seqid, tile_loci, exclude_seqids)
         # need to change the seqid vector, which is for every locus, to only include
         # the loci in the tiles
         seqids = tile_seqids
-    else:
+    elif sign_permute_blocks == 'seqid':
         # just handle slicing out certin seqids
         loci_slice = slice_loci(gintervals.seqid, exclude_seqids=exclude_seqids)
         seqids = gintervals.seqid
+    else:
+        raise ValueError("sign_permute_blocks must be 'tile' or 'seqid'")
+
+    # slice all the appropriate data structures
+    deltas = calc_deltas(freqs)
     sliced_freqs = freqs[..., loci_slice]
     sliced_deltas = deltas[:, :, loci_slice]
     sliced_depths, sliced_diploids = None, None
@@ -93,6 +103,7 @@ def calc_covs_empirical_null(tile_indices, tile_seqids, tile_ids, gintervals,
         B_range = range(int(B))
     
     # main delta permutation procedure
+    all_covs = list()
     for b in B_range:
         # this permutes timepoints, and randomly flips the
         # sign for entire blocks loc loci, keeping the replicates
@@ -113,7 +124,7 @@ def calc_covs_empirical_null(tile_indices, tile_seqids, tile_ids, gintervals,
                                  diploids=sliced_diploids,
                                  bias_correction=True, deltas=sliced_deltas)
         else:
-            covs = temporal_cov(freqs, depths=sliced_depths,
+            covs = temporal_cov(sliced_freqs, depths=sliced_depths,
                                 diploids=sliced_diploids,
                                 bias_correction=bias_correction,
                                 deltas=sliced_deltas)

@@ -1,6 +1,6 @@
 import numpy as np
 
-def bootstrap_ci(estimate, straps, alpha=0.05, method='pivot'):
+def bootstrap_ci(estimate, straps, alpha=0.05, method='pivot', stack=True):
     """
     Return pivot CIs
       This confidence interval returned is a pivotal CIs,
@@ -12,23 +12,41 @@ def bootstrap_ci(estimate, straps, alpha=0.05, method='pivot'):
     alpha = 100. * alpha  # because, numpy.
     qlower, qupper = np.nanpercentile(straps, alpha/2, axis=0), np.nanpercentile(straps, 100-alpha/2, axis=0)
     if method == 'percentile':
-        return qlower, estimate, qupper
+        CIs = qlower, estimate, qupper
     elif method == 'pivot':
-        return 2*estimate - qupper, estimate, 2*estimate - qlower
+        CIs = 2*estimate - qupper, estimate, 2*estimate - qlower
     else:
         raise ValueError("method must be either 'pivot' or 'percentile'")
+    if stack:
+        return np.stack(CIs)
+    return CIs
 
 
-def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B, alpha=0.05, 
+def weighted_mean(array, weights, axis=0):
+    """
+    Weighted mean for a block of resampled temporal covariance matrices. 
+    This uses masked_array since nothing in numpy can handle ignoring nans and 
+    weighted averages.
+    """
+    # mask the covariance matrix, since ma.average is the only nanmean
+    # in numpy that takes weights
+    array_masked = np.ma.masked_array(array, np.isnan(array))
+    return np.ma.average(array, axis=axis, weights=weights).data
+
+
+def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B, 
+                                  estimator=weighted_mean,
+                                  alpha=0.05, 
                                   bootstrap_replicates=False,
                                   replicate=None, average_replicates=False, 
-                                  keep_seqids=None, return_straps=False, ci_method='pivot'):
+                                  keep_seqids=None, return_straps=False, 
+                                  ci_method='pivot', **kwargs):
     """
     Bootstrap the temporal covariances. This procedure bootstraps the temporal sub-block 
     covariance matrices (there are R of these, and each is TxT).
 
     Note that the bootstrap of the covariances takes pre-existing covariances matrices per 
-    block (e.g. tile), and does a *weighted* average of these covariances, with weights
+    block (e.g. tile), and does a *weighted* average ofethese covariances, with weights
     determined by the number of loci in the block.
 
     Params: 
@@ -37,6 +55,7 @@ def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B, alpha=0.
                the SNPs for that block.
            - block_seqids: list of seqids for each block.
            - B: number of bootstraps
+           - estimator: estimator function, taking straps, weights, and all of **kwargs
            - alpha: α level
            - bootstrap_replicates: whether the R replicates are resampled as well, and 
               covariance is averaged over these replicates.
@@ -82,10 +101,9 @@ def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B, alpha=0.
             #assert(replicate is None)
             ridx = np.random.randint(0, R, size=R)
             mat = mat[:, :, :, ridx]
-        # mask the covariance matrix, since ma.average is the only nanmean
-        # in numpy that takes weights
-        covs_masked = np.ma.masked_array(mat, np.isnan(mat))
-        avecovs = np.ma.average(covs_masked, axis=0, weights=weights).data
+        # calculate the estimated function on the temporal covariance matrices
+        # this should average over the first axis, the blocks
+        avecovs = estimator(mat, weights, **kwargs)
         if average_replicates:
             avecovs = avecovs.mean(axis=2)
         straps.append(avecovs)
@@ -94,3 +112,5 @@ def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B, alpha=0.
     if return_straps:
         return straps
     return bootstrap_ci(That, straps, alpha=alpha, method=ci_method)
+
+

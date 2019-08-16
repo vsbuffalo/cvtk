@@ -10,6 +10,7 @@ from cvtk.utils import process_samples, view_along_axis
 from cvtk.cov import temporal_cov, covs_by_group, calc_hets
 from cvtk.cov import stack_temporal_covs_by_group
 from cvtk.bootstrap import block_bootstrap_temporal_covs
+from cvtk.G import calc_G, block_estimate_G
 from cvtk.diagnostics import calc_diagnostics
 
 class TemporalFreqs(object):
@@ -221,3 +222,51 @@ class TiledTemporalFreqs(TemporalFreqs):
                      average_replicates=average_replicates,
                      keep_seqids=keep_seqids, return_straps=return_straps, 
                      ci_method=ci_method)
+
+
+    def _bootstrap_Gs(self, B, end=None, abs=False, alpha=0.05, 
+                               bootstrap_replicates=False,
+                               replicate=None, average_replicates=False, 
+                               keep_seqids=None, return_straps=False,
+                               ci_method='pivot', **kwargs):
+        """
+        Wrapper around block_bootstrap_temporal_covs(), with the estimator function
+        block_estimate_G().
+        Params: 
+           - B: number of bootstraps
+           - alpha: α level
+           - bootstrap_replicates: whether the R replicates are resampled as well, and 
+              covariance is averaged over these replicates.
+           - replicate: only bootstrap the covariances for a single replicate (cannot be used 
+              with bootstrap_replicates).
+           - average_replicates: whether to average across all replicates.
+           - keep_seqids: which seqids to include in bootstrap; if None, all are used.
+           - return_straps: whether to return the actual bootstrap vectors.
+           - ci_method: 'pivot' or 'percentile'
+           - **kwargs: based to calc_covs_by_tile()
+ 
+        """
+        covs = stack_temporal_covs_by_group(self.calc_covs_by_tile(**kwargs), self.R, self.T)
+        return block_bootstrap_temporal_covs(covs, 
+                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'],
+                     B=B, 
+                     estimator=block_estimate_G,
+                     alpha=alpha, 
+                     bootstrap_replicates=bootstrap_replicates, 
+                     average_replicates=average_replicates,
+                     keep_seqids=keep_seqids, return_straps=return_straps, 
+                     ci_method=ci_method)
+
+
+    def bootstrap_Gs(self, *args, **kwargs):
+        """
+        Like TemporalFreqs.G(), this calls the TemporalFreqs._bootstrap_G() method for each
+        timepoint, constructing a block bootstrapped G, blocked by tile.
+
+        This returns a 3 x (T+1) x R array, where the first dimension is lower-CI, mean, upper CI of
+        G.
+        """
+        G = np.stack([self._bootstrap_Gs(*args, end=t, **kwargs) for t in np.arange(self.T+1)])
+        return G.swapaxes(0, 1)
+
+

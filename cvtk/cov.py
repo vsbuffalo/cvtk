@@ -15,20 +15,18 @@ def calc_deltas(freqs):
     else:
         raise ValueError("eqs.ndim must be eitehr 2 or 3")
 
-def calc_hets(freqs, depths=None, diploids=None, bias=False):
+def calc_hets(freqs, depths=None, diploids=None, bias=False, warn=False):
+    R, T, L = freqs.shape
     if depths is not None:
         assert(freqs.shape == depths.shape)
-    if diploids is not None:
-        dnrow, dncol = diploids.shape
-        assert((dnrow, dncol) == (freqs.shape[0], freqs.shape[1]))
-        diploids = diploids[..., np.newaxis]
     het = 2*freqs*(1-freqs)
-    if not bias:
-        if depths is not None:
-            het *= depths / (depths-1)
-        if diploids is not None:
-            # additional bias correction needed
-            het *= 2*diploids / (2*diploids - 1)
+    warn_type = 'ignore' if not warn else 'warn'
+    with np.errstate(divide=warn_type, invalid=warn_type):
+        if not bias:
+            if depths is not None:
+                het *= depths / (depths-1)
+            if diploids is not None:
+                het *= 2*diploids / (2*diploids - 1)
     return het
 
 
@@ -48,26 +46,12 @@ def correct_dimensions(freqs, depths=None, diploids=None):
 
     R, ntimepoints, L = freqs.shape
     if diploids is not None:
-        if isinstance(diploids, int):
-            diploids = np.repeat(diploids, R*ntimepoints)
-            diploids = diploids.reshape(R, ntimepoints)
-        elif isinstance(diploids, np.ndarray):
-            try:
-                if diploids.ndim == 1:
-                    assert(diploids.shape[0] == R * ntimepoints)
-                    diploids = diploids.reshape(R, ntimepoints)
-                elif diploids.ndim == 2:
-                    assert(diploids.shape == (R, ntimepoints))
-                else:
-                    assert(False)
-            except AssertionError:
-                msg = ("diploids must be an integer or a matrix of shape "
-                       f"nreplicates x ntimepoints ({R} x {ntimepoints})")
-                raise ValueError(msg)
-    if depths is not None:
-        assert(freqs.shape == depths.shape)
-    if diploids is not None:
-        assert(freqs.shape == diploids.shape)
+        depth_is_single_int = diploids.size == 1
+        depth_is_valid_vector = diploids.ndim == 2 and diploids.shape == (R, ntimepoints)
+        if not (depth_is_single_int or depth_is_valid_vector):
+            msg = ("diploids must be an integer or a matrix of shape "
+                   f"nreplicates x ntimepoints ({R} x {ntimepoints})")
+            raise ValueError(msg)
     return freqs, depths, diploids
 
 
@@ -185,19 +169,21 @@ def replicate_average_het_matrix(hets, R, T, L):
 
 def covs_by_group(groups, freqs, depths=None, diploids=None, 
                   bias_correction=True, deltas=None):
-    group_depths, group_diploids = None, None
+    group_depths, group_diploids, group_deltas = None, None, None
     covs = []
     for indices in groups:
         group_freqs = view_along_axis(freqs, indices, 2)
         if depths is not None:
             group_depths = view_along_axis(depths, indices, 2)
-        if diploids is not None:
-            group_diploids = view_along_axis(diploids, indices, 2)
+        #if diploids is not None:
+        #    group_diploids = view_along_axis(diploids, indices, 2)
+        if deltas is not None:
+            group_deltas = view_along_axis(deltas, indices, 2)
         tile_covs = temporal_cov(group_freqs,
                                  depths=group_depths, 
                                  diploids=group_diploids,
                                  bias_correction=bias_correction, 
-                                 deltas=deltas)
+                                 deltas=group_deltas)
         covs.append(tile_covs)
     return covs
 
@@ -207,7 +193,7 @@ def stack_temporal_covs_by_group(covs, R, T):
 
 
 def temporal_cov(freqs, depths=None, diploids=None, center=True, 
-                 bias_correction=True, deltas=None):
+                 bias_correction=True, deltas=None, warn=False):
     """
     Params:
       ...
@@ -217,6 +203,7 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True,
      Some sampled frequnecies can be NaN, since in numpy, 0/0 is NaN. This
      needs to be handled accordingly.
     """
+    warn_type = 'ignore' if not warn else 'warn'
     #freqs[np.isnan(freqs)] = 0
     # check the dimensions are compatable, padding on a dimension
     # for R = 1 cases
@@ -254,7 +241,9 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True,
     cov = np.cov(deltas, bias=True)
 
     if not bias_correction:
-        return cov / het_denom
+        with np.errstate(divide=warn_type, invalid=warn_type):
+            norm_cov = cov / het_denom
+        return norm_cov
 
     # correction arrays — these are built up depending on input
     ave_bias = np.zeros((R, (T+1)))
@@ -265,14 +254,16 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True,
     # data
     diploid_correction = 0
     depth_correction = 0
-    if depths is not None:
-        depth_correction = 1 / depths
-    if diploids is not None:
-        diploid_correction = 1 / (2 * diploids)
+
+    with np.errstate(divide=warn_type, invalid=warn_type):
         if depths is not None:
-            diploid_correction += 1 / (2 * depths * diploids)
+            depth_correction = 1 / depths
+        if diploids is not None:
+            diploid_correction = 1 / (2 * diploids)
+            if depths is not None:
+                diploid_correction += 1 / (2 * depths * diploids)
     # the bias vector for all timepoints
-    ave_bias += (hets / 2. * (diploid_correction + depth_correction)).mean(axis=2)
+    ave_bias += (0.5 * hets * (diploid_correction + depth_correction)).mean(axis=2)
     var_correction += (- ave_bias[:, :-1] - ave_bias[:, 1:]).reshape(RxT)
     # the covariance correction is a bit trickier: it's off diagonal elements, but 
     # after every Tth entry does not need a correction, as it's a between replicate
@@ -283,5 +274,7 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True,
             np.diag(covar_correction, k=1) +
             np.diag(covar_correction, k=-1))
 
-    return cov / het_denom
+    with np.errstate(divide=warn_type, invalid=warn_type):
+        norm_cov = cov / het_denom
+   return norm_cov
 

@@ -5,5 +5,3 @@ def integerize(x):
     valmap = {val:i for i, val in enumerate(vals)}
     return [valmap[v] for v in x]
 
-
-

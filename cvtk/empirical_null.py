@@ -89,13 +89,13 @@ def calc_covs_empirical_null(freqs, tile_indices, tile_seqids,
 
     # slice all the appropriate data structures
     deltas = calc_deltas(freqs)
+    R, T, L = deltas.shape
     sliced_freqs = freqs[..., loci_slice]
     sliced_deltas = deltas[:, :, loci_slice]
-    sliced_depths, sliced_diploids = None, None
+    # diploids does not need to be sliced, since we can broadcast the last dimension
+    sliced_depths, sliced_diploids = None, diploids
     if depths is not None:
         sliced_depths = depths[..., loci_slice]
-    if diploids is not None:
-        sliced_diploids = sliced_diploids[..., loci_slice]
 
     if progress_bar:
         B_range = tnrange(int(B))
@@ -120,7 +120,7 @@ def calc_covs_empirical_null(freqs, tile_indices, tile_seqids,
 
         if by_tile:
             covs = covs_by_group(tile_indices, sliced_freqs, 
-                                 depths=sliced_diploids,
+                                 depths=sliced_depths,
                                  diploids=sliced_diploids,
                                  bias_correction=True, deltas=sliced_deltas)
         else:

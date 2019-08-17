@@ -161,3 +161,30 @@ def view_along_axis(arr, indices, axis):
     return arr[tuple(slices)]
 
 
+def validate_diploids(diploids, R, ntimepoints):
+    """
+    Since diploids can be a numpy array or integer, this validates the object and returns an
+    R x ntimepoints x 1 array that can be broadcast in calculations.
+    """
+    if isinstance(diploids, int):
+        diploids = np.repeat(np.array([diploids], dtype='uint32'), R*ntimepoints)
+    elif isinstance(diploids, list):
+        # if the reshape fails, something's wrong
+        diploids = np.array(diploids, dtype='uint32')
+
+    try:
+        diploids = np.array(diploids, dtype='uint32').reshape((R, ntimepoints, 1))
+    except:
+        fmt = f"diploids must be single integer or array of size R*ntimepoints ({R*ntimepoints})"
+        ValueError(fmt)
+    # now, try to coerce to smaller sie if possible
+    diploids_max = diploids.max()
+    if diploids_max < np.iinfo(np.uint8).max:
+        diploids = diploids.astype('uint8')
+    elif diploids_max < np.iinfo(np.uint16).max:
+        diploids = diploids.astype('uint16')
+    else:
+        diploids = diploids.astype('uint32')
+    return diploids
+     
+

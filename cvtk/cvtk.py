@@ -7,7 +7,7 @@ import pandas as pd
 from tqdm import tnrange
 
 from cvtk.utils import sort_samples, swap_alleles, reshape_matrix
-from cvtk.utils import process_samples, view_along_axis
+from cvtk.utils import process_samples, view_along_axis, validate_diploids
 from cvtk.cov import temporal_cov, covs_by_group, calc_hets
 from cvtk.cov import stack_temporal_covs_by_group
 from cvtk.bootstrap import block_bootstrap_temporal_covs
@@ -46,15 +46,23 @@ class TemporalFreqs(object):
             depths = depths.astype('uint16')
             self.depths = reshape_matrix(depths[sorted_i, :], nreplicates)
         if diploids is not None:
-            if np.all(diploids < np.iinfo(np.uint8.max)):
-                diploids = diploids.astype('uint8')
- 
+            if isinstance(diploids, np.ndarray) and len(diploids) > 1:
+                assert(diploids.ndim == 1)
+                try:
+                    diploids = diploids[sorted_i]
+                except:
+                    msg = ("diploids must be single integer or array of "
+                           f"size nreplicates*ntimepoints ({nreplicates*ntimepoints}), "
+                           f"supplied size: {len(diploids)}")
+                    raise ValueError(msg)
+            self.diploids = validate_diploids(diploids, nreplicates, ntimepoints)
+            assert(self.diploids.shape == (nreplicates, ntimepoints, 1)) 
+
         self.swapped_alleles = None
         if swap:
             self.freqs, self.swapped_alleles = swap_alleles(self.freqs)
 
         # TODO: reshape diploids according to samples
-        self.diploids = diploids
         self.gintervals = gintervals
 
     @property

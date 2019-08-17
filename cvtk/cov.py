@@ -1,5 +1,5 @@
-## covmethods.py -- temporal/replicate covariance methods
 import numpy as np
+from tqdm import tqdm, tqdm_notebook
 
 from cvtk.utils import flatten_matrix, view_along_axis
 
@@ -48,7 +48,8 @@ def correct_dimensions(freqs, depths=None, diploids=None):
     if diploids is not None:
         depth_is_single_int = diploids.size == 1
         depth_is_valid_vector = diploids.ndim == 2 and diploids.shape == (R, ntimepoints)
-        if not (depth_is_single_int or depth_is_valid_vector):
+        depth_is_valid_array = diploids.ndim == 3 and diploids.shape == (R, ntimepoints, 1)
+        if not (depth_is_single_int or depth_is_valid_vector or depth_is_valid_array):
             msg = ("diploids must be an integer or a matrix of shape "
                    f"nreplicates x ntimepoints ({R} x {ntimepoints})")
             raise ValueError(msg)
@@ -114,7 +115,7 @@ def stack_replicate_covariances(covmat, R, T, as_tensor=False, return_tuple=Fals
 
 def stack_temporal_covariances(covmat, R, T, stack=True):
     """
-    Extracts the block matrices along the diagonal.
+    Stack temporal sub-matrices of the temporal covariance matrix.
     """
     layers = []
     rows, cols = replicate_block_matrix_indices(R, T)
@@ -168,10 +169,13 @@ def replicate_average_het_matrix(hets, R, T, L):
 
 
 def covs_by_group(groups, freqs, depths=None, diploids=None, 
-                  bias_correction=True, deltas=None):
+                  bias_correction=True, deltas=None, progress_bar=False):
     group_depths, group_diploids, group_deltas = None, None, None
     covs = []
-    for indices in groups:
+    groups_iter = groups
+    if progress_bar:
+        groups_iter = tqdm_notebook(groups)
+    for indices in groups_iter:
         group_freqs = view_along_axis(freqs, indices, 2)
         if depths is not None:
             group_depths = view_along_axis(depths, indices, 2)
@@ -190,6 +194,20 @@ def covs_by_group(groups, freqs, depths=None, diploids=None,
 
 def stack_temporal_covs_by_group(covs, R, T):
     return np.stack([stack_temporal_covariances(c, R, T) for c in covs])
+
+
+def extract_temporal_cov_diagonals(x, k=0, average_replicates=False, rep=None):
+    assert(x.ndim == 4)
+    if average_replicates and rep is not None:
+        raise ValueError("both average_replicates=True and rep != None")
+    if rep is None:
+       # swap axes so they are 
+        res = np.diagonal(x, offset=k, axis1=1, axis2=2)
+        if average_replicates:
+            # second to last axis is the replicate axis
+            return res.mean(axis=-2)
+        return res
+    return np.diagonal(x, offset=k, axis1=1, axis2=2)[:, rep, :]
 
 
 def temporal_cov(freqs, depths=None, diploids=None, center=True, 
@@ -276,5 +294,5 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True,
 
     with np.errstate(divide=warn_type, invalid=warn_type):
         norm_cov = cov / het_denom
-   return norm_cov
+    return norm_cov
 

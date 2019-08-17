@@ -88,13 +88,13 @@ class TemporalFreqs(object):
         return temporal_cov(self.freqs, self.depths, self.diploids,
                             bias_correction=bias_correction)
 
-    def calc_covs_by_group(self, groups, bias_correction=True):
+    def calc_covs_by_group(self, groups, bias_correction=True, progress_bar=False):
         """
         Calculate covariances, grouping loci by the indices in groups.
         """
         covs = covs_by_group(groups, self.freqs, depths=self.depths,
                              diploids=self.diploids,
-                             bias_correction=bias_correction)
+                             bias_correction=bias_correction, progress_bar=progress_bar)
         self.tile_covs = covs
         return covs
 
@@ -274,7 +274,7 @@ class TiledTemporalFreqs(TemporalFreqs):
                      keep_seqids=keep_seqids, return_straps=return_straps, 
                      ci_method=ci_method, progress_bar=progress_bar)
 
-    def empirical_null(self, B=100, exlude_seqs=None, 
+    def calc_empirical_null(self, B=100, exlude_seqs=None, 
                        sign_permute_blocks='tile', 
                        by_tile=False,
                        bias_correction=True, progress_bar=False):

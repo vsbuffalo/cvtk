@@ -195,6 +195,10 @@ def covs_by_group(groups, freqs, depths=None, diploids=None,
 def stack_temporal_covs_by_group(covs, R, T):
     return np.stack([stack_temporal_covariances(c, R, T) for c in covs])
 
+def stack_replicate_covs_by_group(covs, R, T):
+    return np.stack([stack_replicate_covariances(c, R, T) for c in covs])
+
+
 
 def temporal_cov(freqs, depths=None, diploids=None, center=True, 
                  bias_correction=True, deltas=None, warn=False):

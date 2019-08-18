@@ -88,7 +88,8 @@ def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B,
     covs_idx = np.arange(nblocks)
     if keep_seqids is not None:
         keep_seqids = set(keep_seqids)
-        covs_idx = np.array([i for i, seqid in enumerate(indices_seqid_pairs) if seqid in keep_seqids])
+        covs_idx = np.array([i for i, seqid in enumerate(indices_seqid_pairs) if 
+                             seqid in keep_seqids])
     # prune down the index if not all seqids kept
     weights = weights[covs_idx]
     covs = covs[covs_idx, ...]

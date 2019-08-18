@@ -211,6 +211,34 @@ class TiledTemporalFreqs(TemporalFreqs):
             dfs.append(df)
         return pd.concat(dfs, axis=0), models, xpreds, ypreds
 
+    def bootstrap_replicate_covs(self, B, alpha=0.05, keep_seqids=None, 
+                                 return_straps=False, ci_method='pivot', **kwargs):
+        """
+        Wrapper around block_bootstrap_temporal_covs().
+        Params: 
+           - B: number of bootstraps
+           - alpha: α level
+           - bootstrap_replicates: whether the R replicates are resampled as well, and 
+              covariance is averaged over these replicates.
+           - replicate: only bootstrap the covariances for a single replicate (cannot be used 
+              with bootstrap_replicates).
+           - average_replicates: whether to average across all replicates.
+           - keep_seqids: which seqids to include in bootstrap; if None, all are used.
+           - return_straps: whether to return the actual bootstrap vectors.
+           - ci_method: 'pivot' or 'percentile'
+           - **kwargs: based to calc_covs_by_tile()
+ 
+        """
+        covs = stack_replicate_covs_by_group(self.calc_covs_by_tile(**kwargs), self.R, self.T)
+        return block_bootstrap_temporal_covs(covs, 
+                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'],
+                     B=B, alpha=alpha, 
+                     bootstrap_replicates=bootstrap_replicates, 
+                     average_replicates=average_replicates,
+                     keep_seqids=keep_seqids, return_straps=return_straps, 
+                     ci_method=ci_method)
+
+
     def bootstrap_temporal_covs(self, B, alpha=0.05, bootstrap_replicates=False,
                                 replicate=None, average_replicates=False, 
                                 keep_seqids=None, return_straps=False,

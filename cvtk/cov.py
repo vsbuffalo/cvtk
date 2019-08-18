@@ -196,20 +196,6 @@ def stack_temporal_covs_by_group(covs, R, T):
     return np.stack([stack_temporal_covariances(c, R, T) for c in covs])
 
 
-def extract_temporal_cov_diagonals(x, k=0, average_replicates=False, rep=None):
-    assert(x.ndim == 4)
-    if average_replicates and rep is not None:
-        raise ValueError("both average_replicates=True and rep != None")
-    if rep is None:
-       # swap axes so they are 
-        res = np.diagonal(x, offset=k, axis1=1, axis2=2)
-        if average_replicates:
-            # second to last axis is the replicate axis
-            return res.mean(axis=-2)
-        return res
-    return np.diagonal(x, offset=k, axis1=1, axis2=2)[:, rep, :]
-
-
 def temporal_cov(freqs, depths=None, diploids=None, center=True, 
                  bias_correction=True, deltas=None, warn=False):
     """

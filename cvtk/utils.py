@@ -188,3 +188,35 @@ def validate_diploids(diploids, R, ntimepoints):
     return diploids
      
 
+def extract_empirical_nulls_diagonals(x, k=0, average_replicates=False, rep=None):
+    assert(x.ndim == 5)
+    if average_replicates and rep is not None:
+        raise ValueError("both average_replicates=True and rep != None")
+    if rep is None:
+       # swap axes so they are 
+        res = np.diagonal(x, offset=k, axis1=2, axis2=3)
+        if average_replicates:
+            # second to last axis is the replicate axis
+            return res.mean(axis=-2)
+        return res
+    return np.diagonal(x, offset=k, axis1=2, axis2=3)[:, rep, :]
+
+def extract_temporal_cov_diagonals(x, k=0, average_replicates=False, rep=None):
+    assert(x.ndim == 4)
+    if average_replicates and rep is not None:
+        raise ValueError("both average_replicates=True and rep != None")
+    if rep is None:
+       # swap axes so they are 
+        res = np.diagonal(x, offset=k, axis1=1, axis2=2)
+        if average_replicates:
+            # second to last axis is the replicate axis
+            return res.mean(axis=-2)
+        return res
+    return np.diagonal(x, offset=k, axis1=1, axis2=2)[:, rep, :]
+
+
+def integerize(x):
+    vals = sorted(set(x))
+    valmap = {val:i for i, val in enumerate(vals)}
+    return [valmap[v] for v in x]
+

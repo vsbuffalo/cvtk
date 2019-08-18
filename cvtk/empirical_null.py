@@ -62,7 +62,7 @@ def calc_covs_empirical_null(freqs, tile_indices, tile_seqids,
                              depths=None, diploids=None,
                              by_tile=False,
                              exclude_seqids=None, 
-                             sign_permute_blocks='tile', bias_correction=True, 
+                             sign_permute_blocks='tile', bias_correction=False, 
                              progress_bar=True):
     """
     Params:
@@ -123,28 +123,15 @@ def calc_covs_empirical_null(freqs, tile_indices, tile_seqids,
                                  depths=sliced_depths,
                                  diploids=sliced_diploids,
                                  bias_correction=bias_correction, 
-                                 deltas=sliced_deltas)
+                                 deltas=permuted_deltas)
         else:
             covs = temporal_cov(sliced_freqs, depths=sliced_depths,
                                 diploids=sliced_diploids,
                                 bias_correction=bias_correction,
-                                deltas=sliced_deltas)
+                                deltas=permuted_deltas)
 
         all_covs.append(covs)
     if by_tile:
         return reshape_empirical_null(all_covs, R, T)
     return all_covs
 
-
-def extract_empirical_nulls_diagonals(x, k=0, average_replicates=False, rep=None):
-    assert(x.ndim == 5)
-    if average_replicates and rep is not None:
-        raise ValueError("both average_replicates=True and rep != None")
-    if rep is None:
-       # swap axes so they are 
-        res = np.diagonal(x, offset=k, axis1=2, axis2=3)
-        if average_replicates:
-            # second to last axis is the replicate axis
-            return res.mean(axis=-2)
-        return res
-    return np.diagonal(x, offset=k, axis1=2, axis2=3)[:, rep, :]

@@ -1,8 +1,8 @@
-from cvtk.misc import integerize
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib import cm
 import allel
+from cvtk.utils import integerize
 
 
 def correction_diagnostic_plot(diag):

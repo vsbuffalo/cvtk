@@ -277,7 +277,7 @@ class TiledTemporalFreqs(TemporalFreqs):
     def calc_empirical_null(self, B=100, exlude_seqs=None, 
                        sign_permute_blocks='tile', 
                        by_tile=False,
-                       bias_correction=True, progress_bar=False):
+                       bias_correction=False, progress_bar=False):
 
         return calc_covs_empirical_null(self.freqs, 
                                         tile_indices=self.tile_indices, 

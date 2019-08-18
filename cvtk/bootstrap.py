@@ -115,7 +115,7 @@ def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B,
         if average_replicates:
             # The last dimension should always be the replicate dimension
             assert(est.shape[-1] == R)
-            est = est.mean(axis=est.ndim-1)
+            est = np.nanmean(est, axis=est.ndim-1)
         straps.append(est)
     straps = np.stack(straps)
     That = np.mean(straps, axis=0)

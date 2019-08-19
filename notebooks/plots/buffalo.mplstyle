@@ -129,15 +129,18 @@ font.sans-serif     : Helvetica, Arial #, DejaVu Sans, Bitstream Vera Sans, Comp
                             ## type1cm, textcomp.
                             ## Adobe Postscript (PSSNFS) font packages may also be
                             ## loaded, depending on your font settings.
-                            
+# axes/ticks line width                            
+axes.linewidth       : 0.8     ## edge linewidth
+ytick.major.width    : 0.8    ## major tick width in points
+xtick.major.width    : 0.8    ## major tick width in points
+
 lines.linewidth   : 1.1     ## line width in points
 scatter.marker : o               ## The default marker type for scatter plots.
 axes.edgecolor       : (0.15, 0.15, 0.15)   ## axes edge color
-axes.linewidth       : 1.1     ## edge linewidth
+
 xtick.color          : (0.15, 0.15, 0.15)  ## color of the tick labels
 ytick.color          : (0.15, 0.15, 0.15)  ## color of the tick labels
-ytick.major.width    : 1.1    ## major tick width in points
-xtick.major.width    : 1.1    ## major tick width in points
+
 axes.labelcolor      : (0.15, 0.15, 0.15)
 axes.titlesize      : 12   ## fontsize of the axes title
 axes.labelsize      : 11  ## fontsize of the x any y labels
@@ -145,8 +148,8 @@ axes.labelweight    : normal  ## weight of the x and y labels
 xtick.direction      : out    ## direction: in, out, or inout
 ytick.direction      : out    ## direction: in, out, or inout
 axes.labelpad        : 5.0     ## space between label and axis
-xtick.labelsize      : 10  ## fontsize of the tick labels
-ytick.labelsize      : 10 ## fontsize of the tick labels
+xtick.labelsize      : 8  ## fontsize of the tick labels
+ytick.labelsize      : 8 ## fontsize of the tick labels
 xtick.major.pad      : 5.5    ## distance to major tick label in points
 ytick.major.pad      : 5.5    ## distance to major tick label in points
 axes.spines.top    : False

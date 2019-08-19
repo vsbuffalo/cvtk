@@ -411,7 +411,14 @@ class GenomicIntervals(object):
             self.data[colname] = views
         return views
 
-
+    #def find_overlaps(self, query_interval):
+    #    """
+    #    Return the indices of intervals that overlap query interval.
+    #    """
+    #    for i, (seqid, interval) in enumerate(self.itertuples()):
+    #        if interval.overlaps(query_interval):
+    #            yield i
+ 
     def overlap_coverage(self, intervals, colname=None,
                          proportion=False, reduce=True):
         """

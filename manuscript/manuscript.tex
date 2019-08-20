@@ -107,13 +107,51 @@ Explain G.
 
 We first analyzed \textcite{Barghi2019-qy}, an evolve-and-resequence study with
 ten replicate populations exposed to a high temperature environment and evolved
-for 60 generations. 
+for 60 generations, and sequenced every ten generations. Using the seven
+timepoints and ten replicate populations, we estimated a bias-corrected $60
+\times 60$ temporal-replicate variance-covariance matrix (see XXX for details).
+Since each replicate population was sequenced every ten generations, the
+timepoints $t_0 = 0$ generations, $t_1 = 10$ generations, $t_2 = 20$
+generations, etc., lead to observed allele frequency changes across ten
+generation chunks, $\Delta p_{t_0}, \Delta p_{t_1}, \ldots, \Delta p_{t_6}$.
+Consequently, the ten temporal covariance matrices for each of the ten
+replicate populations have off-diagonal elements of the form $\cov(\Delta
+p_{t_0}, \Delta p_{t_1}) = \cov(p_{t_1} - p_{t_0}, p_{t_2} - p_{t_1}) =
+\sum_{i=0}^{10} \sum_{j=10}^{20} \cov(\Delta p_i, \Delta p_j)$. Each diagonal
+element has the form $\var(\Delta p_{t_0}) = \sum_{i=0}^{t_0} \var(\Delta
+p_{i}) + \sum_{i \ne j}^{t_0} \cov(\Delta p_{i}, \Delta p_{j})$, and is thus a
+combination of the effects of drift and selection, as both the variance in
+allele frequency changes and cumulative temporal autocovariances terms increase
+the variance in allele frequency. With sampling each generation, one could more
+accurately partition the total variance in allele frequency change
+\parencite{Buffalo2019-io}; while we cannot directly estimate the contribution
+of linked selection to the variance in allele frequency change here, the
+presence of a positive observed covariance between allele frequency change can
+only be caused linked selection. 
+
+Averaging across replicate populations, we find positive temporal covariances
+that are statistically significant (p < XXX) consistent with linked selection
+acting to affect allele frequency changes over very short time periods. We
+visualize these covariances in Figure \label{figure-1} (A), which depicts the
+temporal covariances through time, for each of the five rows covariance matrix.
+Each row represents the temporal covariance $\cov(\Delta p_s, \Delta p_t)$,
+between some initial reference generation $s$ (the row of the matrix), and some
+later timepoint $t$ (the column of the matrix). For each row, the covariances
+at first are positive, and then decay towards zero as expected when directional
+selection affects linked variants' frequency trajectories until ultimately
+linkage disequilibrium and additive genetic variance for decay
+\parencite{Buffalo2019-io}.
+
+
+we can calculate the temporal
+covariances between an initial starting reference generation ($s = \{0, 10, 20,
+\ldots, 50\})$.
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/figure-1.pdf}
-  \caption{$B=5000$ bootstraps, with 100e}
-  \label{}
+  \caption{$B=5000$ bootstraps, with 100}
+  \label{fig:figure-1}
 \end{figure}
 
 \begin{figure}[!ht]
@@ -274,18 +312,6 @@ of the heterozygosity is
  \\ \nonumber & \;\;\;\;\;\; + \sum_{i=0}^{t-1} \var(\Delta_{_H} p_i)  + \sum_{0 \le i < j}^{t-1} \cov(\Delta p_i, \Delta p_j) \
 \end{align}
 
-For $t=1$,
-
-\begin{align}
-  \var(\widetilde{p}_1 - \widetilde{p}_0) &= \widetilde{p}_1(1-\widetilde{p}_1)\frac{d_1 + n_1 - 1}{(n_1-1)(d_1-1)} + 
- \widetilde{p}_0(1-\widetilde{p}_0)\frac{d_0 + n_0 - 1}{(n_0-1)(d_0-1)} + \\ & \nonumber\;\;\;\;\;\;
-\end{align}
-
-\begin{align}
-  \widehat{V_t} = \frac{1}{L} \sum_{l=1}^L (\Delta \widetilde{p}_{t,l})^2
-\end{align}
-
-TODO
 
 \subsection{Covariance Correction}
 
@@ -299,5 +325,17 @@ The basic issue is that $\cov(\Delta \widetilde{p}_t, \Delta
 of timepoint $t+1$. Thus acts to bias the covariance by subtracting off the
 noise variance term of $\var(\widetilde{p}_{t+1})$, so we add that back in.
 
+\subsection{Variance-Covariance Matrix Correction}
+
+With frequency collected at $\tau$ timepoints across $R$ replicate populations
+at $L$ loci, we have an $R \times \tau \times L$ array $\mathbf{F}$ of allele
+frequencies and $\mathbf{D}$ array of sequencing depths. We calculate the 
+
+
+change the
+dimensionality of
+
+\subsection{Block Bootstrap Procedure}
+\label{supp:block-bootstrap}
 
 \end{document}

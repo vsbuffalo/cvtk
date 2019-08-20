@@ -243,7 +243,7 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True,
     if depths is not None:
         assert(depths.shape == (R, T+1, L))
     if diploids is not None:
-        assert(diploids.shape == (R, T+1, L))
+        assert(diploids.shape == (R, T+1, 1))
 
     # calculate variance-covariance matrix
     cov = np.cov(deltas, bias=True)
@@ -269,7 +269,7 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True,
         if diploids is not None:
             diploid_correction = 1 / (2 * diploids)
             if depths is not None:
-                diploid_correction += 1 / (2 * depths * diploids)
+                diploid_correction = diploid_correction + 1 / (2 * depths * diploids)
     # the bias vector for all timepoints
     ave_bias += (0.5 * hets * (diploid_correction + depth_correction)).mean(axis=2)
     var_correction += (- ave_bias[:, :-1] - ave_bias[:, 1:]).reshape(RxT)

@@ -8,9 +8,10 @@ from tqdm import tnrange
 
 from cvtk.utils import sort_samples, swap_alleles, reshape_matrix
 from cvtk.utils import process_samples, view_along_axis, validate_diploids
+from cvtk.cov import stack_replicate_covs_by_group
 from cvtk.cov import temporal_cov, covs_by_group, calc_hets
 from cvtk.cov import stack_temporal_covs_by_group
-from cvtk.bootstrap import block_bootstrap_temporal_covs
+from cvtk.bootstrap import block_bootstrap_temporal_covs, block_bootstrap_covs
 from cvtk.G import calc_G, block_estimate_G
 from cvtk.diagnostics import calc_diagnostics
 from cvtk.empirical_null import calc_covs_empirical_null
@@ -21,7 +22,7 @@ class TemporalFreqs(object):
     def __init__(self, freqs, samples, depths=None, diploids=None,
                  gintervals=None, swap=True):
 
-        if freqs.shape != depths.shape:
+        if depths is not None and freqs.shape != depths.shape:
             msg = ("frequency matrix 'freqs' must have same shape as"
                    "matrix of sequencing depths 'depths'")
             raise ValueError(msg)
@@ -40,11 +41,14 @@ class TemporalFreqs(object):
 
         # process frequency matrix, turning into tensor
         self.freqs = reshape_matrix(freqs[sorted_i, :], nreplicates)
+        self.depths = None
         if depths is not None:
             # depths can be stored much more efficiently as a uint16
             assert(np.all(depths.max() < np.iinfo(np.uint16).max))
             depths = depths.astype('uint16')
             self.depths = reshape_matrix(depths[sorted_i, :], nreplicates)
+
+        self.diploids = None
         if diploids is not None:
             if isinstance(diploids, np.ndarray) and len(diploids) > 1:
                 assert(diploids.ndim == 1)
@@ -211,6 +215,28 @@ class TiledTemporalFreqs(TemporalFreqs):
             dfs.append(df)
         return pd.concat(dfs, axis=0), models, xpreds, ypreds
 
+    def bootstrap_covs(self, B, alpha=0.05, keep_seqids=None, progress_bar=False,
+                       return_straps=False, ci_method='pivot', **kwargs):
+        """
+        Bootstrap whole covaraince matrix.
+        Params: 
+           - B: number of bootstraps
+           - alpha: α level
+           - keep_seqids: which seqids to include in bootstrap; if None, all are used.
+           - return_straps: whether to return the actual bootstrap vectors.
+           - ci_method: 'pivot' or 'percentile'
+           - **kwargs: based to calc_covs_by_tile()
+ 
+        """
+        covs = np.stack(self.calc_covs_by_tile(**kwargs))
+        return block_bootstrap_covs(covs, 
+                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
+                     progress_bar=progress_bar,
+                     B=B, alpha=alpha, 
+                     keep_seqids=keep_seqids, return_straps=return_straps, 
+                     ci_method=ci_method)
+
+
     def bootstrap_replicate_covs(self, B, alpha=0.05, keep_seqids=None, 
                                  return_straps=False, ci_method='pivot', **kwargs):
         """
@@ -229,12 +255,14 @@ class TiledTemporalFreqs(TemporalFreqs):
            - **kwargs: based to calc_covs_by_tile()
  
         """
+        raise ValueError("not implemented")
+        # this is still under development
         covs = stack_replicate_covs_by_group(self.calc_covs_by_tile(**kwargs), self.R, self.T)
         return block_bootstrap_temporal_covs(covs, 
-                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'],
+                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
                      B=B, alpha=alpha, 
-                     bootstrap_replicates=bootstrap_replicates, 
-                     average_replicates=average_replicates,
+                     bootstrap_replicates=False,
+                     average_replicates=False,
                      keep_seqids=keep_seqids, return_straps=return_straps, 
                      ci_method=ci_method)
 
@@ -261,7 +289,7 @@ class TiledTemporalFreqs(TemporalFreqs):
         """
         covs = stack_temporal_covs_by_group(self.calc_covs_by_tile(**kwargs), self.R, self.T)
         return block_bootstrap_temporal_covs(covs, 
-                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'],
+                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
                      B=B, alpha=alpha, 
                      bootstrap_replicates=bootstrap_replicates, 
                      average_replicates=average_replicates,
@@ -293,7 +321,7 @@ class TiledTemporalFreqs(TemporalFreqs):
                                             self.R, self.T)
  
         return block_bootstrap_temporal_covs(covs, 
-                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'],
+                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
                      B=B, 
                      estimator=block_estimate_G,
                      alpha=alpha, 

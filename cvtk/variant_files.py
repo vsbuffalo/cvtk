@@ -80,6 +80,23 @@ class VariantFile(object):
                                      minor=self.minors.astype(str))))
         return g
 
+    def remove_fixed(self):
+        if self.freqs is None:
+            raise ValueError("Calculate frequencies first with VariantFile.calc_freqs()")
+        freqs = self.freqs
+        to_keep = np.logical_not(np.apply_along_axis(all, 0, (freqs == 0) | (freqs == 1)))
+        to_keep_indices = np.where(to_keep)[0]
+        self.chroms = self.chroms[to_keep_indices]
+        self.positions = self.positions[to_keep_indices]
+        self.mat = self.mat[:, to_keep_indices, :]
+        self.freqs = self.freqs[:, to_keep_indices]
+        if len(self.refs):
+            self.refs = self.refs[to_keep_indices]
+        if len(self.majors):
+            self.majors = self.majors[to_keep_indices]
+        if len(self.minors):
+            self.minors = self.minors[to_keep_indices]
+
     def __repr__(self):
         return f"VariantFile with {self.nloci} loci and {self.nsamples} samples."
 
@@ -107,8 +124,9 @@ class VariantFile(object):
                     "a list of integer index values.")
             print(msg)
             raise er
-        self.mat = np.stack([out[k] for k in sorted(out.keys())])
-        self.subpops = sorted(out.keys())
+        key_order = sorted(out.keys())
+        self.mat = np.stack([out[k] for k in key_order])
+        self.subpops = key_order
 
 
     @property

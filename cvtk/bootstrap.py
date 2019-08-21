@@ -1,6 +1,7 @@
 import numpy as np
 from tqdm import tnrange
 
+
 def bootstrap_ci(estimate, straps, alpha=0.05, method='pivot', stack=True):
     """
     Return pivot CIs

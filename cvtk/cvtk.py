@@ -10,6 +10,7 @@ from cvtk.utils import sort_samples, swap_alleles, reshape_matrix
 from cvtk.utils import process_samples, view_along_axis, validate_diploids
 from cvtk.cov import stack_replicate_covs_by_group
 from cvtk.cov import temporal_cov, covs_by_group, calc_hets
+from cvtk.cov import total_variance, var_by_group
 from cvtk.cov import stack_temporal_covs_by_group
 from cvtk.bootstrap import block_bootstrap_temporal_covs, block_bootstrap_covs
 from cvtk.G import calc_G, block_estimate_G
@@ -85,23 +86,31 @@ class TemporalFreqs(object):
     def R(self):
         return self.freqs.shape[0]
 
-    def calc_covs(self, exlude_seqs=None, bias_correction=True):
+    def calc_covs(self, exlude_seqs=None, bias_correction=True, standardize=True):
         """
         Calculate the genome-wide temporal-replicate variance-covariance matrix.
         """
         return temporal_cov(self.freqs, self.depths, self.diploids,
-                            bias_correction=bias_correction)
+                            bias_correction=bias_correction, standardize=standardize)
 
-    def calc_covs_by_group(self, groups, bias_correction=True, progress_bar=False):
+    def calc_covs_by_group(self, groups, bias_correction=True, standardize=True, 
+                           progress_bar=False):
         """
         Calculate covariances, grouping loci by the indices in groups.
         """
         covs = covs_by_group(groups, self.freqs, depths=self.depths,
-                             diploids=self.diploids,
+                             diploids=self.diploids, standardize=standardize,
                              bias_correction=bias_correction, progress_bar=progress_bar)
         self.tile_covs = covs
         return covs
 
+    def calc_var(self, t=None, standardize=True, bias_correction=True):
+        return total_variance(self.freqs, self.depths, self.diploids, t=t,
+                              standardize=standardize, bias_correction=bias_correction)
+
+    def calc_var_by_group(self, groups, t=None, standardize=True, bias_correction=True):
+        return var_by_group(groups, freqs=self.freqs, depths=self.depths, diploids=self.diploids, 
+                            t=t, standardize=standardize, bias_correction=bias_correction)
 
 
 class TiledTemporalFreqs(TemporalFreqs):
@@ -160,6 +169,11 @@ class TiledTemporalFreqs(TemporalFreqs):
         indices = self.tile_indices
         return super().calc_covs_by_group(indices, *args, **kwargs)
 
+    def calc_var_by_tile(self, *args, **kwargs):
+        indices = self.tile_indices
+        return super().calc_var_by_group(indices, *args, **kwargs)
+
+
     def depth_by_tile(self, average=True):
         depth = []
         ave_depth = self.depths.mean(axis=(0, 1))
@@ -214,6 +228,29 @@ class TiledTemporalFreqs(TemporalFreqs):
             df['correction'] = use_correction
             dfs.append(df)
         return pd.concat(dfs, axis=0), models, xpreds, ypreds
+
+    def bootstrap_replicate_G_covs(self, B, alpha=0.05, keep_seqids=None, progress_bar=False,
+                       return_straps=False, ci_method='pivot', **kwargs):
+        """
+        Bootstrap whole covaraince matrix.
+        Params: 
+           - B: number of bootstraps
+           - alpha: α level
+           - keep_seqids: which seqids to include in bootstrap; if None, all are used.
+           - return_straps: whether to return the actual bootstrap vectors.
+           - ci_method: 'pivot' or 'percentile'
+           - **kwargs: based to calc_covs_by_tile()
+ 
+        """
+        covs = np.stack(self.calc_covs_by_tile(**kwargs))
+        return block_bootstrap_covs(covs, 
+                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
+                     progress_bar=progress_bar,
+                     estimator=replicate_G,
+                     B=B, alpha=alpha, 
+                     keep_seqids=keep_seqids, return_straps=return_straps, 
+                     ci_method=ci_method)
+
 
     def bootstrap_covs(self, B, alpha=0.05, keep_seqids=None, progress_bar=False,
                        return_straps=False, ci_method='pivot', **kwargs):
@@ -297,39 +334,62 @@ class TiledTemporalFreqs(TemporalFreqs):
                      ci_method=ci_method)
 
 
-    def bootstrap_Gs(self, B, abs=False, alpha=0.05, bootstrap_replicates=False,
-                      replicate=None, average_replicates=False, keep_seqids=None, 
-                      return_straps=False, ci_method='pivot', progress_bar=False, **kwargs):
+    def bootstrap_G(self, B, abs=False, alpha=0.05, keep_seqids=None, 
+                      average_replicates=False, bootstrap_replicates=False,
+                      ci_method='pivot', progress_bar=False, **kwargs):
         """
-        Wrapper around block_bootstrap_temporal_covs(), with the estimator function
-        block_estimate_G().
-        Params: 
-           - B: number of bootstraps
-           - alpha: α level
-           - bootstrap_replicates: whether the R replicates are resampled as well, and 
-              covariance is averaged over these replicates.
-           - replicate: only bootstrap the covariances for a single replicate (cannot be used 
-              with bootstrap_replicates).
-           - average_replicates: whether to average across all replicates.
-           - keep_seqids: which seqids to include in bootstrap; if None, all are used.
-           - return_straps: whether to return the actual bootstrap vectors.
-           - ci_method: 'pivot' or 'percentile'
-           - **kwargs: based to calc_covs_by_tile()
- 
         """
-        covs = stack_temporal_covs_by_group(self.calc_covs_by_tile(**kwargs), 
+        vars = list()
+        for t in np.arange(1, self.T+1):
+            vars.append(np.stack(self.calc_var_by_tile(t=t, standardize=False, **kwargs)))
+        total_var = np.stack(vars, axis=1)
+        covs = stack_temporal_covs_by_group(self.calc_covs_by_tile(standardize=False, **kwargs), 
                                             self.R, self.T)
- 
         return block_bootstrap_temporal_covs(covs, 
+                     total_var=total_var,  # passed to bootstrap function
                      block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
                      B=B, 
                      estimator=block_estimate_G,
                      alpha=alpha, 
                      bootstrap_replicates=bootstrap_replicates, 
                      average_replicates=average_replicates,
-                     keep_seqids=keep_seqids, return_straps=return_straps, 
+                     keep_seqids=keep_seqids, return_straps=False, 
                      ci_method=ci_method, progress_bar=progress_bar)
 
+
+#    def bootstrap_Gs(self, B, abs=False, alpha=0.05, bootstrap_replicates=False,
+#                      replicate=None, average_replicates=False, keep_seqids=None, 
+#                      return_straps=False, ci_method='pivot', progress_bar=False, **kwargs):
+#        """
+#        Wrapper around block_bootstrap_temporal_covs(), with the estimator function
+#        block_estimate_G().
+#        Params: 
+#           - B: number of bootstraps
+#           - alpha: α level
+#           - bootstrap_replicates: whether the R replicates are resampled as well, and 
+#              covariance is averaged over these replicates.
+#           - replicate: only bootstrap the covariances for a single replicate (cannot be used 
+#              with bootstrap_replicates).
+#           - average_replicates: whether to average across all replicates.
+#           - keep_seqids: which seqids to include in bootstrap; if None, all are used.
+#           - return_straps: whether to return the actual bootstrap vectors.
+#           - ci_method: 'pivot' or 'percentile'
+#           - **kwargs: based to calc_covs_by_tile()
+# 
+#        """
+#        covs = stack_temporal_covs_by_group(self.calc_covs_by_tile(**kwargs), 
+#                                            self.R, self.T)
+# 
+#        return block_bootstrap_temporal_covs(covs, 
+#                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
+#                     B=B, 
+#                     estimator=block_estimate_G,
+#                     alpha=alpha, 
+#                     bootstrap_replicates=bootstrap_replicates, 
+#                     average_replicates=average_replicates,
+#                     keep_seqids=keep_seqids, return_straps=return_straps, 
+#                     ci_method=ci_method, progress_bar=progress_bar)
+#
     def calc_empirical_null(self, B=100, exlude_seqs=None, 
                        sign_permute_blocks='tile', 
                        by_tile=False,

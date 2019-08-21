@@ -85,7 +85,7 @@ def replicate_block_matrix_indices(R, T):
     col_bm = row_bm.T
     return (row_bm, col_bm)
 
-def stack_replicate_covariances(covmat, R, T, as_tensor=False, return_tuple=False,
+def stack_replicate_covariances(covmat, R, T, stack=True, return_tuple=False,
                                 upper_only=True):
     """
     Upper only now.
@@ -101,7 +101,7 @@ def stack_replicate_covariances(covmat, R, T, as_tensor=False, return_tuple=Fals
                 continue
             this_block_matrix = np.logical_and(rows == i, cols == j)
             block = covmat[this_block_matrix].reshape(T, T)
-            if as_tensor:
+            if stack:
                 layers.append(block)
             else:
                 if return_tuple:
@@ -109,7 +109,7 @@ def stack_replicate_covariances(covmat, R, T, as_tensor=False, return_tuple=Fals
                     layers.append((i, j, block))
                 else:
                     layers.append(block)
-    if as_tensor:
+    if stack:
         return np.stack(layers).T
     return layers
 
@@ -168,7 +168,32 @@ def replicate_average_het_matrix(hets, R, T, L):
     return avehet_min
 
 
-def covs_by_group(groups, freqs, depths=None, diploids=None, 
+def var_by_group(groups, freqs, t=None, depths=None, diploids=None, 
+                 bias_correction=True, deltas=None, progress_bar=False,
+                 standardize=True):
+    group_depths, group_diploids, group_deltas = None, None, None
+    vars = []
+    groups_iter = groups
+    if progress_bar:
+        groups_iter = tqdm_notebook(groups)
+    for indices in groups_iter:
+        group_freqs = view_along_axis(freqs, indices, 2)
+        if depths is not None:
+            group_depths = view_along_axis(depths, indices, 2)
+        #if diploids is not None:
+        #    group_diploids = view_along_axis(diploids, indices, 2)
+        if deltas is not None:
+            group_deltas = view_along_axis(deltas, indices, 2)
+        tile_vars = total_variance(group_freqs,
+                                   depths=group_depths, 
+                                   diploids=group_diploids,
+                                   t=t, standardize=standardize,
+                                   bias_correction=bias_correction)
+        vars.append(tile_vars)
+    return vars
+
+
+def covs_by_group(groups, freqs, depths=None, diploids=None, standardize=True,
                   bias_correction=True, deltas=None, progress_bar=False):
     group_depths, group_diploids, group_deltas = None, None, None
     covs = []
@@ -187,21 +212,29 @@ def covs_by_group(groups, freqs, depths=None, diploids=None,
                                  depths=group_depths, 
                                  diploids=group_diploids,
                                  bias_correction=bias_correction, 
+                                 standardize=standardize,
                                  deltas=group_deltas)
         covs.append(tile_covs)
     return covs
 
 
-def stack_temporal_covs_by_group(covs, R, T):
-    return np.stack([stack_temporal_covariances(c, R, T) for c in covs])
+def stack_temporal_covs_by_group(covs, R, T, stack=True, **kwargs):
+    res = [stack_temporal_covariances(c, R, T, stack=stack, **kwargs) for c in covs]
+    if stack:
+        return np.stack(res)
+    return res
 
-def stack_replicate_covs_by_group(covs, R, T):
-    return np.stack([stack_replicate_covariances(c, R, T) for c in covs])
+
+def stack_replicate_covs_by_group(covs, R, T, stack=True, **kwargs):
+    res = [stack_replicate_covariances(c, R, T, stack=stack, **kwargs) for c in covs]
+    if stack:
+        return np.stack(res)
+    return res
 
 
 
 def temporal_cov(freqs, depths=None, diploids=None, center=True, 
-                 bias_correction=True, deltas=None, warn=False):
+                 bias_correction=True, standardize=True, deltas=None, warn=False):
     """
     Params:
       ...
@@ -249,9 +282,10 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True,
     cov = np.cov(deltas, bias=True)
 
     if not bias_correction:
-        with np.errstate(divide=warn_type, invalid=warn_type):
-            norm_cov = cov / het_denom
-        return norm_cov
+        if standardize:
+            with np.errstate(divide=warn_type, invalid=warn_type):
+                cov = cov / het_denom
+        return cov
 
     # correction arrays — these are built up depending on input
     ave_bias = np.zeros((R, (T+1)))
@@ -260,8 +294,8 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True,
 
     # build up correct for any combination of depth / diploid / depth & diploid
     # data
-    diploid_correction = 0
-    depth_correction = 0
+    diploid_correction = 0.
+    depth_correction = 0.
 
     with np.errstate(divide=warn_type, invalid=warn_type):
         if depths is not None:
@@ -282,7 +316,48 @@ def temporal_cov(freqs, depths=None, diploids=None, center=True,
             np.diag(covar_correction, k=1) +
             np.diag(covar_correction, k=-1))
 
-    with np.errstate(divide=warn_type, invalid=warn_type):
-        norm_cov = cov / het_denom
-    return norm_cov
+    if standardize:
+        with np.errstate(divide=warn_type, invalid=warn_type):
+            cov = cov / het_denom
+    return cov
 
+
+def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True, 
+                   bias_correction=True, warn=False):
+    """
+    Calculate the Var(p_t - p_0) across all replicates.
+    """
+    R, ntimepoints, L = freqs.shape
+    if t is None:
+        t = ntimepoints-1
+    assert(t < ntimepoints)
+    pt_p0 = (freqs[:, t, :] - freqs[:, 0, :])
+    var_pt_p0 = pt_p0.var(axis=1)
+
+    if not bias_correction:
+        if standardize:
+            return var_pt_p0 / np.nanmean(hets[:, 0, :], axis=1)
+        return var_pt_p0 
+
+    diploid_correction = 0.
+    depth_correction = 0.
+    var_correction = 0.
+    ave_bias = 0.
+    warn_type = 'ignore' if not warn else 'warn'
+    with np.errstate(divide=warn_type, invalid=warn_type):
+        if depths is not None:
+            depth_correction = 1 / depths[:, (0, t), :]
+        if diploids is not None:
+            diploid_correction = 1 / (2 * diploids[:, (0, t), :])
+            if depths is not None:
+                b = 1 / (2 * depths[:, (0, t), :] * diploids[:, (0, t), :])
+                diploid_correction = diploid_correction + b
+    # the bias vector for all timepoints
+    hets = calc_hets(freqs, depths=depths, diploids=diploids)[:, (0, t), :]
+    ave_bias += (0.5 * hets * (diploid_correction + depth_correction)).mean(axis=2)
+    var_correction += (- ave_bias[:, 0] - ave_bias[:, 1])
+    out =  var_pt_p0 + var_correction
+    if standardize:
+        out = out / np.nanmean(hets[:, 0, :], axis=1)
+    return out
+ 

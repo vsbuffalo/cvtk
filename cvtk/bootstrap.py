@@ -1,5 +1,6 @@
 import numpy as np
 from tqdm import tnrange
+from cvtk.utils import view_along_axis
 
 
 def bootstrap_ci(estimate, straps, alpha=0.05, method='pivot', stack=True):
@@ -35,90 +36,56 @@ def weighted_mean(array, weights, axis=0):
     array_masked = np.ma.masked_invalid(array)
     return np.ma.average(array_masked, axis=axis, weights=weights).data
 
-
-def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B, 
-                                  estimator=weighted_mean,
-                                  alpha=0.05, 
-                                  bootstrap_replicates=False,
-                                  replicate=None, average_replicates=False, 
-                                  keep_seqids=None, return_straps=False, 
-                                  ci_method='pivot', 
-                                  progress_bar=False,
-                                  **kwargs):
-    """
-    Bootstrap the temporal covariances. This procedure bootstraps the temporal sub-block 
-    covariance matrices (there are R of these, and each is TxT).
-
-    Note that the bootstrap of the covariances takes pre-existing covariances matrices per 
-    block (e.g. tile), and does a *weighted* average ofethese covariances, with weights
-    determined by the number of loci in the block.
-
-    Params: 
-           - covs: temporal covariance 4D array, nblock x T x T x R.
-           - block_indices: list of lists, each inner list contains the indices for 
-               the SNPs for that block.
-           - block_seqids: list of seqids for each block.
-           - B: number of bootstraps
-           - estimator: estimator function, taking straps, weights, and all of **kwargs
-           - alpha: α level
-           - bootstrap_replicates: whether the R replicates are resampled as well, and 
-              covariance is averaged over these replicates.
-           - replicate: only bootstrap the covariances for a single replicate (cannot be used 
-              with bootstrap_replicates).
-           - average_replicates: whether to average across all replicates.
-           - keep_seqids: which seqids to include in bootstrap
-           - return_straps: whether to return the actual bootstrap vectors.
-           - ci_method: 'pivot' or 'percentile'
-    
-    Future improvements:
-           - use any arbitrary masked array function for the statistic, not just the mean.
-    """
-    assert(covs.ndim == 4)
-    nblocks, T, T_, R = covs.shape
-    assert(T == T_)
-    if replicate is not None and bootstrap_replicates:
-            msg = "cannot bootstrap on single replicate; set either bootstrap_replicates=False or replicate=None"
-            raise ValueError(msg)
-    if replicate is not None:
-        covs = covs[:, :, :, replicate]
-    # block weights by number of loci
-    assert(not isinstance(keep_seqids, str))  # prevent a common error
-    indices_seqid_pairs = list(zip(block_indices, block_seqids))
-    weights = np.array([len(x) for x, seqid in indices_seqid_pairs]) 
-    weights = weights/weights.sum()
-    covs_idx = np.arange(nblocks)
-    if keep_seqids is not None:
-        keep_seqids = set(keep_seqids)
-        covs_idx = np.array([i for i, seqid in enumerate(block_seqids) if 
-                             seqid in keep_seqids])
-    # prune down the index if not all seqids kept
-    weights = weights[covs_idx]
-    covs = covs[covs_idx, ...]
-    nblocks = covs.shape[0]
-    
+def block_bootstrap(freqs, block_indices, block_seqids, B, 
+                    estimator, depths=None, diploids=None, alpha=0.05, 
+                    keep_seqids=None, return_straps=False,
+                    ci_method='pivot', progress_bar=False, **kwargs):
     if progress_bar:
         B_range = tnrange(int(B), desc="bootstraps")
     else:
         B_range = range(int(B))
+
+    # create a vector of the block indices to resample, based on 
+    # whether keep_seqids is specified
+    if keep_seqids is not None:
+        blocks = np.array([i for i, seqid in enumerate(block_seqids) 
+                           if seqid in keep_seqids], dtype='uint32')
+    else:
+        blocks = np.array([i for i, seqid in enumerate(block_seqids)], dtype='uint32')
     # number of samples in resample
+    nblocks = len(blocks)
     straps = list()
+    strap_lens = list()
+    
+    # build an array that's length of loci, full of the block IDs
+    #block_ids = np.full(freqs.shape[2], -1, dtype='uint32')
+    #for i, indices in enumerate(block_indices):
+    #    block_ids[indices] = i
+    #block_indices = np.array(block_indices)
+
+    group_freqs = list()
+    group_depths = None if depths is None else []
+    
+    for indices in block_indices:
+        group_freqs.append(view_along_axis(freqs, indices, 2))
+        if depths is not None:
+            group_depths.append(view_along_axis(depths, indices, 2))
+
     for b in B_range:
-        bidx = np.random.randint(0, nblocks, size=nblocks)
-        # get the windows of the resampled indices
-        mat = covs[bidx, ...]
-        if bootstrap_replicates:
-            #assert(replicate is None)
-            ridx = np.random.randint(0, R, size=R)
-            mat = mat[:, :, :, ridx]
-        # calculate the estimated function on the temporal covariance matrices
-        # this should average over the first axis, the blocks
-        est = estimator(mat, weights[bidx], **kwargs)
-        #import pdb; pdb.set_trace()
-        if average_replicates:
-            # The last dimension should always be the replicate dimension
-            assert(est.shape[-1] == R)
-            est = np.nanmean(est, axis=est.ndim-1)
-        straps.append(est)
+        bidx = np.random.choice(blocks, size=nblocks, replace=True)
+        #block_loci = np.array([index for index in block_indices[b] for b in bidx], dtype='uint32')
+        #block_loci = np.where(np.in1d(block_ids, bidx))[0]
+        #block_loci = np.concatenate(block_indices[bidx])
+        #strap_lens.append(len(block_loci))
+        #sliced_freqs = freqs[:, :, block_loci]
+        #sliced_depths = depths
+        sliced_freqs = np.concatenate([group_freqs[b] for b in bidx], axis=2)
+        sliced_depths = None
+        if depths is not None:
+            #sliced_depths = depths[:, :, block_loci]
+            sliced_depths = np.concatenate([group_depths[b] for b in bidx], axis=2)
+        stat = estimator(freqs=sliced_freqs, depths=sliced_depths, diploids=diploids, **kwargs)
+        straps.append(stat)
     straps = np.stack(straps)
     That = np.mean(straps, axis=0)
     if return_straps:
@@ -126,52 +93,13 @@ def block_bootstrap_temporal_covs(covs, block_indices, block_seqids, B,
     return bootstrap_ci(That, straps, alpha=alpha, method=ci_method)
 
 
-def block_bootstrap_covs(covs, block_indices, block_seqids, B, 
-                          estimator=weighted_mean,
-                          alpha=0.05, 
-                          keep_seqids=None, return_straps=False, 
-                          ci_method='pivot', 
-                          progress_bar=False,
-                          **kwargs):
-    """
-    Bootstrap the variance-covariance matrix
-    """
-    assert(covs.ndim == 3)
-    nblocks, RxT, RxT_ = covs.shape
-    assert(RxT == RxT_)
-    # block weights by number of loci
-    assert(not isinstance(keep_seqids, str))  # prevent a common error
-    indices_seqid_pairs = list(zip(block_indices, block_seqids))
-    weights = np.array([len(x) for x, seqid in indices_seqid_pairs]) 
-    weights = weights/weights.sum()
-    covs_idx = np.arange(nblocks)
-    if keep_seqids is not None:
-        keep_seqids = set(keep_seqids)
-        covs_idx = np.array([i for i, seqid in enumerate(block_seqids) if seqid in keep_seqids])
-    # prune down the index if not all seqids kept
-    weights = weights[covs_idx]
-    covs = covs[covs_idx, ...]
-    nblocks = covs.shape[0]
-    
-    if progress_bar:
-        B_range = tnrange(int(B), desc="bootstraps")
-    else:
-        B_range = range(int(B))
-    # number of samples in resample
-    straps = list()
-    for b in B_range:
-        bidx = np.random.randint(0, nblocks, size=nblocks)
-        # get the windows of the resampled indices
-        mat = covs[bidx, ...]
-        # calculate the estimated function on the temporal covariance matrices
-        # this should average over the first axis, the blocks
-        est = estimator(mat, weights[bidx], **kwargs)
-        #import pdb; pdb.set_trace()
-        straps.append(est)
-    straps = np.stack(straps)
-    That = np.mean(straps, axis=0)
-    if return_straps:
-        return straps
-    return bootstrap_ci(That, straps, alpha=alpha, method=ci_method)
+def bootstrap_temporal_cov(freqs, depths=None, diploids=None, average_replicates=True,
+                           **kwargs):
+    R, T, L = freqs.shape
+    covs = temporal_replicate_cov(freqs=freqs, depths=depths, diploids=diploids, **kwargs)
+    temp_covs = stack_temporal_covariances(covs, R, T)
+    if average_replicates:
+        return temp_covs.mean(axis=2)
+    return temp_covs
 
 

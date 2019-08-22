@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 from tqdm import tqdm, tqdm_notebook
 
@@ -208,13 +209,13 @@ def covs_by_group(groups, freqs, depths=None, diploids=None, standardize=True,
         #    group_diploids = view_along_axis(diploids, indices, 2)
         if deltas is not None:
             group_deltas = view_along_axis(deltas, indices, 2)
-        tile_covs = temporal_cov(group_freqs,
-                                 depths=group_depths, 
-                                 diploids=group_diploids,
-                                 bias_correction=bias_correction, 
-                                 standardize=standardize,
-                                 deltas=group_deltas)
-        covs.append(tile_covs)
+        tile_covs = temporal_replicate_cov(group_freqs,
+                                           depths=group_depths, 
+                                           diploids=group_diploids,
+                                           bias_correction=bias_correction, 
+                                           standardize=standardize,
+                                           deltas=group_deltas)
+        covs.append(tile_covs)          
     return covs
 
 
@@ -233,8 +234,8 @@ def stack_replicate_covs_by_group(covs, R, T, stack=True, **kwargs):
 
 
 
-def temporal_cov(freqs, depths=None, diploids=None, center=True, 
-                 bias_correction=True, standardize=True, deltas=None, warn=False):
+def temporal_replicate_cov(freqs, depths=None, diploids=None, center=True, 
+                           bias_correction=True, standardize=True, deltas=None, warn=False):
     """
     Params:
       ...
@@ -357,6 +358,11 @@ def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True,
     ave_bias += (0.5 * hets * (diploid_correction + depth_correction)).mean(axis=2)
     var_correction += (- ave_bias[:, 0] - ave_bias[:, 1])
     out =  var_pt_p0 + var_correction
+    # in some cases, subtracting off the expected bias leads us to create negative
+    # covariances. In these cases, we don't apply the correction.
+    if warn:
+        warnings.warn("Some bias-corrected variances were negative. The bias correction was not applied.")
+        out[out < 0] = var_pt_p0
     if standardize:
         out = out / np.nanmean(hets[:, 0, :], axis=1)
     return out

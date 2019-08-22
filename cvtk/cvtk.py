@@ -9,10 +9,11 @@ from tqdm import tnrange
 from cvtk.utils import sort_samples, swap_alleles, reshape_matrix
 from cvtk.utils import process_samples, view_along_axis, validate_diploids
 from cvtk.cov import stack_replicate_covs_by_group
-from cvtk.cov import temporal_cov, covs_by_group, calc_hets
+from cvtk.cov import temporal_replicate_cov, covs_by_group, calc_hets
 from cvtk.cov import total_variance, var_by_group
 from cvtk.cov import stack_temporal_covs_by_group
-from cvtk.bootstrap import block_bootstrap_temporal_covs, block_bootstrap_covs
+#from cvtk.bootstrap import block_bootstrap_temporal_covs, block_bootstrap_covs
+from cvtk.bootstrap import block_bootstrap, bootstrap_temporal_cov
 from cvtk.G import calc_G, block_estimate_G
 from cvtk.diagnostics import calc_diagnostics
 from cvtk.empirical_null import calc_covs_empirical_null
@@ -90,8 +91,8 @@ class TemporalFreqs(object):
         """
         Calculate the genome-wide temporal-replicate variance-covariance matrix.
         """
-        return temporal_cov(self.freqs, self.depths, self.diploids,
-                            bias_correction=bias_correction, standardize=standardize)
+        return temporal_replicate_cov(self.freqs, self.depths, self.diploids,
+                                      bias_correction=bias_correction, standardize=standardize)
 
     def calc_covs_by_group(self, groups, bias_correction=True, standardize=True, 
                            progress_bar=False):
@@ -229,30 +230,31 @@ class TiledTemporalFreqs(TemporalFreqs):
             dfs.append(df)
         return pd.concat(dfs, axis=0), models, xpreds, ypreds
 
-    def bootstrap_replicate_G_covs(self, B, alpha=0.05, keep_seqids=None, progress_bar=False,
-                       return_straps=False, ci_method='pivot', **kwargs):
-        """
-        Bootstrap whole covaraince matrix.
-        Params: 
-           - B: number of bootstraps
-           - alpha: α level
-           - keep_seqids: which seqids to include in bootstrap; if None, all are used.
-           - return_straps: whether to return the actual bootstrap vectors.
-           - ci_method: 'pivot' or 'percentile'
-           - **kwargs: based to calc_covs_by_tile()
+    #def bootstrap_replicate_G_covs(self, B, alpha=0.05, keep_seqids=None, progress_bar=False,
+    #                   return_straps=False, ci_method='pivot', **kwargs):
+    #    """
+    #    Bootstrap whole covaraince matrix.
+    #    Params: 
+    #       - B: number of bootstraps
+    #       - alpha: α level
+    #       - keep_seqids: which seqids to include in bootstrap; if None, all are used.
+    #       - return_straps: whether to return the actual bootstrap vectors.
+    #       - ci_method: 'pivot' or 'percentile'
+    #       - **kwargs: based to calc_covs_by_tile()
  
-        """
-        covs = np.stack(self.calc_covs_by_tile(**kwargs))
-        return block_bootstrap_covs(covs, 
-                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
-                     progress_bar=progress_bar,
-                     estimator=replicate_G,
-                     B=B, alpha=alpha, 
-                     keep_seqids=keep_seqids, return_straps=return_straps, 
-                     ci_method=ci_method)
+    #    """
+    #    covs = np.stack(self.calc_covs_by_tile(**kwargs))
+    #    return block_bootstrap_covs(covs, 
+    #                 block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
+    #                 progress_bar=progress_bar,
+    #                 estimator=replicate_G,
+    #                 B=B, alpha=alpha, 
+    #                 keep_seqids=keep_seqids, return_straps=return_straps, 
+    #                 ci_method=ci_method)
 
 
     def bootstrap_covs(self, B, alpha=0.05, keep_seqids=None, progress_bar=False,
+                       average_replicates=True, temporal_only=False,
                        return_straps=False, ci_method='pivot', **kwargs):
         """
         Bootstrap whole covaraince matrix.
@@ -265,73 +267,77 @@ class TiledTemporalFreqs(TemporalFreqs):
            - **kwargs: based to calc_covs_by_tile()
  
         """
-        covs = np.stack(self.calc_covs_by_tile(**kwargs))
-        return block_bootstrap_covs(covs, 
-                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
+        estimator = temporal_replicate_cov if not temporal_only else temporal_cov
+        return block_bootstrap(self.freqs, 
+                     block_indices=self.tile_indices, 
+                     block_seqids=self.tile_df['seqid'].values,
+                     estimator=estimator,
+                     B=B, alpha=alpha, 
                      progress_bar=progress_bar,
-                     B=B, alpha=alpha, 
                      keep_seqids=keep_seqids, return_straps=return_straps, 
-                     ci_method=ci_method)
+                     ci_method=ci_method,
+                     # kwargs passed directly to bootstrap_temporal_cov
+                     average_replicates=average_replicates)
 
 
-    def bootstrap_replicate_covs(self, B, alpha=0.05, keep_seqids=None, 
-                                 return_straps=False, ci_method='pivot', **kwargs):
-        """
-        Wrapper around block_bootstrap_temporal_covs().
-        Params: 
-           - B: number of bootstraps
-           - alpha: α level
-           - bootstrap_replicates: whether the R replicates are resampled as well, and 
-              covariance is averaged over these replicates.
-           - replicate: only bootstrap the covariances for a single replicate (cannot be used 
-              with bootstrap_replicates).
-           - average_replicates: whether to average across all replicates.
-           - keep_seqids: which seqids to include in bootstrap; if None, all are used.
-           - return_straps: whether to return the actual bootstrap vectors.
-           - ci_method: 'pivot' or 'percentile'
-           - **kwargs: based to calc_covs_by_tile()
+    #def bootstrap_replicate_covs(self, B, alpha=0.05, keep_seqids=None, 
+    #                             return_straps=False, ci_method='pivot', **kwargs):
+    #    """
+    #    Wrapper around block_bootstrap_temporal_covs().
+    #    Params: 
+    #       - B: number of bootstraps
+    #       - alpha: α level
+    #       - bootstrap_replicates: whether the R replicates are resampled as well, and 
+    #          covariance is averaged over these replicates.
+    #       - replicate: only bootstrap the covariances for a single replicate (cannot be used 
+    #          with bootstrap_replicates).
+    #       - average_replicates: whether to average across all replicates.
+    #       - keep_seqids: which seqids to include in bootstrap; if None, all are used.
+    #       - return_straps: whether to return the actual bootstrap vectors.
+    #       - ci_method: 'pivot' or 'percentile'
+    #       - **kwargs: based to calc_covs_by_tile()
  
-        """
-        raise ValueError("not implemented")
-        # this is still under development
-        covs = stack_replicate_covs_by_group(self.calc_covs_by_tile(**kwargs), self.R, self.T)
-        return block_bootstrap_temporal_covs(covs, 
-                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
-                     B=B, alpha=alpha, 
-                     bootstrap_replicates=False,
-                     average_replicates=False,
-                     keep_seqids=keep_seqids, return_straps=return_straps, 
-                     ci_method=ci_method)
+    #    """
+    #    raise ValueError("not implemented")
+    #    # this is still under development
+    #    covs = stack_replicate_covs_by_group(self.calc_covs_by_tile(**kwargs), self.R, self.T)
+    #    return block_bootstrap_temporal_covs(covs, 
+    #                 block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
+    #                 B=B, alpha=alpha, 
+    #                 bootstrap_replicates=False,
+    #                 average_replicates=False,
+    #                 keep_seqids=keep_seqids, return_straps=return_straps, 
+    #                 ci_method=ci_method)
 
 
-    def bootstrap_temporal_covs(self, B, alpha=0.05, bootstrap_replicates=False,
-                                replicate=None, average_replicates=False, 
-                                keep_seqids=None, return_straps=False,
-                                ci_method='pivot', **kwargs):
-        """
-        Wrapper around block_bootstrap_temporal_covs().
-        Params: 
-           - B: number of bootstraps
-           - alpha: α level
-           - bootstrap_replicates: whether the R replicates are resampled as well, and 
-              covariance is averaged over these replicates.
-           - replicate: only bootstrap the covariances for a single replicate (cannot be used 
-              with bootstrap_replicates).
-           - average_replicates: whether to average across all replicates.
-           - keep_seqids: which seqids to include in bootstrap; if None, all are used.
-           - return_straps: whether to return the actual bootstrap vectors.
-           - ci_method: 'pivot' or 'percentile'
-           - **kwargs: based to calc_covs_by_tile()
+    #def bootstrap_temporal_covs(self, B, alpha=0.05, bootstrap_replicates=False,
+    #                            replicate=None, average_replicates=False, 
+    #                            keep_seqids=None, return_straps=False,
+    #                            ci_method='pivot', **kwargs):
+    #    """
+    #    Wrapper around block_bootstrap_temporal_covs().
+    #    Params: 
+    #       - B: number of bootstraps
+    #       - alpha: α level
+    #       - bootstrap_replicates: whether the R replicates are resampled as well, and 
+    #          covariance is averaged over these replicates.
+    #       - replicate: only bootstrap the covariances for a single replicate (cannot be used 
+    #          with bootstrap_replicates).
+    #       - average_replicates: whether to average across all replicates.
+    #       - keep_seqids: which seqids to include in bootstrap; if None, all are used.
+    #       - return_straps: whether to return the actual bootstrap vectors.
+    #       - ci_method: 'pivot' or 'percentile'
+    #       - **kwargs: based to calc_covs_by_tile()
  
-        """
-        covs = stack_temporal_covs_by_group(self.calc_covs_by_tile(**kwargs), self.R, self.T)
-        return block_bootstrap_temporal_covs(covs, 
-                     block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
-                     B=B, alpha=alpha, 
-                     bootstrap_replicates=bootstrap_replicates, 
-                     average_replicates=average_replicates,
-                     keep_seqids=keep_seqids, return_straps=return_straps, 
-                     ci_method=ci_method)
+    #    """
+    #    covs = stack_temporal_covs_by_group(self.calc_covs_by_tile(**kwargs), self.R, self.T)
+    #    return block_bootstrap_temporal_covs(covs, 
+    #                 block_indices=self.tile_indices, block_seqids=self.tile_df['seqid'].values,
+    #                 B=B, alpha=alpha, 
+    #                 bootstrap_replicates=bootstrap_replicates, 
+    #                 average_replicates=average_replicates,
+    #                 keep_seqids=keep_seqids, return_straps=return_straps, 
+    #                 ci_method=ci_method)
 
 
     def bootstrap_G(self, B, abs=False, alpha=0.05, keep_seqids=None, 

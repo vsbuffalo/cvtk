@@ -52,6 +52,7 @@
 \newcommand{\cf}{\emph{cf.} }
 \DeclareMathOperator{\var}{Var}
 \DeclareMathOperator{\cov}{Cov}
+\DeclareMathOperator{\flt}{\mathrm{flat}}
 \DeclareMathOperator{\T}{{\mathrm{T}}}
 \newcommand{\vect}[1]{\mathbf{#1}}
 \newcommand{\nssh}{SSH_n}
@@ -140,12 +141,22 @@ later timepoint $t$ (the column of the matrix). For each row, the covariances
 at first are positive, and then decay towards zero as expected when directional
 selection affects linked variants' frequency trajectories until ultimately
 linkage disequilibrium and additive genetic variance for decay
-\parencite{Buffalo2019-io}.
+\parencite{Buffalo2019-io}. Note that per replicate, the signal is a bit
+noisier; see Supplementary Figures XXX.
 
+While the presence of positive temporal covariances is consistent with linked
+selection affecting allele frequencies over time, this measure not easily
+interpretable. Alternatively, we can quantify the impact of linked selection
+through the ratio of total covariance in allele frequency change to the total
+variance in allele frequency change. Since the total variation in allele
+frequency change can be decomposed into variance and covariance components,
+$\var(p_t - p_0) = \sum_{i \ne j} \cov(\Delta p_i, \Delta p_j) / \var(p_t -
+p_0)$, and the covariances are zero when only drift acts, this is a
+conservative measure of how much of the variance in allele frequency change is
+caused by linked selection \parencite{Buffalo2019-io}. Since timepoints every
+ten generations were sequenced, we cannot directly estimate the temporal
+covariances 
 
-we can calculate the temporal
-covariances between an initial starting reference generation ($s = \{0, 10, 20,
-\ldots, 50\})$.
 
 \begin{figure}[!ht]
   \centering
@@ -327,13 +338,70 @@ noise variance term of $\var(\widetilde{p}_{t+1})$, so we add that back in.
 
 \subsection{Variance-Covariance Matrix Correction}
 
-With frequency collected at $\tau$ timepoints across $R$ replicate populations
-at $L$ loci, we have an $R \times \tau \times L$ array $\mathbf{F}$ of allele
-frequencies and $\mathbf{D}$ array of sequencing depths. We calculate the 
+With frequency collected at $T+1$ timepoints across $R$ replicate populations
+at $L$ loci, we have $\mathbf{F}$ of allele frequencies, $\mathbf{D}$ array of
+sequencing depths, and a $\mathbf{N}$ array of the number of individuals
+sequenced, each of dimension $R \times (T+1) \times L$. We calculate the array
+$\mathbf{\Delta F}$ which contains the allele frequency changes between
+adjacent generations, and has dimension $R \times T \times L$. The operation
+$\flt(\mathbf{\Delta}\mathbf{F})$ flattens this array to a $(R \cdot
+T) \times L$ matrix, such that rows are grouped by replicate, e.g. for
+timepoint $t$, replicate $r$, and locus $l$ and allele frequencies $p_{t, r}$,
+for a single locus the entries are 
 
+% \begin{align}
+%   \mathbf{\Delta F} &= 
+%                     &\begin{bmatrix} 
+%     p_{1, 0, 0} - p_{0, 0, 0} & p_{2, 0, 0} - p_{1, 0, 0} & \ldots & p_{1, 1, 0} - p_{0, 1, 0} & p_{2, 1, 0} - p_{1, 1, 0} & \ldots & p_{T+1, R, 0} - p_{T, R, 0}  \\
+%     p_{1, 0, 1} - p_{0, 0, 1} & p_{2, 0, 1} - p_{1, 0, 1} & \ldots & p_{1, 1, 1} - p_{0, 1, 1} & p_{2, 1, 1} - p_{1, 1, 1} & \ldots & p_{T+1, R, 1} - p_{T, R, 1}  \\
+%     \vdots & \vdots & \ddots & \vdots & \vdots & \ddots & \vdots  \\
+%     p_{1, 0, L} - p_{0, 0, L} & p_{2, 0, L} - p_{1, 0, L} & \ldots & p_{1, 1, L} - p_{0, 1, L} & p_{2, 1, L} - p_{1, 1, L} & \ldots & p_{T+1, R, L} - p_{T, R, L}  \\
+%   \end{bmatrix} 
+% \end{align}
 
-change the
-dimensionality of
+\begin{align}
+    \flt(\mathbf{\Delta F}) &=
+                    &\begin{bmatrix} 
+    \Delta p_{1, 0, 0} & \Delta p_{2, 0, 0} & \ldots & \Delta p_{1, 1, 0} & \Delta p_{2, 1, 0} & \ldots & \Delta p_{T, R, 0}  \\
+    \Delta p_{1, 0, 1} & \Delta p_{2, 0, 1} & \ldots & \Delta p_{1, 1, 1} & \Delta p_{2, 1, 1} & \ldots & \Delta p_{T, R, 1}  \\
+    \vdots & \vdots & \ddots & \vdots & \vdots & \ddots & \vdots  \\
+    \Delta p_{1, 0, L} & \Delta p_{2, 0, L} & \ldots & \Delta p_{1, 1, L} & \Delta p_{2, 1, L} & \ldots & \Delta p_{T, R, L}  \\
+  \end{bmatrix} 
+\end{align}
+
+where each $\Delta p_{t, r, l} = p_{t+1, r, l} - p_{t, r, l}$. Then, the sample
+temporal-replicate covariance matrix $\mathbf{Q}'$ calculated on
+$\flt(\mathbf{\Delta F})$ is a $(R \cdot T) \times (R \cdot T)$
+matrix. Given the bias of the sample covariance of allele frequency changes, we
+calculated an expected bias matrix $\mathbf{B}$, averaging over loci,
+
+\begin{align}
+  \mathbf{B} = \frac{1}{L} \sum_{l=1}^L \frac{\mathbf{h}_l}{2} \circ \left( \frac{1}{\mathbf{d}_l} + \frac{1}{2\mathbf{n}_l} + \frac{1}{2\mathbf{d}_l \circ \mathbf{n}_l} \right)
+\end{align}
+
+where $\circ$ denotes elementwise product, and $\mathbf{h}_l$, $\mathbf{d}_l$,
+and $\mathbf{n}_l$, are rows corresponding to locus $l$ of the unbiased
+heterozygosity arrays $\mathbf{H}$, depth matrix $\mathbf{D}$, and number of
+diploids matrix $\mathbf{N}$. The unbiased $R \times (T+1) \times L$
+heterozygosity array can be calculated as  
+
+\begin{align}
+  \mathbf{H} = \frac{2 \mathbf{D} \circ \mathbf{N} }{ (\mathbf{D}-1) \circ (\mathbf{N} -1)} \circ \mathbf{F} \circ (1-\mathbf{F})
+\end{align}
+
+Thus, $\mathbf{B}$ is a $R \times (T+1)$ matrix. From XXX, we know that the
+temporal variances and covariances require a correction, 
+
+\begin{align}
+  \mathbf{Q} = \mathbf{Q}' - \mathrm{diag}(\flt(\mathbf{B}_{\cdot,2:(T+1)})) - \mathrm{diag}(\flt(\mathbf{B}_{\cdot, 1:T})) + \mathrm{offdiag}_1(\flt(\mathbf{B}_{\cdot, 2:T})) + \mathrm{offdiag}_{-1}(\flt(\mathbf{B}_{\cdot, 2:T}))
+\end{align}
+
+where $\mathrm{diag}(\mathbf{x})$ is an operation that takes the vector
+$\mathbf{x}$ and places them along the diagonal of a matrix. Similarly,
+$\mathrm{offdiag}_{k}(\mathbf{x})$ places vector $\mathbf{x}$ along the
+offdiagonal where for row $i$, and column $j$, $j-i = k$. We represent subset
+of columns $s$ through $t$ of a matrix $\mathbf{B}$ as $\mathbf{B}_{\cdot,
+s:t}$.
 
 \subsection{Block Bootstrap Procedure}
 \label{supp:block-bootstrap}

@@ -42,7 +42,6 @@ def weighted_mean(array, weights, axis=0):
 
 def block_bootstrap_ratio_averages(blocks_numerator, blocks_denominator, 
                                    block_indices, block_seqids, B, estimator, 
-                                   depths=None, diploids=None, 
                                    alpha=0.05, keep_seqids=None, return_straps=False,
                                    ci_method='pivot', progress_bar=False, **kwargs):
     """
@@ -78,8 +77,6 @@ def block_bootstrap_ratio_averages(blocks_numerator, blocks_denominator,
     # number of samples in resample
     nblocks = len(blocks)
     straps = list()
-    group_freqs = list()
-    group_depths = None if depths is None else []
     
     for b in B_range:
         bidx = np.random.choice(blocks, size=nblocks, replace=True)

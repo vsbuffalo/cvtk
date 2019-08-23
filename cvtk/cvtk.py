@@ -269,7 +269,6 @@ class TiledTemporalFreqs(TemporalFreqs):
         return block_bootstrap_ratio_averages(covs, het_denoms,
                                               block_indices=self.tile_indices, 
                                               block_seqids=self.tile_df['seqid'].values,
-                                              diploids=self.diploids,
                                               estimator=cov_estimator,
                                               B=B, alpha=alpha, 
                                               progress_bar=progress_bar,

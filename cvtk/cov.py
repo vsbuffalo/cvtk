@@ -198,7 +198,7 @@ def cov_by_group(groups, freqs, depths=None, diploids=None, standardize=True,
                  bias_correction=True, deltas=None, use_masked=False, 
                  share_first=False, return_ratio_parts=False,
                  progress_bar=False):
-    group_depths, group_diploids, group_deltas = None, None, None
+    group_depths, group_deltas = None, None
     covs = []
     het_denoms = [] # incase return_ratio_parts=True
     groups_iter = groups
@@ -214,7 +214,7 @@ def cov_by_group(groups, freqs, depths=None, diploids=None, standardize=True,
             group_deltas = view_along_axis(deltas, indices, 2)
         res = temporal_replicate_cov(group_freqs,
                                      depths=group_depths, 
-                                     diploids=group_diploids,
+                                     diploids=diploids,
                                      bias_correction=bias_correction, 
                                      standardize=standardize,
                                      use_masked=use_masked,
@@ -226,7 +226,7 @@ def cov_by_group(groups, freqs, depths=None, diploids=None, standardize=True,
             covs.append(cov)
             het_denoms.append(het_denom)
         else:
-            covs.append(res)          
+            covs.append(res)
     if return_ratio_parts:
         return covs, het_denoms
     return covs
@@ -331,6 +331,7 @@ def temporal_replicate_cov(freqs, depths=None, diploids=None, center=True,
     ave_bias += np.nanmean(0.5 * hets * (diploid_correction + depth_correction), axis=2)
     var_correction += (- ave_bias[:, :-1] - ave_bias[:, 1:]).reshape(RxT)
     if share_first:
+        #import pdb; pdb.set_trace()
         cov = cov - ave_bias[0, 0]
     # the covariance correction is a bit trickier: it's off diagonal elements, but 
     # after every Tth entry does not need a correction, as it's a between replicate

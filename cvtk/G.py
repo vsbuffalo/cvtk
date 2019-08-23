@@ -49,7 +49,7 @@ def G_estimator(cov, total_var, average_replicates=False, abs=False):
     return G_array
 
 
-def replicate_cor_coef(array, weights, R, T):
+def replicate_cor_coef(cov, var, R, T):
     """
     E_{A≠B} cov(Δp_{t,A}, Δp_{t,B})
     -----------------------

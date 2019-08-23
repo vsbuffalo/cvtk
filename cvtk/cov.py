@@ -381,7 +381,7 @@ def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True,
                 diploid_correction = diploid_correction + b
     # the bias vector for all timepoints
     hets = calc_hets(freqs, depths=depths, diploids=diploids)[:, (0, t), :]
-    ave_bias += (0.5 * hets * (diploid_correction + depth_correction)).mean(axis=2)
+    ave_bias += np.nanmean(0.5 * hets * (diploid_correction + depth_correction), axis=2)
     var_correction += (- ave_bias[:, 0] - ave_bias[:, 1])
     out =  var_pt_p0 + var_correction
     # in some cases, subtracting off the expected bias leads us to create negative

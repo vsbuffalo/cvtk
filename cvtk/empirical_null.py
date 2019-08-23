@@ -3,7 +3,7 @@ import numpy as np
 from tqdm import tnrange
 
 from cvtk.cov import stack_temporal_covariances, calc_deltas
-from cvtk.cov import covs_by_group, temporal_cov
+from cvtk.cov import cov_by_group, temporal_replicate_cov
 from cvtk.utils import sliceify
 
 
@@ -119,17 +119,17 @@ def calc_covs_empirical_null(freqs, tile_indices, tile_seqids,
             raise ValueError("sign_permute_blocks must be either 'tile' or 'seqid'")
 
         if by_tile:
-            covs = covs_by_group(tile_indices, sliced_freqs, 
+            covs = cov_by_group(tile_indices, sliced_freqs, 
                                  depths=sliced_depths,
                                  diploids=sliced_diploids,
                                  bias_correction=bias_correction, 
                                  deltas=permuted_deltas)
         else:
-            covs = temporal_cov(sliced_freqs, depths=sliced_depths,
-                                diploids=sliced_diploids,
-                                bias_correction=bias_correction,
-                                deltas=permuted_deltas)
-
+            covs = temporal_replicate_cov(sliced_freqs, depths=sliced_depths,
+                                          diploids=sliced_diploids,
+                                          bias_correction=bias_correction,
+                                          deltas=permuted_deltas)
+          
         all_covs.append(covs)
     if by_tile:
         return reshape_empirical_null(all_covs, R, T)

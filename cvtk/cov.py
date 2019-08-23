@@ -194,10 +194,13 @@ def var_by_group(groups, freqs, t=None, depths=None, diploids=None,
     return vars
 
 
-def covs_by_group(groups, freqs, depths=None, diploids=None, standardize=True,
-                  bias_correction=True, deltas=None, progress_bar=False):
+def cov_by_group(groups, freqs, depths=None, diploids=None, standardize=True,
+                 bias_correction=True, deltas=None, use_masked=False, 
+                 share_first=False, return_ratio_parts=False,
+                 progress_bar=False):
     group_depths, group_diploids, group_deltas = None, None, None
     covs = []
+    het_denoms = [] # incase return_ratio_parts=True
     groups_iter = groups
     if progress_bar:
         groups_iter = tqdm_notebook(groups)
@@ -209,13 +212,23 @@ def covs_by_group(groups, freqs, depths=None, diploids=None, standardize=True,
         #    group_diploids = view_along_axis(diploids, indices, 2)
         if deltas is not None:
             group_deltas = view_along_axis(deltas, indices, 2)
-        tile_covs = temporal_replicate_cov(group_freqs,
-                                           depths=group_depths, 
-                                           diploids=group_diploids,
-                                           bias_correction=bias_correction, 
-                                           standardize=standardize,
-                                           deltas=group_deltas)
-        covs.append(tile_covs)          
+        res = temporal_replicate_cov(group_freqs,
+                                     depths=group_depths, 
+                                     diploids=group_diploids,
+                                     bias_correction=bias_correction, 
+                                     standardize=standardize,
+                                     use_masked=use_masked,
+                                     share_first=share_first,
+                                     return_ratio_parts=return_ratio_parts,
+                                     deltas=group_deltas)
+        if return_ratio_parts:
+            cov, het_denom = res
+            covs.append(cov)
+            het_denoms.append(het_denom)
+        else:
+            covs.append(res)          
+    if return_ratio_parts:
+        return covs, het_denoms
     return covs
 
 
@@ -235,7 +248,9 @@ def stack_replicate_covs_by_group(covs, R, T, stack=True, **kwargs):
 
 
 def temporal_replicate_cov(freqs, depths=None, diploids=None, center=True, 
-                           bias_correction=True, standardize=True, deltas=None, warn=False):
+                           bias_correction=True, standardize=True, deltas=None, 
+                           use_masked=False, share_first=False, 
+                           return_ratio_parts=False, warn=False):
     """
     Params:
       ...
@@ -280,13 +295,20 @@ def temporal_replicate_cov(freqs, depths=None, diploids=None, center=True,
         assert(diploids.shape == (R, T+1, 1))
 
     # calculate variance-covariance matrix
-    cov = np.cov(deltas, bias=True)
+    if use_masked:
+        deltas_masked = np.ma.masked_invalid(deltas)
+        cov = np.ma.cov(deltas_masked, bias=True).data
+    else:
+        cov = np.cov(deltas, bias=True)
 
     if not bias_correction:
+        if return_ratio_parts:
+            return cov, het_denom
         if standardize:
             with np.errstate(divide=warn_type, invalid=warn_type):
                 cov = cov / het_denom
         return cov
+        
 
     # correction arrays — these are built up depending on input
     ave_bias = np.zeros((R, (T+1)))
@@ -306,8 +328,10 @@ def temporal_replicate_cov(freqs, depths=None, diploids=None, center=True,
             if depths is not None:
                 diploid_correction = diploid_correction + 1 / (2 * depths * diploids)
     # the bias vector for all timepoints
-    ave_bias += (0.5 * hets * (diploid_correction + depth_correction)).mean(axis=2)
+    ave_bias += np.nanmean(0.5 * hets * (diploid_correction + depth_correction), axis=2)
     var_correction += (- ave_bias[:, :-1] - ave_bias[:, 1:]).reshape(RxT)
+    if share_first:
+        cov = cov - ave_bias[0, 0]
     # the covariance correction is a bit trickier: it's off diagonal elements, but 
     # after every Tth entry does not need a correction, as it's a between replicate
     # covariance. We append a zero column, and then remove the last element.
@@ -318,6 +342,8 @@ def temporal_replicate_cov(freqs, depths=None, diploids=None, center=True,
             np.diag(covar_correction, k=-1))
 
     if standardize:
+        if return_ratio_parts:
+            return cov, het_denom
         with np.errstate(divide=warn_type, invalid=warn_type):
             cov = cov / het_denom
     return cov

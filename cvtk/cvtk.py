@@ -12,9 +12,10 @@ from cvtk.utils import process_samples, view_along_axis, validate_diploids
 from cvtk.cov import stack_replicate_covs_by_group, stack_temporal_covariances
 from cvtk.cov import temporal_replicate_cov, cov_by_group, calc_hets
 from cvtk.cov import total_variance, var_by_group
-from cvtk.cov import stack_temporal_covs_by_group
+from cvtk.cov import stack_temporal_covs_by_group, stack_replicate_covs_by_group
 from cvtk.bootstrap import block_bootstrap_ratio_averages, cov_estimator
 from cvtk.G import calc_G, G_estimator
+from cvtk.G import convergence_corr_numerator, convergence_corr_denominator, convergence_corr
 from cvtk.diagnostics import calc_diagnostics
 from cvtk.empirical_null import calc_covs_empirical_null
 
@@ -97,6 +98,10 @@ class TemporalFreqs(object):
                                       bias_correction=bias_correction, 
                                       share_first=self.share_first,
                                       standardize=standardize, use_masked=use_masked)
+
+    def convergence_corr(self):
+        gw_covs = self.calc_cov()
+        return convergence_corr(gw_covs, self.R, self.T)
 
     def calc_cov_by_group(self, groups, bias_correction=True, standardize=True, 
                            use_masked=False, return_ratio_parts=False,
@@ -213,7 +218,8 @@ class TiledTemporalFreqs(TemporalFreqs):
         tile_hets = []
         hets = calc_hets(self.freqs, self.depths, self.diploids, bias=bias)
         for indices in self.tile_indices:
-            het = view_along_axis(hets, indices, 0)
+            #het = view_along_axis(hets, indices, 0)
+            het = hets[..., indices]
             if average:
                 het = het.mean()
             tile_hets.append(het)
@@ -245,7 +251,8 @@ class TiledTemporalFreqs(TemporalFreqs):
         seqids = self.tile_df['seqid'].values
         for use_correction in [True, False]:
             covs = self.calc_cov_by_tile(bias_correction=use_correction)
-            res = calc_diagnostics(covs, mean_hets, seqids, tile_depths, exclude_seqids=exclude_seqids)
+            res = calc_diagnostics(covs, mean_hets, seqids, tile_depths, 
+                                   exclude_seqids=exclude_seqids)
             models[use_correction], xpreds[use_correction], ypreds[use_correction], df = res
             df['correction'] = use_correction
             dfs.append(df)
@@ -277,6 +284,28 @@ class TiledTemporalFreqs(TemporalFreqs):
                                               # kwargs passed directly to cov_estimator
                                               average_replicates=average_replicates,
                                               R=self.R, T=self.T)
+
+
+    def bootstrap_convergence_corr(self, B, alpha=0.05, keep_seqids=None, 
+                           ci_method='pivot', progress_bar=False, **kwargs):
+        """
+        E_{A≠B} cov(Δp_{t,A}, Δp_{t,B})
+        -----------------------
+        E_{A≠B} sqrt(var(Δp_{t,A}) var(Δp_{t,B}))
+        """
+        covs = self.calc_cov_by_tile(standardize=False)
+        replicate_covs = stack_replicate_covs_by_group(covs, self.R, self.T, upper_only=False)
+        temporal_covs = stack_temporal_covs_by_group(covs, self.R, self.T)
+        nums, denoms = convergence_corr_numerator(replicate_covs), convergence_corr_denominator(temporal_covs)
+        return block_bootstrap_ratio_averages(nums, denoms,
+                     block_indices=self.tile_indices, 
+                     block_seqids=self.tile_df['seqid'].values,
+                     estimator=np.divide,
+                     B=B, 
+                     alpha=alpha, 
+                     keep_seqids=keep_seqids, return_straps=False, 
+                     ci_method=ci_method, progress_bar=progress_bar)
+
 
     def bootstrap_G(self, B, abs=False, alpha=0.05, keep_seqids=None, 
                     average_replicates=False, ci_method='pivot', 

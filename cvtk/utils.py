@@ -216,6 +216,7 @@ def extract_temporal_cov_diagonals(x, k=0, average_replicates=False, rep=None):
 
 
 def integerize(x):
+    x = str(x)
     vals = sorted(set(x))
     valmap = {val:i for i, val in enumerate(vals)}
     return [valmap[v] for v in x]

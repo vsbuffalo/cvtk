@@ -5,15 +5,19 @@ import allel
 from cvtk.utils import integerize
 
 
-def correction_diagnostic_plot(diag):
+def correction_diagnostic_plot(diag, color=True):
     corr_df, models, xpreds, ypreds = diag
     fig, ax = plt.subplots(ncols=2, nrows=2)
     labelx, labely = 0.05, 0.9
     before = corr_df[corr_df['correction'] == False]
     after = corr_df[corr_df['correction'] == True]
-    ax[0, 0].scatter(before['depth'], before['diag'], c=integerize(before['seqid']), s=5)
+    if color:
+        ax[0, 0].scatter(before['depth'], before['diag'], c=integerize(before['seqid']), s=5)
+        ax[0, 1].scatter(before['depth'], after['diag'], c=integerize(before['seqid']), s=5)
+    else:
+        ax[0, 0].scatter(before['depth'], before['diag'], s=5)
+        ax[0, 1].scatter(before['depth'], after['diag'], s=5)
     ax[0, 0].plot(xpreds[False], ypreds[False][0], 'r-')
-    ax[0, 1].scatter(before['depth'], after['diag'], c=integerize(before['seqid']), s=5)
     ax[0, 1].plot(xpreds[True], ypreds[True][0], 'r-')
     ax[0, 0].annotate('before correction', xy=(labelx, labely), xycoords='axes fraction')
     ax[0, 0].set_ylabel('variance')
@@ -21,12 +25,18 @@ def correction_diagnostic_plot(diag):
     ax[0, 1].set_xlabel('average depth per window')
     ax[0, 1].annotate('after correction', xy=(labelx, labely), xycoords='axes fraction')
     
-    ax[1, 0].scatter(before['depth'], before['offdiag'], c=integerize(before['seqid']), zorder=2, s=5)
     ax[1, 0].plot(xpreds[False], ypreds[False][1], 'r-')
     ax[1, 0].annotate('before correction', xy=(labelx, labely), xycoords='axes fraction')
     ax[1, 0].axhline(y=0, color='99', zorder=1)
     ax[1, 0].set_ylabel('covariance')
-    ax[1, 1].scatter(before['depth'], after['offdiag'], c=integerize(before['seqid']), zorder=2, s=5)
+    if color:
+        ax[1, 0].scatter(before['depth'], before['offdiag'], c=integerize(before['seqid']), 
+                         zorder=2, s=5)
+        ax[1, 1].scatter(before['depth'], after['offdiag'], c=integerize(before['seqid']), 
+                         zorder=2, s=5)
+    else:
+        ax[1, 0].scatter(before['depth'], before['offdiag'], zorder=2, s=5)
+        ax[1, 1].scatter(before['depth'], after['offdiag'], zorder=2, s=5)
     ax[1, 1].plot(xpreds[True], ypreds[True][1], 'r-')
     ax[1, 1].annotate('after correction', xy=(labelx, labely), xycoords='axes fraction')
     ax[1, 1].axhline(y=0, color='99', zorder=1)

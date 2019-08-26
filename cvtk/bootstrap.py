@@ -41,7 +41,7 @@ def weighted_mean(array, weights, axis=0):
 
 
 def block_bootstrap_ratio_averages(blocks_numerator, blocks_denominator, 
-                                   block_indices, block_seqids, B, estimator, 
+                                   block_indices, block_seqids, B, estimator=np.divide, 
                                    alpha=0.05, keep_seqids=None, return_straps=False,
                                    ci_method='pivot', progress_bar=False, **kwargs):
     """

@@ -238,6 +238,13 @@ def stack_temporal_covs_by_group(covs, R, T, stack=True, **kwargs):
         return np.stack(res)
     return res
 
+def stack_replicate_covs_by_group(covs, R, T, stack=True, **kwargs):
+    res = [stack_replicate_covariances(c, R, T, stack=stack, **kwargs) for c in covs]
+    if stack:
+        return np.stack(res)
+    return res
+
+
 
 def stack_replicate_covs_by_group(covs, R, T, stack=True, **kwargs):
     res = [stack_replicate_covariances(c, R, T, stack=stack, **kwargs) for c in covs]
@@ -386,10 +393,10 @@ def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True,
     var_correction += (- ave_bias[:, 0] - ave_bias[:, 1])
     out =  var_pt_p0 + var_correction
     # in some cases, subtracting off the expected bias leads us to create negative
-    # covariances. In these cases, we don't apply the correction.
-    if warn:
-        warnings.warn("Some bias-corrected variances were negative. The bias correction was not applied.")
-        out[out < 0] = var_pt_p0
+    # covariances. In th and ese cases, we don't apply the correction.
+    if warn and np.any(out <= 0):
+        msg = "Some bias-corrected variances were negative!"
+        warnings.warn(msg)
     if standardize:
         out = out / np.nanmean(hets[:, 0, :], axis=1)
     return out

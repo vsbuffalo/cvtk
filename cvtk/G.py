@@ -1,5 +1,6 @@
 import numpy as np
 from cvtk.bootstrap import weighted_mean
+from cvtk.cov import stack_replicate_covariances, stack_temporal_covariances
 
 def calc_G(cov, total_var, end=None, abs=False):
     """
@@ -49,19 +50,31 @@ def G_estimator(cov, total_var, average_replicates=False, abs=False):
     return G_array
 
 
-def replicate_cor_coef(cov, var, R, T):
+def convergence_corr(covs, R, T):
+     replicate_covs = stack_replicate_covariances(covs, R, T, upper_only=False)
+     temporal_covs = stack_temporal_covariances(covs, R, T)
+     return (convergence_corr_numerator(replicate_covs[np.newaxis, ...]) / 
+             convergence_corr_denominator(temporal_covs[np.newaxis, ...]))
+
+def convergence_corr_numerator(stacked_replicate_covs):
     """
-    E_{A≠B} cov(Δp_{t,A}, Δp_{t,B})
-    -----------------------
-    E_{A≠B} sqrt(var(Δp_{t,A}) var(Δp_{t,B}))
+    E_{A≠B} cov(Δp_{t,A}, Δp_{s,B})
     """
-    RxT, RxT = array.shape
-    #rep_mats = stack_replicate_covs_by_group(array, R, T)
-    #temp_mats = stack_temporal_covs_by_group(array, R, T)  
-    rep_row, rep_col = replicate_block_matrix_indices(R, T)
-    for A in np.arange(R):
-        for B in np.arange(A, R):
-            if A == B:
-                continue
-            (rep_row == A) & (rep_col == B)
-             
+    assert(stacked_replicate_covs.ndim == 4)
+    return np.nanmean(stacked_replicate_covs, axis=3)
+
+def convergence_corr_denominator(stacked_temporal_covs):
+    """
+    E_{A≠B} sqrt(var(Δp_{t,A}) var(Δp_{s,B}))
+    """
+    assert(stacked_temporal_covs.ndim == 4)
+    nblocks, T, T_, R = stacked_temporal_covs.shape
+    vars = np.diagonal(stacked_temporal_covs, offset=0, axis1=1, axis2=2)
+    # get the outer product of the last dimension 🤞
+    varmat = np.einsum('bri,bqj->brqij', vars, vars)
+    # the following gets all A, B replicate pairs where A ≠ B
+    tr, tc = np.triu_indices(R, k=1)
+    sdmat = np.sqrt(varmat[:, tr, tc, :, :].mean(axis=1))
+    return sdmat
+    
+ 

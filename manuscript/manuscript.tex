@@ -167,7 +167,7 @@ covariances
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=\textwidth]{}
+  \includegraphics[width=\textwidth]{figures/figure-2.pdf}
   \caption{}
   \label{}
 \end{figure}
@@ -339,15 +339,16 @@ noise variance term of $\var(\widetilde{p}_{t+1})$, so we add that back in.
 \subsection{Variance-Covariance Matrix Correction}
 
 With frequency collected at $T+1$ timepoints across $R$ replicate populations
-at $L$ loci, we have $\mathbf{F}$ of allele frequencies, $\mathbf{D}$ array of
-sequencing depths, and a $\mathbf{N}$ array of the number of individuals
-sequenced, each of dimension $R \times (T+1) \times L$. We calculate the array
-$\mathbf{\Delta F}$ which contains the allele frequency changes between
-adjacent generations, and has dimension $R \times T \times L$. The operation
-$\flt(\mathbf{\Delta}\mathbf{F})$ flattens this array to a $(R \cdot
-T) \times L$ matrix, such that rows are grouped by replicate, e.g. for
-timepoint $t$, replicate $r$, and locus $l$ and allele frequencies $p_{t, r}$,
-for a single locus the entries are 
+at $L$ loci, we have $\mathbf{F}$ of allele frequencies, $\mathbf{D}$
+multidimensional array of sequencing depths, and a $\mathbf{N}$
+multidimensional array of the number of individuals sequenced, each of
+dimension $R \times (T+1) \times L$.  We calculate the array $\mathbf{\Delta
+F}$ which contains the allele frequency changes between adjacent generations,
+and has dimension $R \times T \times L$.  The operation
+$\flt(\mathbf{\Delta}\mathbf{F})$ flattens this array to a $(R \cdot T) \times
+L$ matrix, such that rows are grouped by replicate, e.g. for timepoint $t$,
+replicate $r$, and locus $l$ and allele frequencies $p_{t, r}$, for a single
+locus the entries are 
 
 % \begin{align}
 %   \mathbf{\Delta F} &= 
@@ -371,8 +372,25 @@ for a single locus the entries are
 
 where each $\Delta p_{t, r, l} = p_{t+1, r, l} - p_{t, r, l}$. Then, the sample
 temporal-replicate covariance matrix $\mathbf{Q}'$ calculated on
-$\flt(\mathbf{\Delta F})$ is a $(R \cdot T) \times (R \cdot T)$
-matrix. Given the bias of the sample covariance of allele frequency changes, we
+$\flt(\mathbf{\Delta F})$ is a $(R \cdot T) \times (R \cdot T)$ matrix, with
+the $R$ temporal-covariance block submatrices along the diagonal, and the
+$R(R-1)$ replicate-covariance submatrices matrices in the upper and lower
+triangles of the matrix,
+
+\begin{align}
+	\mathbf{Q}' &= 
+  \begin{bmatrix} 
+		\mathbf{Q}_{1,1}' & \mathbf{Q}_{1, 2}' & \ldots & \mathbf{Q}_{1, R}' \\ 
+		\mathbf{Q}_{2,1}' & \mathbf{Q}_{2, 2}' & \ldots & \mathbf{Q}_{2, R}' \\ 
+		\vdots & \vdots & \ddots & \vdots \\
+		\mathbf{Q}_{R,1}' & \mathbf{Q}_{R, 2}' & \ldots & \mathbf{Q}_{R, R}' \\ 
+  \end{bmatrix} 
+\end{align}
+%
+where each submatrix $\mathbf{Q}_{i,j}'$ is the $T \times T$ sample covariance
+matrix for replicates $i$ and $j$.  
+
+Given the bias of the sample covariance of allele frequency changes, we
 calculated an expected bias matrix $\mathbf{B}$, averaging over loci,
 
 \begin{align}
@@ -389,8 +407,23 @@ heterozygosity array can be calculated as
   \mathbf{H} = \frac{2 \mathbf{D} \circ \mathbf{N} }{ (\mathbf{D}-1) \circ (\mathbf{N} -1)} \circ \mathbf{F} \circ (1-\mathbf{F})
 \end{align}
 
-Thus, $\mathbf{B}$ is a $R \times (T+1)$ matrix. From XXX, we know that the
-temporal variances and covariances require a correction, 
+where division here is elementwise. Thus, $\mathbf{B}$ is a $R \times (T+1)$
+matrix. As explained in XXX, each temporal covariance submatrix
+$\mathbf{Q}_{r,r}$ requires two corrections.
+
+\begin{equation}
+	\[
+	Q_{i,j} =  
+		\begin{dcases}
+			Q_{t,s}' - b_{t} - b_{s}, & \text{if  } t = s \\
+			Q_{t,s}' + b_{}, & \text{if  } |i - j| = 1 \\
+		\end{cases}
+	\]
+\end{equation}
+
+$Q_{i,j} = \cov(\Delta p_i, \Delta p_j)$
+
+Additionally, in some study designs, the frequencies from the first timepoint 
 
 \begin{align}
   \mathbf{Q} = \mathbf{Q}' - \mathrm{diag}(\flt(\mathbf{B}_{\cdot,2:(T+1)})) - \mathrm{diag}(\flt(\mathbf{B}_{\cdot, 1:T})) + \mathrm{offdiag}_1(\flt(\mathbf{B}_{\cdot, 2:T})) + \mathrm{offdiag}_{-1}(\flt(\mathbf{B}_{\cdot, 2:T}))

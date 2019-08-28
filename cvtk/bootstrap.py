@@ -43,6 +43,7 @@ def weighted_mean(array, weights, axis=0):
 
 def block_bootstrap_ratio_averages(blocks_numerator, blocks_denominator, 
                                    block_indices, block_seqids, B, estimator=np.divide, 
+                                   statistic=None,
                                    alpha=0.05, keep_seqids=None, return_straps=False,
                                    ci_method='pivot', progress_bar=False, **kwargs):
     """
@@ -58,6 +59,7 @@ def block_bootstrap_ratio_averages(blocks_numerator, blocks_denominator,
     It's assumed that blocks_numerator and blocks_denominator are both multidimension arrays
     with the first dimension being the block (e.g. tile) dimension.
     """
+    That = statistic   # for clarity: read T-hat
     if progress_bar:
         B_range = tnrange(int(B), desc="bootstraps")
     else:
@@ -86,7 +88,8 @@ def block_bootstrap_ratio_averages(blocks_numerator, blocks_denominator,
         stat = estimator(exp_numerator, exp_denominator, **kwargs)
         straps.append(stat)
     straps = np.stack(straps)
-    That = np.mean(straps, axis=0)
+    if That is None:
+        That = np.mean(straps, axis=0)
     if return_straps:
         return straps
     return bootstrap_ci(That, straps, alpha=alpha, method=ci_method)

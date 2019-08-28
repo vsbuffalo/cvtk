@@ -100,3 +100,45 @@ def cov_estimator(cov, het_denom, R, T, average_replicates=False, warn=False):
     else:
         return np.mean(stack_temporal_covariances(cov, R, T), axis=2)
 
+
+flatten = lambda l: [item for sublist in l for item in sublist]
+
+def block_bootstrap(freqs,
+                    block_indices, block_seqids, B, estimator,
+                    alpha=0.05, keep_seqids=None, return_straps=False,
+                    ci_method='pivot', progress_bar=False, **kwargs):
+    """
+    """
+    if progress_bar:
+        B_range = tnrange(int(B), desc="bootstraps")
+    else:
+        B_range = range(int(B))
+
+    # We create the vector of indices to sample with replacement from, excluding 
+    # any blocks with seqids not in keep_seqids.
+    if keep_seqids is not None:
+        blocks = np.array([i for i, seqid in enumerate(block_seqids) 
+                           if seqid in keep_seqids], dtype='uint32')
+    else:
+        blocks = np.array([i for i, seqid in enumerate(block_seqids)], dtype='uint32')
+
+    # Calculate the weights 
+    weights = np.array([len(x) for x in block_indices]) 
+    weights = weights/weights.sum()
+
+    # number of samples in resample
+    nblocks = len(blocks)
+    straps = list()
+    
+    for b in B_range:
+        bidx = np.random.choice(blocks, size=nblocks, replace=True)
+        indices = np.array(flatten([block_indices[b] for b in bidx]))
+        stat = estimator(freqs[..., indices], **kwargs)
+        straps.append(stat)
+    straps = np.stack(straps)
+    That = np.mean(straps, axis=0)
+    if return_straps:
+        return straps
+    return bootstrap_ci(That, straps, alpha=alpha, method=ci_method)
+
+

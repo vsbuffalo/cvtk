@@ -1,6 +1,8 @@
 import numpy as np
 from cvtk.bootstrap import weighted_mean
 from cvtk.cov import stack_replicate_covariances, stack_temporal_covariances
+from cvtk.cov import stack_replicate_covs_by_group, stack_temporal_covs_by_group
+from cvtk.cov import temporal_replicate_cov
 
 def calc_G(cov, total_var, end=None, abs=False):
     """
@@ -50,18 +52,32 @@ def G_estimator(cov, total_var, average_replicates=False, abs=False):
     return G_array
 
 
+def convergence_corr_by_group(covs, R, T):
+     replicate_covs = stack_replicate_covs_by_group(covs, R, T, upper_only=False)
+     temporal_covs = stack_temporal_covs_by_group(covs, R, T)
+     num, denom = (convergence_corr_numerator(replicate_covs),
+                   convergence_corr_denominator(temporal_covs))
+     return num / denom 
+
+def convergence_corr_from_freqs(freqs, depths=None, diploids=None, **kwargs):
+     R, Tp1, L = freqs.shape
+     T = Tp1 - 1
+     covs = temporal_replicate_cov(freqs, depths=depths, diploids=diploids, **kwargs)
+     return convergence_corr(covs, R, T)
+
 def convergence_corr(covs, R, T):
      replicate_covs = stack_replicate_covariances(covs, R, T, upper_only=False)
      temporal_covs = stack_temporal_covariances(covs, R, T)
-     return (convergence_corr_numerator(replicate_covs[np.newaxis, ...]) / 
-             convergence_corr_denominator(temporal_covs[np.newaxis, ...]))
+     num, denom = (convergence_corr_numerator(replicate_covs[np.newaxis, ...]),
+                   convergence_corr_denominator(temporal_covs[np.newaxis, ...]))
+     return num / denom 
 
 def convergence_corr_numerator(stacked_replicate_covs):
     """
     E_{A≠B} cov(Δp_{t,A}, Δp_{s,B})
     """
     assert(stacked_replicate_covs.ndim == 4)
-    return np.nanmean(stacked_replicate_covs, axis=3)
+    return np.mean(stacked_replicate_covs, axis=3)
 
 def convergence_corr_denominator(stacked_temporal_covs):
     """
@@ -70,7 +86,7 @@ def convergence_corr_denominator(stacked_temporal_covs):
     assert(stacked_temporal_covs.ndim == 4)
     nblocks, T, T_, R = stacked_temporal_covs.shape
     vars = np.diagonal(stacked_temporal_covs, offset=0, axis1=1, axis2=2)
-    # get the outer product of the last dimension 🤞
+    # get the outer products over time and replicates
     varmat = np.einsum('bri,bqj->brqij', vars, vars)
     # the following gets all A, B replicate pairs where A ≠ B
     tr, tc = np.triu_indices(R, k=1)

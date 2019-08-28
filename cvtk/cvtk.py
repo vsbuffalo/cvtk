@@ -14,8 +14,10 @@ from cvtk.cov import temporal_replicate_cov, cov_by_group, calc_hets
 from cvtk.cov import total_variance, var_by_group
 from cvtk.cov import stack_temporal_covs_by_group, stack_replicate_covs_by_group
 from cvtk.bootstrap import block_bootstrap_ratio_averages, cov_estimator
-from cvtk.G import calc_G, G_estimator
+from cvtk.bootstrap import block_bootstrap
+from cvtk.G import calc_G, G_estimator, convergence_corr_by_group
 from cvtk.G import convergence_corr_numerator, convergence_corr_denominator, convergence_corr
+from cvtk.G import convergence_corr_from_freqs
 from cvtk.diagnostics import calc_diagnostics
 from cvtk.empirical_null import calc_covs_empirical_null
 
@@ -99,9 +101,14 @@ class TemporalFreqs(object):
                                       share_first=self.share_first,
                                       standardize=standardize, use_masked=use_masked)
 
-    def convergence_corr(self):
-        gw_covs = self.calc_cov()
+    def convergence_corr(self, bias_correction=True):
+        gw_covs = self.calc_cov(standardize=False, bias_correction=bias_correction)
         return convergence_corr(gw_covs, self.R, self.T)
+
+    def convergence_corr_by_group(self, groups, bias_correction=True):
+        covs = self.calc_cov_by_group(groups, standardize=False, bias_correction=bias_correction)
+        return convergence_corr_by_group(covs, self.R, self.T)
+
 
     def calc_cov_by_group(self, groups, bias_correction=True, standardize=True, 
                            use_masked=False, return_ratio_parts=False,
@@ -285,25 +292,47 @@ class TiledTemporalFreqs(TemporalFreqs):
                                               average_replicates=average_replicates,
                                               R=self.R, T=self.T)
 
+    def convergence_corr_by_tile(self, bias_correction=True):
+        return self.convergence_corr_by_group(self.tile_indices, 
+                                              bias_correction=bias_correction)
+
 
     def bootstrap_convergence_corr(self, B, alpha=0.05, keep_seqids=None, 
-                           ci_method='pivot', progress_bar=False, **kwargs):
+                                   ci_method='pivot', progress_bar=False, 
+                                   bias_correction=True, ratio_of_averages=True,
+                                   return_straps=False):
         """
+        Bootstrap the convergence correlation. By default this is calculated as a ratio of
+        averages, 
+
         E_{A≠B} cov(Δp_{t,A}, Δp_{t,B})
         -----------------------
         E_{A≠B} sqrt(var(Δp_{t,A}) var(Δp_{t,B}))
+
+        But if ratio_of_averages = False, blocks of frequencies are sampled, the covariance calculated,
+        and then the convergence correlation is calculated on those.
         """
-        covs = self.calc_cov_by_tile(standardize=False)
+        #covs = self.calc_cov_by_tile(standardize=False, bias_correction=bias_correction)
+        if not ratio_of_averages:
+            return block_bootstrap(self.freqs, B=B, block_indices=self.tile_indices,
+                                   block_seqids=self.tile_df['seqid'].values,
+                                   alpha=alpha, keep_seqids=keep_seqids,
+                                   progress_bar=progress_bar,
+                                   estimator=convergence_corr_from_freqs,
+                                   standardize=False, bias_correction=bias_correction)
+       
+        covs = self.calc_cov_by_tile(bias_correction=bias_correction, standardize=False) 
         replicate_covs = stack_replicate_covs_by_group(covs, self.R, self.T, upper_only=False)
         temporal_covs = stack_temporal_covs_by_group(covs, self.R, self.T)
-        nums, denoms = convergence_corr_numerator(replicate_covs), convergence_corr_denominator(temporal_covs)
+        nums, denoms = (convergence_corr_numerator(replicate_covs),
+                        convergence_corr_denominator(temporal_covs))
         return block_bootstrap_ratio_averages(nums, denoms,
                      block_indices=self.tile_indices, 
                      block_seqids=self.tile_df['seqid'].values,
                      estimator=np.divide,
                      B=B, 
                      alpha=alpha, 
-                     keep_seqids=keep_seqids, return_straps=False, 
+                     keep_seqids=keep_seqids, return_straps=return_straps,
                      ci_method=ci_method, progress_bar=progress_bar)
 
 

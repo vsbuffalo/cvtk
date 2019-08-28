@@ -271,21 +271,25 @@ depicted to the right.}
 \end{figure}
 
 Finally, we observed that in the longest run evolve-and-resequence study we
-analyzed, some temporal covariances appeared to become negative at future
-timepoints, a pattern that could be caused by advantageous fitness backgrounds
-later becoming disadvantageous. The underlying causes could include
-frequency-dependent selection, recombination disassociating beneficial and
-deleterious alleles in repulsion linkage disequilibrium, or an environmental
-change in the direction of selection. Thus far, our analysis has used
-covariances averaged across the entire genome. Averaging over such large
-numbers of loci is necessary to detect a signal of covariance in allele
-frequency changes when both drift (inflated in evolve-and-sequence studies
-which use small population sizes) and sampling variance can create spurious
-covariances. However, the cost of using genome-wide covariances is that the
-signal from regions harboring more additive genetic variance may be washed out
-by noise. This is especially the case with detecting shifts in selection, which
-are likely to be localized depending on the average effect of a region. To
-address this limitation, 
+analyzed \parencite{Barghi2019-qy}, some temporal covariances appeared to
+become negative at future timepoints (see the first two rows in Figure
+\ref{fig:figure-1} A). This could be caused by advantageous fitness backgrounds
+later becoming disadvantageous, either due to frequency-dependent selection,
+recombination breaking up a haplotype with coupled beneficial and deleterious
+alleles, or or an environmental change in the direction of selection. However,
+the signal of a change in the direction of selection may be washed out when we
+calculate genome-wide temporal covariances. Averaging over such large numbers
+of loci is necessary to detect a signal of covariance in allele frequency
+changes when both drift (inflated in evolve-and-sequence studies which use
+small population sizes) and sampling variance can create spurious covariances.
+To address this limitation, we calculated temporal covariances over XXX Mb
+windows, with on average XXX loci. While the covariance of each tile is noisy,
+we can analyze the genome-wide distribution of tile covariances for changes
+through time. We would like to compare the distribution of these tile
+covariances to a neutral expectation, but a theoretically-determined neutral
+null distribution would be inappropriate given complex dependencies across the
+genome due to LD (which can occur over long physical distances in E&R and
+selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). 
 
 
 \begin{figure}[!ht]
@@ -553,5 +557,16 @@ s:t}$.
 
 \subsection{Block Bootstrap Procedure}
 \label{supp:block-bootstrap}
+
+
+\subsection{Correction}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-correction-plot.pdf}
+  \caption{}
+  \label{fig:figure-3}
+\end{figure}
+
+
 
 \end{document}

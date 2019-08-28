@@ -1,5 +1,5 @@
 
-all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf ../../manuscript/figures/figure-3.pdf
+all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf ../../manuscript/figures/figure-3.pdf ../../manuscript/figures/barghi-correction-plot.pdf
 
 ../../manuscript/figures/figure-1.pdf: figure-1.pdf
 		cp figure-1.pdf ../../manuscript/figures/figure-1.pdf
@@ -9,5 +9,8 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 
 ../../manuscript/figures/figure-3.pdf: figure-3.pdf
 		cp figure-3.pdf ../../manuscript/figures/figure-3.pdf
+
+../../manuscript/figures/barghi-correction-plot.pdf: barghi-correction-plot.pdf
+		cp $< $@
 
 

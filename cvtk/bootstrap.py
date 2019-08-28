@@ -5,7 +5,7 @@ from cvtk.utils import view_along_axis
 from cvtk.cov import stack_temporal_covariances, temporal_replicate_cov
 
 
-def bootstrap_ci(estimate, straps, alpha=0.05, method='pivot', stack=True):
+def bootstrap_ci(estimate, straps, alpha=0.05, method='pivot', axis=0, stack=True):
     """
     Return pivot CIs
       This confidence interval returned is a pivotal CIs,
@@ -15,7 +15,8 @@ def bootstrap_ci(estimate, straps, alpha=0.05, method='pivot', stack=True):
        and Q(x) is the empirical x percentile across the bootstraps.
     """
     alpha = 100. * alpha  # because, numpy.
-    qlower, qupper = np.nanpercentile(straps, alpha/2, axis=0), np.nanpercentile(straps, 100-alpha/2, axis=0)
+    qlower, qupper = (np.nanpercentile(straps, alpha/2, axis=axis), 
+                      np.nanpercentile(straps, 100-alpha/2, axis=axis))
     if method == 'percentile':
         CIs = qlower, estimate, qupper
     elif method == 'pivot':

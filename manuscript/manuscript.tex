@@ -105,7 +105,18 @@ note that under the null model where the fitness differences between
 individuals are entirely random and non-heritable (e.g. when selection is not
 acting), both forms of covariances are expected to be zero. 
 
-Explain G.
+\begin{center}
+  \begin{tabular}{l c c c c c c}
+    Study & Species & Selection & Replicates & Pop. Size & Gens. & Timepoints \\ 
+  \hline
+    \textcite{Kelly2019-dc}  & \emph{D. simulans} & lab & 3 & $\sim$1100 & 14 & 2 \\ \hline
+    \textcite{Barghi2019-qy} & \emph{D. simulans} & lab & 10 & $\sim$1000 & 60 & 10 \\ \hline
+    \textcite{Castro2019-uk} & \emph{M. musculus} & \begin{tabular}{c}tibiae length\\control\end{tabular} & \begin{tabular}{c}2\\1\end{tabular} &\begin{tabular}{c}32\\28\end{tabular}  & 20 & 2 \\
+ \hline
+\end{tabular}
+\caption{Table to test captions and labels}
+\label{table:1}
+\end{center}
 
 We first analyzed \textcite{Barghi2019-qy}, an evolve-and-resequence study with
 ten replicate populations exposed to a high temperature environment and evolved
@@ -275,21 +286,22 @@ analyzed \parencite{Barghi2019-qy}, some temporal covariances appeared to
 become negative at future timepoints (see the first two rows in Figure
 \ref{fig:figure-1} A). This could be caused by advantageous fitness backgrounds
 later becoming disadvantageous, either due to frequency-dependent selection,
-recombination breaking up a haplotype with coupled beneficial and deleterious
-alleles, or or an environmental change in the direction of selection. However,
-the signal of a change in the direction of selection may be washed out when we
-calculate genome-wide temporal covariances. Averaging over such large numbers
-of loci is necessary to detect a signal of covariance in allele frequency
-changes when both drift (inflated in evolve-and-sequence studies which use
-small population sizes) and sampling variance can create spurious covariances.
-To address this limitation, we calculated temporal covariances over XXX Mb
-windows, with on average XXX loci. While the covariance of each tile is noisy,
-we can analyze the genome-wide distribution of tile covariances for changes
-through time. We would like to compare the distribution of these tile
-covariances to a neutral expectation, but a theoretically-determined neutral
-null distribution would be inappropriate given complex dependencies across the
-genome due to LD (which can occur over long physical distances in E&R and
-selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). 
+recombination breaking up coupled beneficial and deleterious alleles, or an
+environmental change in the direction of selection. However, the signal of a
+change in the direction of selection localized to a particular region of the
+genome may be washed out when we calculate genome-wide temporal covariances.
+Averaging over such large numbers of loci is necessary to detect a signal of
+covariance in allele frequency changes when both drift (inflated in
+evolve-and-sequence studies which use small population sizes) and sampling
+variance can create spurious covariances. To address this limitation, we
+calculated temporal covariances over XXX Mb genomic windows, with on average
+XXX loci per window.  While the covariance of each tile is noisy, we can
+analyze the genome-wide distribution of tile covariances for changes through
+time. We would like to compare the distribution of these tile covariances to a
+neutral expectation, but a theoretically-determined neutral null distribution
+would be inappropriate given complex dependencies across the genome due to LD
+(which can occur over long physical distances in E&R and selection studies,
+\cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). 
 
 
 \begin{figure}[!ht]
@@ -564,7 +576,7 @@ s:t}$.
   \centering
   \includegraphics[]{figures/barghi-correction-plot.pdf}
   \caption{}
-  \label{fig:figure-3}
+  \label{suppfig:correction}
 \end{figure}
 
 

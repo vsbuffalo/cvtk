@@ -134,6 +134,29 @@ covariances between timepoints to be weak, some fraction of the additive
 genetic variance and linkage disequilibrium that creates temporal
 autocovariance decays in the ten generations between sequencing.
 
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure-1.pdf}
+
+  \caption{A: Temporal covariance, averaged across all ten replicate
+    populations, through time from the \textcite{Barghi2019-qy} study. Each
+    line depicts the temporal covariance $\cov(\Delta p_s, \Delta p_t)$ from
+    some reference generation $s$ to a later time $t$ which varies along the
+    x-axis; each line corresponds to a row of the upper-triangle of the
+    temporal covariance matrix with the same color (upper right). The ranges
+    around each point are $95\%$ block-bootstrap confidence intervals. B: The
+    proportion of the total variance in allele frequency change explained by
+    linked selection, $G(t)$, as it varies through time $t$ along the x-axis.
+    The black line is the $G(t)$ averaged across replicates, with the $95\%$
+    block-bootstrap confidence interval. The other lines are the $G(t)$ for
+    each individual replicate, with colors indicating what subset of the
+    temporal-covariance matrix to the right is being included in the
+  calculation of $G(t)$.}
+
+  \label{fig:figure-1}
+\end{figure}
+
+
 Averaging across replicate populations, we find positive temporal covariances
 across time that are statistically significant (p < XXX) consistent with linked
 selection acting to affect allele frequency changes over very short time
@@ -164,34 +187,74 @@ see how this quantity grows through time. As with the temporal covariances, the
 study design of \textcite{Barghi2019} leads our measure $G(t)$ to be even more
 conservative, since the temporal covariances with each ten-generation block
 between sequenced timepoints are not directly observable, and are not included
-in the numerator of $G(t)$. Still, we find a remarkably strong signal 
+in the numerator of $G(t)$. Still, we find a remarkably strong signal that
+greater than $20\%$ of total variation in allele frequency change over 60
+generations is directly the result of linked selection.
 
 % NOTE in supp. material why the average replicate G(t) looks lower than
 % replicates.
 
+The replicate design of \textcite{Barghi2019-qy} also allows us to quantify
+another covariance: the covariance in allele frequency change between replicate
+populations experiencing convergent selection pressure. These between-replicate
+covariances are created in the same way as temporal covariances are: neutral
+alleles linked to a particular fitness background experience are expected to
+have allele frequency changes in the same direction if the selection pressures
+are similar. We measure this through a statistic similar to a correlation,
+which we call the convergent correlation; this is the ratio of average
+between-replicate covariance across all pairs to the average standard deviation
+across all pairs of replicates, 
 
+\begin{align}
+  \mathrm{cor}(\Delta p_s, \Delta p_t) = \frac{\E_{A\ne B} \left( \cov(\Delta p_{s,A}, \Delta p_{t,B}) \right)}{\E_{A\ne B} \left( \sqrt{\var(\Delta p_{s,A}) \var(\Delta p_{t,B})} \right)}
+\end{align}
+%
+where $A$ and $B$ here are two replicate labels.
 
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{figures/figure-1.pdf}
+We've calculated the convergent correlation for all rows of the replicate
+covariance matrices, which unlike temporal covariance matrices have diagonal
+elements that are also covariances (e.g. $\cov(\Delta p_{t,A}, \Delta
+p_{t,B})$). Like temporal covariances, we visualize these through time (Figure
+\ref{fig:figure-2} A), with each line representing the convergent correlation
+from a particular reference generation $s$ as it varies with $t$ (shown on the
+x-axis). In other words, each of the colored lines corresponds to the like
+colored row of the convergence correlation matrix (upper left in Figure
+\ref{fig:figure-2} A). We find these decay very quickly, from an initial
+convergence correlation coefficient of about 0.1 (block bootstrap confidence
+intervals XXX; see the note in Supplementary Material XXX why these are so
+narrow), to around 0.01 within 20 generations.
 
-  \caption{A: Temporal covariance, averaged across all ten replicate
-    populations, through time from the \textcite{Barghi2019-qy} study. Each
-    line depicts the temporal covariance $\cov(\Delta p_s, \Delta p_t)$ from
-    some reference generation $s$ to a later time $t$ which varies along the
-    x-axis; each line corresponds to a row of the upper-triangle of the
-    temporal covariance matrix with the same color (upper right). The ranges
-    around each point are $95\%$ block-bootstrap confidence intervals. B: The
-    proportion of the total variance in allele frequency change explained by
-    linked selection, $G(t)$, as it varies through time $t$ along the x-axis.
-    The black line is the $G(t)$ averaged across replicates, with the $95\%$
-    block-bootstrap confidence interval. The other lines are the $G(t)$ for
-    each individual replicate, with colors indicating what subset of the
-    temporal-covariance matrix to the right is being included in the
-  calculation of $G(t)$.}
+A benefit of between-replicate covariances is unlike temporal covariances,
+these can be calculated with only two sequenced timepoints and a replicated
+study design. This allowed allowed us to assess the impact of linked selection
+in driving convergent patterns of allele frequency change across replicate
+populations in two other studies. First, we reanalyzed the selection experiment
+of \textcite{Kelly2019-dc}, which evolved three replicate populations of
+\emph{Drosophila simulans} for 14 generations in a novel laboratory
+environment. Since each replicate was exposed to the same selection pressure
+and share linkage disequilibria common to the original natural founding
+population, we expected each of the three replicate populations to have
+positive between-replicate covariances. We find all three pairwise
+between-replicate covariances are positive and statistical significant (p <
+XXX, estimated via block bootstrap). We estimate the convergent correlation
+coefficient across these replicates as 0.36 ($95\%$ block-bootstrap confidence
+interval $[0.31, 0.40]$).
 
-  \label{fig:figure-1}
-\end{figure}
+Second, we reanalyzed the Longshanks selection experiment, which selected for
+longer tibiae length relative to body size in mice, leading to a response of
+selection of about 5 standard deviations over the course of twenty generations
+\parencite{Castro2019-uk}. This study includes two independent selection lines,
+Longshanks 1 and 2 (LS1 and LS2), and an unselected control line (Ctrl).
+Consequently, this selection experiment offers a useful control to test our
+between-replicate covariances: we expect to see positive between-replicate
+covariance in the comparison between the two Longshanks selection lines, but
+not between the two pairwise comparisons between the control line and the two
+Longshanks lines. We find that this is the case (Figure \ref{fig:figure-2} C),
+with the two Longshanks comparisons to the control line not being significantly
+different from zero, while the comparison between the two Longshanks line is
+statistically significantly different from zero (CIs XXX).
+
+Paragraph about large effect loci.
 
 \begin{figure}[!ht]
   \centering
@@ -206,6 +269,23 @@ depicted to the right.}
 
   \label{fig:figure-2}
 \end{figure}
+
+Finally, we observed that in the longest run evolve-and-resequence study we
+analyzed, some temporal covariances appeared to become negative at future
+timepoints, a pattern that could be caused by advantageous fitness backgrounds
+later becoming disadvantageous. The underlying causes could include
+frequency-dependent selection, recombination disassociating beneficial and
+deleterious alleles in repulsion linkage disequilibrium, or an environmental
+change in the direction of selection. Thus far, our analysis has used
+covariances averaged across the entire genome. Averaging over such large
+numbers of loci is necessary to detect a signal of covariance in allele
+frequency changes when both drift (inflated in evolve-and-sequence studies
+which use small population sizes) and sampling variance can create spurious
+covariances. However, the cost of using genome-wide covariances is that the
+signal from regions harboring more additive genetic variance may be washed out
+by noise. This is especially the case with detecting shifts in selection, which
+are likely to be localized depending on the average effect of a region. To
+address this limitation, 
 
 
 \begin{figure}[!ht]

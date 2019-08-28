@@ -64,6 +64,7 @@
 
 % TODO
 % - generate figures and write about them
+% - Figure 2 has some overplotting issues.
 
 \title{}
 
@@ -114,7 +115,7 @@ timepoints and ten replicate populations, we estimated a bias-corrected $60
 Since each replicate population was sequenced every ten generations, the
 timepoints $t_0 = 0$ generations, $t_1 = 10$ generations, $t_2 = 20$
 generations, etc., lead to observed allele frequency changes across ten
-generation chunks, $\Delta p_{t_0}, \Delta p_{t_1}, \ldots, \Delta p_{t_6}$.
+generation blocks, $\Delta p_{t_0}, \Delta p_{t_1}, \ldots, \Delta p_{t_6}$.
 Consequently, the ten temporal covariance matrices for each of the ten
 replicate populations have off-diagonal elements of the form $\cov(\Delta
 p_{t_0}, \Delta p_{t_1}) = \cov(p_{t_1} - p_{t_0}, p_{t_2} - p_{t_1}) =
@@ -128,34 +129,46 @@ accurately partition the total variance in allele frequency change
 \parencite{Buffalo2019-io}; while we cannot directly estimate the contribution
 of linked selection to the variance in allele frequency change here, the
 presence of a positive observed covariance between allele frequency change can
-only be caused linked selection. 
+only be caused linked selection. Overall, we expect observed temporal
+covariances between timepoints to be weak, some fraction of the additive
+genetic variance and linkage disequilibrium that creates temporal
+autocovariance decays in the ten generations between sequencing.
 
 Averaging across replicate populations, we find positive temporal covariances
-that are statistically significant (p < XXX) consistent with linked selection
-acting to affect allele frequency changes over very short time periods. We
-visualize these covariances in Figure \label{figure-1} (A), which depicts the
-temporal covariances through time, for each of the five rows covariance matrix.
-Each row represents the temporal covariance $\cov(\Delta p_s, \Delta p_t)$,
-between some initial reference generation $s$ (the row of the matrix), and some
-later timepoint $t$ (the column of the matrix). For each row, the covariances
-at first are positive, and then decay towards zero as expected when directional
-selection affects linked variants' frequency trajectories until ultimately
-linkage disequilibrium and additive genetic variance for decay
-\parencite{Buffalo2019-io}. Note that per replicate, the signal is a bit
-noisier; see Supplementary Figures XXX.
+across time that are statistically significant (p < XXX) consistent with linked
+selection acting to affect allele frequency changes over very short time
+periods. We visualize these covariances in Figure \label{figure-1} (A), which
+depicts the temporal covariances through time, for each of the five rows
+covariance matrix.  Each row represents the temporal covariance $\cov(\Delta
+p_s, \Delta p_t)$, between some initial reference generation $s$ (the row of
+the matrix), and some later timepoint $t$ (the column of the matrix). For each
+row, the covariances at first are positive, and then decay towards zero as
+expected when directional selection affects linked variants' frequency
+trajectories until ultimately linkage disequilibrium and additive genetic
+variance for decay \parencite{Buffalo2019-io}. Note that per replicate, the
+signal is a bit noisier; see Supplementary Figures XXX.
 
 While the presence of positive temporal covariances is consistent with linked
 selection affecting allele frequencies over time, this measure not easily
-interpretable. Alternatively, we can quantify the impact of linked selection
-through the ratio of total covariance in allele frequency change to the total
-variance in allele frequency change. Since the total variation in allele
-frequency change can be decomposed into variance and covariance components,
-$\var(p_t - p_0) = \sum_{i \ne j} \cov(\Delta p_i, \Delta p_j) / \var(p_t -
-p_0)$, and the covariances are zero when only drift acts, this is a
-conservative measure of how much of the variance in allele frequency change is
-caused by linked selection \parencite{Buffalo2019-io}. Since timepoints every
-ten generations were sequenced, we cannot directly estimate the temporal
-covariances 
+interpretable. Additionally, we can quantify the impact of linked selection on
+allele frequency change as the ratio of total covariance in allele frequency
+change to the total variance in allele frequency change. Since the total
+variation in allele frequency change can be decomposed into variance and
+covariance components, $\var(p_t - p_0) = \sum_{i \ne j} \cov(\Delta p_i,
+\Delta p_j) / \var(p_t - p_0)$, and the covariances are zero when drift acts
+alone, this is a lower bound on how much of the variance in allele frequency
+change is caused by linked selection \parencite{Buffalo2019-io}. We call this
+measure $G(t)$, which is the total effect of linked selection between the
+initial generation $0$ and some later generation $t$, which can be varied to
+see how this quantity grows through time. As with the temporal covariances, the
+study design of \textcite{Barghi2019} leads our measure $G(t)$ to be even more
+conservative, since the temporal covariances with each ten-generation block
+between sequenced timepoints are not directly observable, and are not included
+in the numerator of $G(t)$. Still, we find a remarkably strong signal 
+
+% NOTE in supp. material why the average replicate G(t) looks lower than
+% replicates.
+
 
 
 \begin{figure}[!ht]

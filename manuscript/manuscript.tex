@@ -68,13 +68,12 @@
 
 \title{}
 
-\author{}
 
-% \author[$\ast$,$\dag$,$1$]{Vince Buffalo}
-% \author[$\dag$]{Graham Coop}
-% \affil[$\ast$]{\footnotesize Population Biology Graduate Group}
-% \affil[$\dag$]{\footnotesize Center for Population Biology, Department of Evolution and Ecology, University of California, Davis, CA 95616}
-% \affil[$1$]{\footnotesize Email for correspondence: \href{mailto:vsbuffalo@ucdavis.edu}{vsbuffalo@ucdavis.edu}}
+\author[$\ast$,$\dag$,$1$]{Vince Buffalo}
+\author[$\dag$]{Graham Coop}
+\affil[$\ast$]{\footnotesize Population Biology Graduate Group}
+\affil[$\dag$]{\footnotesize Center for Population Biology, Department of Evolution and Ecology, University of California, Davis, CA 95616}
+\affil[$1$]{\footnotesize Email for correspondence: \href{mailto:vsbuffalo@ucdavis.edu}{vsbuffalo@ucdavis.edu}}
 
 \begin{document}
 \maketitle
@@ -84,26 +83,26 @@
 \section{Results}
 
 
-We measure two types of covariances between allele frequency caused by
-selection: temporal autocovariances, and across-replicate covariances. First,
-positive temporal autocovariance in a neutral allele frequency's trajectory
-occurs when the allele becomes associated with a high or low fitness
-chromosomal background, and this association persists through the generations
-due to linkage disequilibrium. As long as the direction of selection remains
-constant, the fitness background is predictive of the direction in the neutral
-allele's frequency changes, creating positive covariance. Even though these
-magnitude of frequency changes at each site may be subtle, as they would be
-under polygenic selection, cumulatively these perturb neighboring sites in a
-predictable manner and build up temporal autocovariance which acts as a
-genome-wide signal of linked selection. Second, if evolution occurs in
-replicate populations undergoing convergent selection pressure, neutral sites
-linked to fitness backgrounds shared across replicates are expected to change
-in the same direction. This creates across-replicate covariance, which is a
-measure of the extent to which convergent selection pressures across replicate
-populations cause similar allele frequency changes. Finally, it is important to
-note that under the null model where the fitness differences between
-individuals are entirely random and non-heritable (e.g. when selection is not
-acting), both forms of covariances are expected to be zero. 
+% We measure two types of covariances between allele frequency caused by
+% selection: temporal autocovariances, and across-replicate covariances. First,
+% positive temporal autocovariance in a neutral allele frequency's trajectory
+% occurs when the allele becomes associated with a high or low fitness
+% chromosomal background, and this association persists through the generations
+% due to linkage disequilibrium. As long as the direction of selection remains
+% constant, the fitness background is predictive of the direction in the neutral
+% allele's frequency changes, creating positive covariance. Even though these
+% magnitude of frequency changes at each site may be subtle, as they would be
+% under polygenic selection, cumulatively these perturb neighboring sites in a
+% predictable manner and build up temporal autocovariance which acts as a
+% genome-wide signal of linked selection. Second, if evolution occurs in
+% replicate populations undergoing convergent selection pressure, neutral sites
+% linked to fitness backgrounds shared across replicates are expected to change
+% in the same direction. This creates across-replicate covariance, which is a
+% measure of the extent to which convergent selection pressures across replicate
+% populations cause similar allele frequency changes. Finally, it is important to
+% note that under the null model where the fitness differences between
+% individuals are entirely random and non-heritable (e.g. when selection is not
+% acting), both forms of covariances are expected to be zero. 
 
 \begin{center}
   \begin{tabular}{l c c c c c c}
@@ -114,17 +113,23 @@ acting), both forms of covariances are expected to be zero.
     \textcite{Castro2019-uk} & \emph{M. musculus} & \begin{tabular}{c}tibiae length\\control\end{tabular} & \begin{tabular}{c}2\\1\end{tabular} &\begin{tabular}{c}32\\28\end{tabular}  & 20 & 2 \\
  \hline
 \end{tabular}
-\caption{Table to test captions and labels}
-\label{table:1}
 \end{center}
 
 We first analyzed \textcite{Barghi2019-qy}, an evolve-and-resequence study with
-ten replicate populations exposed to a high temperature environment and evolved
-for 60 generations, and sequenced every ten generations. Using the seven
-timepoints and ten replicate populations, we estimated a bias-corrected $60
-\times 60$ temporal-replicate variance-covariance matrix (see XXX for details).
-Since each replicate population was sequenced every ten generations, the
-timepoints $t_0 = 0$ generations, $t_1 = 10$ generations, $t_2 = 20$
+ten replicate populations exposed to a high temperature lab environment and
+evolved for 60 generations, and sequenced every ten generations. Using the
+seven timepoints and ten replicate populations, we estimated a bias-corrected
+genome-wide $6 \times 6$ temporal covariance matrix (a timepoint is lost in
+calculating all adjacent allele frequency changes). This temporal covariance
+matrix contains 
+
+
+$60 \times 60$ temporal-replicate variance-covariance matrix (see XXX for
+details). 
+
+
+Since each replicate population was sequenced every ten generations,
+the timepoints $t_0 = 0$ generations, $t_1 = 10$ generations, $t_2 = 20$
 generations, etc., lead to observed allele frequency changes across ten
 generation blocks, $\Delta p_{t_0}, \Delta p_{t_1}, \ldots, \Delta p_{t_6}$.
 Consequently, the ten temporal covariance matrices for each of the ten
@@ -217,6 +222,7 @@ between-replicate covariance across all pairs to the average standard deviation
 across all pairs of replicates, 
 
 \begin{align}
+  \label{eq:conv-corr}
   \mathrm{cor}(\Delta p_s, \Delta p_t) = \frac{\E_{A\ne B} \left( \cov(\Delta p_{s,A}, \Delta p_{t,B}) \right)}{\E_{A\ne B} \left( \sqrt{\var(\Delta p_{s,A}) \var(\Delta p_{t,B})} \right)}
 \end{align}
 %
@@ -294,21 +300,66 @@ Averaging over such large numbers of loci is necessary to detect a signal of
 covariance in allele frequency changes when both drift (inflated in
 evolve-and-sequence studies which use small population sizes) and sampling
 variance can create spurious covariances. To address this limitation, we
-calculated temporal covariances over XXX Mb genomic windows, with on average
-XXX loci per window.  While the covariance of each tile is noisy, we can
-analyze the genome-wide distribution of tile covariances for changes through
-time. We would like to compare the distribution of these tile covariances to a
-neutral expectation, but a theoretically-determined neutral null distribution
-would be inappropriate given complex dependencies across the genome due to LD
-(which can occur over long physical distances in E&R and selection studies,
-\cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). 
+calculated temporal covariances over 100kb genomic windows, with on average XXX
+loci per window. While the covariance of each tile is noisy, we can analyze the
+genome-wide distribution of tile covariances for changes through time. We would
+like to compare the distribution of these tile covariances to a neutral
+expectation, but using a theoretic neutral null distribution would be
+inappropriate given complex dependencies across the genome due to linkage
+disequilibria (which can occur over long physical distances in E\&R and
+selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). 
+
+Instead, we have developed a permutation-based procedure that constructs a null
+distribution of the genome-wide covariances as they would look if only neutral
+genetic drift was acting. We do this by randomly flipping the signs of the
+allele frequency changes per-genomic window 1,000 times, which acts to destroy
+the systematic covariances created by linked selection but creates a sampling
+distribution of the covariances spuriously created by neutral genetic drift.
+This empirical neutral null distribution is conservative in the sense that the
+variances of the covariances are wider than expected under drift alone, since
+drift also acts to inflate the magnitude of allele frequency change. By
+flipping the sign at the block-level, we preserve the complex dependencies
+between adjacent loci created by linkage disequilibrium; see Supplementary
+Material Section \ref{supp:empirical-null} for more details on this approach.
+
+Using the \textcite{Barghi2019-qy} study's data, we used the empirical neutral
+null to investigate whether there was a general trend for the temporal
+covariance $\cov(\Delta p_t, \Delta p_{t+k})$ to be positive for small $k$ (as
+expected under selection), but then become systematically negative for larger
+$k$ (as would occur under evolutionary processes that reverse the fitness of
+regions across the genome). Such a change in the fitness direction of
+haplotypes would not be discernible from genome-wide covariances like those in
+Figure \ref{fig:figure-1}. We find (Figure \ref{fig:figure-3} A and B), pooling
+across all replicates (see Supplementary Figure
+\ref{suppfig:barghi-offset-replicate-panels} for individuals replicates), that
+windowed temporal covariances between close timepoints are skewed positive (a
+heavy right tail), while between more distant timepoints these windowed
+temporal covariances tend to shift to become more negative (a heavy left tail).
 
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[]{figures/figure-3.pdf}
-  \caption{}
-  \label{fig:figure-3}
+
+  \caption{A, B: The distribution of temporal covariances calculated in 100kb
+    genomic windows from the \textcite{Barghi2019-qy} study, plotted alongside
+    an empirical neutral null distribution created by recalculating the
+    windowed covariances on sign permuting the allele frequency changes. In
+    subfigure A, windowed covariances $\cov(\Delta p_t, \Delta p_{t+k})$ are
+    separated by $k=2 \times 10$ generations and in subfigure B the covariances
+    are separated by $k=4 \times 10$ generations; each $k$ is an off-diagonal
+    from the variance diagonal of the temporal covariance matrix (see cartoon
+    of upper-triangle of covariance matrix in subfigures A and B, where the red
+    diagonal is the variance, and the dark gray indicates which off-diagonal of
+    the covariance matrix is plotted in the histograms). C: The lower and upper
+    tail probabilities of the observed windowed covariances, at 20\% and 80\%
+    quintiles of the empirical neutral null distribution, for varying time
+    between allele frequency changes (i.e. which off-diagonal $k$). The
+    confidence intervals are  $95\%$ block-bootstrap confidence interval, and the
+    light gray dashed line indicates the 20\% tail probability expected under the
+    neutral null.}
+  
+    \label{fig:figure-3} 
 \end{figure}
 
 
@@ -319,10 +370,16 @@ would be inappropriate given complex dependencies across the genome due to LD
 %   \label{}
 % \end{figure}
 
+\section{Acknowledgments} 
+
+Doc Edge.
+
 
 \section{Appendix}
 
-\section{Sampling Bias Corrections}
+\section{Estimator Bias Correction}
+\subsection{Correcting variance bias with a single depth sampling process}
+\label{supp:depth-var-corr}
 
 Following \textcite{Waples1989-sj}, we have that that the variance in the
 initial generation, which is entirely due to the binomial sampling process, is
@@ -409,24 +466,28 @@ terms with the unbiased sample estimators, e.g. $\frac{d_t}{d_t-1}
 \widetilde{p}_t (1- \widetilde{p}_t)$,
 
 \begin{align}
+  \label{supp:eqn-depth-only-correction}
   \frac{d_0-1}{d_0} \frac{\var(\widetilde{p}_1 - \widetilde{p}_0)}{\widetilde{p}_0(1-\widetilde{p}_0)} - \frac{(d_0-1)}{d_0 (d_1 - 1)} \frac{\widetilde{p}_1(1-\widetilde{p}_1)}{\widetilde{p}_0(1-\widetilde{p}_0)} - \frac{1}{d_0} + \frac{C}{N}  &= \frac{\var(\Delta_{_H} p_0)}{p_0(1-p_0)} + \frac{1}{2N} 
 \end{align}
 
-\subsection{Individual and depth sampling process}
+\subsection{Correcting variance bias with individual and depth sampling processes}
+\label{supp:ind-depth-var-corr}
 
-$X_t \sim \text{Binom}(n_t, p_t)$ where $X_t$ is the count of alleles and $n_t$
-is the number of diploids sampled at time $t$. Then, these individuals are
-sequenced at a depth of $d_t$, and $Y_t \sim \text{Binom}(d_t,
-\nicefrac{X_t}{n_t})$ reads have the tracked allele. We let $\widetilde{p_t} =
-\nicefrac{Y_t}{d_t}$ be the observed sample allele frequency. Then, the
-sampling noise is 
+Here, we extend the sampling bias correction described above to handle two
+binomial sampling processes: one as individuals are binomially sampled from the
+population, and another as reads are binomially sampled during sequencing.
+(see also \cite{Jonas2016-ia}). Let $X_t \sim \text{Binom}(n_t, p_t)$ where
+$X_t$ is the count of alleles and $n_t$ is the number of diploids sampled at
+time $t$. Then, these individuals are sequenced at a depth of $d_t$, and $Y_t
+\sim \text{Binom}(d_t, \nicefrac{X_t}{n_t})$ reads have the tracked allele. We
+let $\widetilde{p_t} = \nicefrac{Y_t}{d_t}$ be the observed sample allele
+frequency. Then, the sampling noise is 
 
 \begin{align}
   \var(\widetilde{p_t}|p_t) &= \E(\var(\widetilde{p_t} | X_t)) + \var(\E(\widetilde{p_t} | X_t)) \\
-                            &= p_t(1-p_t) \left(\frac{1}{n_t} + \frac{1}{d_t} - \frac{1}{n_t d_t} \right).
+                            &= p_t(1-p_t) \left(\frac{1}{n_t} + \frac{1}{d_t} - \frac{1}{n_t d_t} \right)
 \end{align}
 
-(see also \cite{Jonas2016-ia}).
 
 \begin{align}
   \var(\widetilde{p}_t - \widetilde{p}_0) &= 
@@ -439,23 +500,30 @@ Through the law of total expectation, one can find that an unbiased estimator
 of the heterozygosity is 
 
 \begin{align}
-  \frac{n_t d_t}{(n_t-1) (d_t-1)} \widetilde{p_t}(1-\widetilde{p_t})
+  \frac{n_t d_t}{(n_t-1) (d_t-1)} \widetilde{p_t}(1-\widetilde{p_t}).
 \end{align}
 
+Replacing this unbiased heterozygosity into our expression above, the total
+sample variance is
 
 \begin{align}
   \var(\widetilde{p}_t - \widetilde{p}_0) &= 
   \frac{n_t d_t \widetilde{p}_t(1-\widetilde{p}_t)}{(n_t-1)(d_t-1)} \left(\frac{1}{n_t} + \frac{1}{d_t} - \frac{1}{n_t d_t} \right) + 
  \frac{n_0 d_0 \widetilde{p}_0(1-\widetilde{p}_0)}{(n_0-1)(d_0-1)} \left( \frac{1}{n_0} + \frac{1}{d_0} - \frac{1}{n_0 d_0}\right) + \\ & \nonumber\;\;\;\;\;\;
- \frac{n_0 d_0 \widetilde{p}_0(1-\widetilde{p}_0)}{(n_0-1)(d_0-1)}   \left[1 - \left(1-\frac{1}{2N}\right)^t \right]  - \frac{C}{N}  \frac{n_0 d_0 \widetilde{p}_0(1-\widetilde{p}_0)}{(n_0-1)(d_0-1)} + \\ \nonumber & \;\;\;\;\;\; \sum_{i=0}^{t-1} \var(\Delta_{_H} p_i)  + \sum_{0 \le i < j}^{t-1} \cov(\Delta p_i, \Delta p_j)  \\
-                                                                                                                      &= \widetilde{p}_t(1-\widetilde{p}_t)\frac{d_t + n_t - 1}{(n_t-1)(d_t-1)} + 
- \widetilde{p}_0(1-\widetilde{p}_0)\frac{d_0 + n_0 - 1}{(n_0-1)(d_0-1)} + \\ & \nonumber\;\;\;\;\;\;
- \widetilde{p}_0(1-\widetilde{p}_0) \frac{n_0 d_0}{(n_0-1)(d_0-1)}  \left[1 - \left(1-\frac{1}{2N}\right)^t \right] - \frac{C}{N} \widetilde{p}_0(1-\widetilde{p}_0)\frac{n_0 d_0}{(n_0-1)(d_0-1)} 
- \\ \nonumber & \;\;\;\;\;\; + \sum_{i=0}^{t-1} \var(\Delta_{_H} p_i)  + \sum_{0 \le i < j}^{t-1} \cov(\Delta p_i, \Delta p_j) \
+ \frac{n_0 d_0 \widetilde{p}_0(1-\widetilde{p}_0)}{(n_0-1)(d_0-1)}   \left[1 - \left(1-\frac{1}{2N}\right)^t \right]  - \frac{C}{N}  \frac{n_0 d_0 \widetilde{p}_0(1-\widetilde{p}_0)}{(n_0-1)(d_0-1)} + \\ \nonumber & \;\;\;\;\;\; \sum_{i=0}^{t-1} \var(\Delta_{_H} p_i)  + \sum_{0 \le i < j}^{t-1} \cov(\Delta p_i, \Delta p_j).  \\
+                                                                                                                      % &= \widetilde{p}_t(1-\widetilde{p}_t)\frac{d_t + n_t - 1}{(n_t-1)(d_t-1)} + 
+ % \widetilde{p}_0(1-\widetilde{p}_0)\frac{d_0 + n_0 - 1}{(n_0-1)(d_0-1)} + \\ & \nonumber\;\;\;\;\;\;
+ % \widetilde{p}_0(1-\widetilde{p}_0) \frac{n_0 d_0}{(n_0-1)(d_0-1)}  \left[1 - \left(1-\frac{1}{2N}\right)^t \right] - \frac{C}{N} \widetilde{p}_0(1-\widetilde{p}_0)\frac{n_0 d_0}{(n_0-1)(d_0-1)} 
+ % \\ \nonumber & \;\;\;\;\;\; + \sum_{i=0}^{t-1} \var(\Delta_{_H} p_i)  + \sum_{0 \le i < j}^{t-1} \cov(\Delta p_i, \Delta p_j). 
 \end{align}
+
+As with equation \eqref{supp:eqn-depth-only-correction}, we can rearrange this
+to get a biased-correct estimate of the variance in allele frequency change
+between adjacent generations, $\var(\Delta p_t)$. 
 
 
 \subsection{Covariance Correction}
+\label{supp:cov-corr}
 
 We also need to apply a bias correction to the temporal covariances (and
 possibly the replicate covariances if the initial sample frequencies are all
@@ -469,9 +537,12 @@ noise variance term of $\var(\widetilde{p}_{t+1})$, so we add that back in.
 
 \subsection{Variance-Covariance Matrix Correction}
 
-With frequency collected at $T+1$ timepoints across $R$ replicate populations
-at $L$ loci, we have $\mathbf{F}$ of allele frequencies, $\mathbf{D}$
-multidimensional array of sequencing depths, and a $\mathbf{N}$
+Now, we extend the bias corrections for single locus variance and covariance
+described in Supplementary Material Sections \ref{supp:depth-var-corr},
+\ref{supp:ind-depth-var-corr}, and \ref{supp:cov-corr} to multiple sampled
+loci. With frequency collected at $T+1$ timepoints across $R$ replicate
+populations at $L$ loci, we have $\mathbf{F}$ of allele frequencies,
+$\mathbf{D}$ multidimensional array of sequencing depths, and a $\mathbf{N}$
 multidimensional array of the number of individuals sequenced, each of
 dimension $R \times (T+1) \times L$.  We calculate the array $\mathbf{\Delta
 F}$ which contains the allele frequency changes between adjacent generations,
@@ -527,7 +598,7 @@ calculated an expected bias matrix $\mathbf{B}$, averaging over loci,
 \begin{align}
   \mathbf{B} = \frac{1}{L} \sum_{l=1}^L \frac{\mathbf{h}_l}{2} \circ \left( \frac{1}{\mathbf{d}_l} + \frac{1}{2\mathbf{n}_l} + \frac{1}{2\mathbf{d}_l \circ \mathbf{n}_l} \right)
 \end{align}
-
+%
 where $\circ$ denotes elementwise product, and $\mathbf{h}_l$, $\mathbf{d}_l$,
 and $\mathbf{n}_l$, are rows corresponding to locus $l$ of the unbiased
 heterozygosity arrays $\mathbf{H}$, depth matrix $\mathbf{D}$, and number of
@@ -537,47 +608,148 @@ heterozygosity array can be calculated as
 \begin{align}
   \mathbf{H} = \frac{2 \mathbf{D} \circ \mathbf{N} }{ (\mathbf{D}-1) \circ (\mathbf{N} -1)} \circ \mathbf{F} \circ (1-\mathbf{F})
 \end{align}
-
+%
 where division here is elementwise. Thus, $\mathbf{B}$ is a $R \times (T+1)$
-matrix. As explained in XXX, each temporal covariance submatrix
-$\mathbf{Q}_{r,r}$ requires two corrections.
+matrix. As explained in Supplementary Material Section
+\ref{supp:ind-depth-var-corr} and \ref{supp:cov-corr}, the temporal variances
+and covariances require bias corrections, meaning each temporal covariance
+submatrix $\mathbf{Q}_{r,r}$ requires two corrections. For an element
+$Q_{r,t,s} = \cov(\Delta p_t, \Delta p_s)$ of the temporal covariance submatrix
+for replicate $r$, $\mathbf{Q}_{r,r}$, we apply the following correction
 
 \begin{equation}
-	\[
-	Q_{i,j} =  
+	Q_{r,t,s} =  
 		\begin{dcases}
-			Q_{t,s}' - b_{t} - b_{s}, & \text{if  } t = s \\
-			Q_{t,s}' + b_{}, & \text{if  } |i - j| = 1 \\
-		\end{cases}
-	\]
+			Q_{r,t,s}' - b_{r,t} - b_{r,t+1}, & \text{if  } t = s \\
+      Q_{r,t,s}' + b_{r,\max(t,s)}, & \text{if  } |t - s| = 1 \\
+		\end{dcases}
 \end{equation}
 
-$Q_{i,j} = \cov(\Delta p_i, \Delta p_j)$
+where $b_{r,t}$ is element in row $r$ and column $t$ of $\mathbf{B}$.
+Additionally, in some study designs, a single timepoint is shared for the
+initial generation across replicates. In this case, the sampling noise is
+shared between 
 
-Additionally, in some study designs, the frequencies from the first timepoint 
 
-\begin{align}
-  \mathbf{Q} = \mathbf{Q}' - \mathrm{diag}(\flt(\mathbf{B}_{\cdot,2:(T+1)})) - \mathrm{diag}(\flt(\mathbf{B}_{\cdot, 1:T})) + \mathrm{offdiag}_1(\flt(\mathbf{B}_{\cdot, 2:T})) + \mathrm{offdiag}_{-1}(\flt(\mathbf{B}_{\cdot, 2:T}))
-\end{align}
-
-where $\mathrm{diag}(\mathbf{x})$ is an operation that takes the vector
-$\mathbf{x}$ and places them along the diagonal of a matrix. Similarly,
-$\mathrm{offdiag}_{k}(\mathbf{x})$ places vector $\mathbf{x}$ along the
-offdiagonal where for row $i$, and column $j$, $j-i = k$. We represent subset
-of columns $s$ through $t$ of a matrix $\mathbf{B}$ as $\mathbf{B}_{\cdot,
-s:t}$.
 
 \subsection{Block Bootstrap Procedure}
 \label{supp:block-bootstrap}
 
+To infer the uncertainty of covariance, convergence correlation, and $G(t)$
+estimates, we used a block bootstrap procedure. This is a version of the
+bootstrap that resamples blocks of data points, rather than individual data
+points, to infer the uncertainty of an statistic in the presence of unknown
+correlation structure between data. With genome-wide data, linkage
+disequilibria between sites creates complex and unknown dependencies between
+variants. The estimators used in this paper are predominantly ratios, e.g.
+temporal-replicate covariance standardized by half the heterozygosity (XXX),
+$G(t)$ which is the ratio of covariance to total variance (XXX), and the
+convergence correlation (equation \eqref{eq:conv-corr}). In these cases, we can
+exploit the linearity of the expectation to make the bootstrap procedure more
+computationally efficient, by pre-calculating the statistics of the ratio's
+numerator and denominator, $N(\mathbf{x}_i)$ and $D(\mathbf{x}_i)$, on the data
+$\mathbf{x}_i$ for all blocks $i \in \{1, 2, \ldots, W\}$ in the genome. Then
+we draw $W$ bootstrap samples with replacement, and compute the estimate for
+bootstrap sample $b$ with an average weighted by the number of loci in all
+sampled blocks, 
 
-\subsection{Correction}
+\begin{align}
+  \tilde{\theta}_b = \sum_{i=1}^W w_i \frac{N(\mathbf{x}_i)}{D(\mathbf{x}_i)}
+\end{align}
+%
+Note that computing the ratio of averages rather than the average of a ratio is
+a practice common for population genetic statistics like $F_{ST}$
+\parencite{Bhatia2013-zy}. With these $B$ bootstrap estimates, we calculate the
+$\nicefrac{\alpha}{2}$ and $1-\nicefrac{\alpha}{2}$ quantiles, which we use to
+estimate the $1-\alpha = 95\%$ pivot confidence intervals (p. 33
+\cite{Wasserman2006-jl}, p. 194 \cite{Davison2013-oy}) throughout the paper,
+
+\begin{align}
+  C_\alpha = \left(2 \widehat{\theta} - q_{1-\nicefrac{\alpha}{2}}, 2 \widehat{\theta} - q_{\nicefrac{\alpha}{2}} \right).
+\end{align}
+%
+where $\widehat{\theta}$ is the estimate, and $q_x$ is bootstrap quantile for
+probability $x$.
+
+\subsection{The Empirical Neutral Null Windowed Covariance Distribution}
+\label{supp:empirical-null}
+
+
+
+
+\section{Supplementary Figures}
+
+\subsection{Bias Correction for \textcite{Barghi2019-qy}}
+
+We have investigated the effectiveness of our correction on real data by
+exploiting the relationship between sampling depth and the magnitude of the
+variance and covariance biases, and comparing the observed variances and
+covariances before and after correction. We plot the variance and covariance
+(between adjacent timepoints) before and after the bias correction against the
+average sample depth in 100kb genomic windows in Figure
+\ref{suppfig:barghi-correction}. Overall, we find the correction strongly
+
 \begin{figure}[!ht]
   \centering
   \includegraphics[]{figures/barghi-correction-plot.pdf}
-  \caption{}
-  \label{suppfig:correction}
+
+  \caption{The variance and covariances calculated in 100kb genomic windows
+    plotted against average depth in a window before and after bias correction.
+    Each panel has a least-squares estimate between the variance and
+    covariance, and the average depth. Overall, the bias correction corrects
+    sampling bias in both the variance and covariance such that the
+    relationship with depth is constant. Colors indicate the different
+    chromosomes of \emph{D. simulans}; we have excluded the X chromosome
+    (yellow points) and chromosome 4 points (green points to far right) from
+    the regression due to large differences in average coverage.}
+
+  \label{suppfig:barghi-correction}
 \end{figure}
+
+\subsection{\textcite{Barghi2019-qy} Empirical Null and Windowed Covariance Distributions}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-offset-panels.pdf}
+
+  \caption{The distribution of temporal covariances calculated across 100kb
+    genomic windows from \textcite{Barghi2019-qy}'s study (orange) and the
+    block sign permuted empirical neutral null distribution of the windowed
+    covariances (blue). Each panel shows these windowed covariances and the
+    empirical null distribution for covariances $\cov(\Delta p_t, \Delta p_{t+k})$,
+  $k$ is the number of generations between allele frequency changes.}
+  \label{suppfig:barghi-empnull-tilecovs}
+\end{figure}
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-offset-replicate-panels.pdf}
+
+  \caption{The distribution of windowed temporal covariances alongside the
+    empirical neutral null for five randomly sampled replicates (columns), for
+    $k=2$ (first row) and $k=5$ (second row). The main figure of the paper
+    pools all replicate window and empirical neutral null covariances; we show
+    here the windowed temporal covariances tend to shift from being positive (a
+    heavier right tail) to become more negative (a heavier left tail) through
+    time within particular replicates.}
+  
+  \label{suppfig:barghi-offset-replicate-panels}
+\end{figure}
+
+
+
+\subsection{\textcite{Barghi2019-qy} Tail Probabilities for Windowed Covariances Distributions}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-tailprobs-panels.pdf}
+
+  \caption{ }
+  \label{suppfig:barghi-tailprobs-panels}
+\end{figure}
+
+
 
 
 

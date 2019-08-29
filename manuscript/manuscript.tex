@@ -335,6 +335,20 @@ across all replicates (see Supplementary Figure
 windowed temporal covariances between close timepoints are skewed positive (a
 heavy right tail), while between more distant timepoints these windowed
 temporal covariances tend to shift to become more negative (a heavy left tail).
+We additionally quantified the degree to which the left and right tails change
+as we look at covariances between timepoints further apart (Figure
+\ref{fig:figure-3} C). We find that for covariances 2 timepoints apart ($k=2
+\times 10$ generations), the $20\%$ right tail is inflated by a of 1.3 (95\% CI
+[1.29, 1.32]), consistent with linked selection creating positive covariance in
+allele frequency change. Under constant directional selection, we expect these
+positive covariances between increasingly distant timepoints to decay to zero
+as additive genetic variance is exhausted by selection and linkage
+disequilibrium decays. Instead we find that for covariances 4 timepoints apart
+($k=4 \times 10$ generations), the left tail of negative covariances is
+inflated by a factor of 1.19 (95\% CI [1.17, 1.21]). Overall, we see a striking
+pattern that covariances not only decay towards zero, but in fact become
+negative through time, consistent with some regions in the genome having had a
+reversed fitness effect at later timepoints.
 
 
 \begin{figure}[!ht]
@@ -349,15 +363,15 @@ temporal covariances tend to shift to become more negative (a heavy left tail).
     separated by $k=2 \times 10$ generations and in subfigure B the covariances
     are separated by $k=4 \times 10$ generations; each $k$ is an off-diagonal
     from the variance diagonal of the temporal covariance matrix (see cartoon
-    of upper-triangle of covariance matrix in subfigures A and B, where the red
-    diagonal is the variance, and the dark gray indicates which off-diagonal of
-    the covariance matrix is plotted in the histograms). C: The lower and upper
-    tail probabilities of the observed windowed covariances, at 20\% and 80\%
-    quintiles of the empirical neutral null distribution, for varying time
-    between allele frequency changes (i.e. which off-diagonal $k$). The
-    confidence intervals are  $95\%$ block-bootstrap confidence interval, and the
-    light gray dashed line indicates the 20\% tail probability expected under the
-    neutral null.}
+    of upper-triangle of covariance matrix in subfigures A and B, where the
+    first diagonal is the variance, and the dark gray indicates which
+    off-diagonal of the covariance matrix is plotted in the histograms). C: The
+    lower and upper tail probabilities of the observed windowed covariances, at
+    20\% and 80\% quintiles of the empirical neutral null distribution, for
+    varying time between allele frequency changes (i.e. which off-diagonal
+    $k$). The confidence intervals are  $95\%$ block-bootstrap confidence
+    interval, and the light gray dashed line indicates the 20\% tail
+    probability expected under the neutral null.}
   
     \label{fig:figure-3} 
 \end{figure}

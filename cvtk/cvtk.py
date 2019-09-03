@@ -233,7 +233,8 @@ class TiledTemporalFreqs(TemporalFreqs):
 
 
 
-    def correction_diagnostics(self, exclude_seqids=None, offdiag_k=1):
+    def correction_diagnostics(self, exclude_seqids=None, offdiag_k=1, 
+                               depth_limits=None, **kwargs):
         """
         Return a (DataFrame, models, ypreds) tuple full of diagnostic information that can be 
         used in diagnostic plots (see
@@ -256,9 +257,10 @@ class TiledTemporalFreqs(TemporalFreqs):
         mean_hets = self.calc_het_by_tile()
         seqids = self.tile_df['seqid'].values
         for use_correction in [True, False]:
-            covs = self.calc_cov_by_tile(bias_correction=use_correction)
+            covs = self.calc_cov_by_tile(bias_correction=use_correction, **kwargs)
             res = calc_diagnostics(covs, mean_hets, seqids, tile_depths, 
-                                   exclude_seqids=exclude_seqids)
+                                   exclude_seqids=exclude_seqids,
+                                   depth_limits=depth_limits)
             models[use_correction], xpreds[use_correction], ypreds[use_correction], df = res
             df['correction'] = use_correction
             dfs.append(df)

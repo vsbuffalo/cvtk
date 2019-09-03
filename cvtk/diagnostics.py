@@ -3,7 +3,7 @@ import pandas as pd
 import statsmodels.formula.api as smf
 
 def calc_diagnostics(covs, mean_hets, seqids, tile_depths, 
-                     offdiag_k=1, exclude_seqids=None):
+                     offdiag_k=1, exclude_seqids=None, depth_limits=None):
     """
 
     Calculate the diagonal and off-diagonal elements of the variance-covariance
@@ -21,6 +21,8 @@ def calc_diagnostics(covs, mean_hets, seqids, tile_depths,
     # load all this into a dataframe for model fitting
     df = pd.DataFrame(dict(mean_hets=mean_hets, offdiag=offdiag, diag=diag,
                            seqid=seqids, depth=tile_depths))
+    if depth_limits is not None:
+        df = df[(df['depth'] > depth_limits[0]) & (df['depth'] < depth_limits[1])]
     # we fit the model optionally excluding some seqids
     # but we return the *full* dataframe, which we make a 
     # copy of here.

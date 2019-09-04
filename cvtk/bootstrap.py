@@ -14,9 +14,8 @@ def bootstrap_ci(estimate, straps, alpha=0.05, method='pivot', axis=0, stack=Tru
        where T is the estimator for the stastistic T, and α is the confidence level,
        and Q(x) is the empirical x percentile across the bootstraps.
     """
-    alpha = 100. * alpha  # because, numpy.
-    qlower, qupper = (np.nanpercentile(straps, alpha/2, axis=axis), 
-                      np.nanpercentile(straps, 100-alpha/2, axis=axis))
+    qlower, qupper = (np.nanquantile(straps, alpha/2, axis=axis),
+                      np.nanquantile(straps, 1-alpha/2, axis=axis))
     if method == 'percentile':
         CIs = qlower, estimate, qupper
     elif method == 'pivot':
@@ -30,8 +29,8 @@ def bootstrap_ci(estimate, straps, alpha=0.05, method='pivot', axis=0, stack=Tru
 
 def weighted_mean(array, weights, axis=0):
     """
-    Weighted mean for a block of resampled temporal covariance matrices. 
-    This uses masked_array since nothing in numpy can handle ignoring nans and 
+    Weighted mean for a block of resampled temporal covariance matrices.
+    This uses masked_array since nothing in numpy can handle ignoring nans and
     weighted averages.
     """
     # mask the covariance matrix, since ma.average is the only nanmean
@@ -41,19 +40,19 @@ def weighted_mean(array, weights, axis=0):
 
 
 
-def block_bootstrap_ratio_averages(blocks_numerator, blocks_denominator, 
-                                   block_indices, block_seqids, B, estimator=np.divide, 
+def block_bootstrap_ratio_averages(blocks_numerator, blocks_denominator,
+                                   block_indices, block_seqids, B, estimator=np.divide,
                                    statistic=None,
                                    alpha=0.05, keep_seqids=None, return_straps=False,
                                    ci_method='pivot', progress_bar=False, **kwargs):
     """
-    This block bootstrap is used often for quantities we need to calculate that are 
+    This block bootstrap is used often for quantities we need to calculate that are
     ratios of expectations, e.g. standardized temporal covariance (cov(Δp_t, Δp_s) / p_t(1-p_t))
     and G, both of which are expectations over loci. We use the linearity of expectation
     to greatly speed up the block bootstrap procedure.
 
-    We do so by pre-calculating the expected numerator and denominator for each block, 
-    and then take a weighted average over the bootstrap sample for each the numerator and 
+    We do so by pre-calculating the expected numerator and denominator for each block,
+    and then take a weighted average over the bootstrap sample for each the numerator and
     denominator, and then take the final ratio.
 
     It's assumed that blocks_numerator and blocks_denominator are both multidimension arrays
@@ -65,22 +64,22 @@ def block_bootstrap_ratio_averages(blocks_numerator, blocks_denominator,
     else:
         B_range = range(int(B))
 
-    # We create the vector of indices to sample with replacement from, excluding 
+    # We create the vector of indices to sample with replacement from, excluding
     # any blocks with seqids not in keep_seqids.
     if keep_seqids is not None:
-        blocks = np.array([i for i, seqid in enumerate(block_seqids) 
+        blocks = np.array([i for i, seqid in enumerate(block_seqids)
                            if seqid in keep_seqids], dtype='uint32')
     else:
         blocks = np.array([i for i, seqid in enumerate(block_seqids)], dtype='uint32')
 
-    # Calculate the weights 
-    weights = np.array([len(x) for x in block_indices]) 
+    # Calculate the weights
+    weights = np.array([len(x) for x in block_indices])
     weights = weights/weights.sum()
 
     # number of samples in resample
     nblocks = len(blocks)
     straps = list()
-    
+
     for b in B_range:
         bidx = np.random.choice(blocks, size=nblocks, replace=True)
         exp_numerator = weighted_mean(blocks_numerator[bidx, ...], weights=weights[bidx])
@@ -118,22 +117,22 @@ def block_bootstrap(freqs,
     else:
         B_range = range(int(B))
 
-    # We create the vector of indices to sample with replacement from, excluding 
+    # We create the vector of indices to sample with replacement from, excluding
     # any blocks with seqids not in keep_seqids.
     if keep_seqids is not None:
-        blocks = np.array([i for i, seqid in enumerate(block_seqids) 
+        blocks = np.array([i for i, seqid in enumerate(block_seqids)
                            if seqid in keep_seqids], dtype='uint32')
     else:
         blocks = np.array([i for i, seqid in enumerate(block_seqids)], dtype='uint32')
 
-    # Calculate the weights 
-    weights = np.array([len(x) for x in block_indices]) 
+    # Calculate the weights
+    weights = np.array([len(x) for x in block_indices])
     weights = weights/weights.sum()
 
     # number of samples in resample
     nblocks = len(blocks)
     straps = list()
-    
+
     for b in B_range:
         bidx = np.random.choice(blocks, size=nblocks, replace=True)
         indices = np.array(flatten([block_indices[b] for b in bidx]))

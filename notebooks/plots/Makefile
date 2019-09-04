@@ -1,6 +1,7 @@
 all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf ../../manuscript/figures/figure-3.pdf \
 	../../manuscript/figures/barghi-correction-plot.pdf ../../manuscript/figures/barghi-offset-panels.pdf \
-	../../manuscript/figures/barghi-tailprobs-panels.pdf ../../manuscript/figures/barghi-offset-replicate-panels.pdf
+	../../manuscript/figures/barghi-tailprobs-panels.pdf ../../manuscript/figures/barghi-offset-replicate-panels.pdf \
+	../../manuscript/figures/barghi-cross-validation-binsize.pdf ../../manuscript/figures/barghi-tailprobs-seqid-0.20.pdf
 
 ../../manuscript/figures/figure-1.pdf: figure-1.pdf
 		cp figure-1.pdf ../../manuscript/figures/figure-1.pdf
@@ -21,4 +22,10 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 		cp $< $@
 
 ../../manuscript/figures/barghi-offset-replicate-panels.pdf: barghi-offset-replicate-panels.pdf
+		cp $< $@
+
+../../manuscript/figures/barghi-cross-validation-binsize.pdf: barghi-cross-validation-binsize.pdf
+		cp $< $@
+
+../../manuscript/figures/barghi-tailprobs-seqid-0.20.pdf: barghi-tailprobs-seqid-0.20.pdf
 		cp $< $@

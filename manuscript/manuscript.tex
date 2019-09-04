@@ -693,6 +693,7 @@ probability $x$.
 
 \section{Supplementary Figures}
 
+
 \subsection{Bias Correction for \textcite{Barghi2019-qy}}
 
 We have investigated the effectiveness of our correction on real data by
@@ -721,6 +722,16 @@ average sample depth in 100kb genomic windows in Figure
 \end{figure}
 
 \subsection{\textcite{Barghi2019-qy} Empirical Null and Windowed Covariance Distributions}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-cross-validation-binsize.pdf}
+
+  \caption{}
+  \label{suppfig:barghi-cross-validation-binsize}
+\end{figure}
+
+
 
 \begin{figure}[!ht]
   \centering
@@ -762,6 +773,67 @@ average sample depth in 100kb genomic windows in Figure
   \caption{ }
   \label{suppfig:barghi-tailprobs-panels}
 \end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-tailprobs-seqid-0.20.pdf}
+
+  \caption{}
+  \label{suppfig:barghi-tailprobs-seqid}
+\end{figure}
+
+\subsection{\textcite{Bergland2014-ij} Re-Analysis}
+
+We also applied our temporal covariance approach to \texcite{Bergland2014-ij},
+a study that finds evidence of genome-wide fluctuating selection between Spring
+and Fall seasons across three years. As described in \textcite{Buffalo2019-io},
+we would expect positive covariances between like seasons (i.e. Spring 2010 and
+Spring 2011), negative covariances between dislike seasons (i.e. Spring 2010
+and Fall 2011) when fluctuating selection is strong and acts genome-wide, as
+the original study found. However, while we find temporal covariances that are
+non-zero, we find only weak support for a seasonal fluctuating model driving
+these covariances. In Supplementary Figure XXX, we show the temporal
+covariances from varying reference generations, across Spring/Fall,
+Spring/Spring, and Fall/Fall pairs. The first row of temporal covariance matrix
+is consistent with fluctuating selection operating for two timepoints, as the
+first covariance is negative, and the second is positive, and later covariances
+are not statistically differentiable from zero (which could occur if LD and
+additive genetic variance decay). However, the all other temporal covariances
+do not fit the pattern we would expect under genome-wide fluctuating selection.
+
+We were concerned that this might be due to a flaw in our methods. To address
+this concern, we first ensured that our temporal-covariance matrix bias
+correction was working as expected. We find that it corrects the relationship
+between depth and both variance and covariance (Supplementary Figure XXX) as
+expected. We decided to re-analyze the data of \parencite{Bergland2014-ij}
+using the same seasonal fluctuating model as the original paper. This model is
+a Binomial logit-linked GLM, where the seasons are regressed on the frequency
+data, and the binomial weights are determined by the effective number of
+chromosomes, $N_{eff} = (2 n_t d_t - 1) / (2 n_t + d_t)$ where, using our
+notation, $n_t$ and $d_t$ are the number of diploid individuals and the read
+depth at timepoint $t$, respectively. We fit this model on all loci marked as
+used in the \textcite{Bergland2014-ij} study. Overall, our p-values for the
+Wald test for each locus closely match those of the original paper (Pearson
+correlation coefficient 0.98, p-value < $2.2 \times 10^{-16}; see Supplementary
+Figure XXX), and the histograms of the p-values are identical (Supplementary
+Figure XXX). 
+
+While \textcite{Bergland2014-ij} find significant p-values after a Benjamini
+and Hochberg FDR p-value adjustment \parencite{Benjamini1995-jy}, they do not
+construct a null distribution of p-values as would be expected if fluctuating
+selection were not acting, which they could compare their observed p-value
+distribution to. Without such a distribution, we cannot know whether we might
+expect many variants across the genome to have frequencies that spuriously fit
+the pattern of fluctuating seasons. We created this empirical null distribution
+by randomly permuting the season labels and re-running the seasonal GLM model.
+We find, regardless of whether we permute at the locus-level or the permutation
+replicate-level, that the observed seasonal p-value distribution
+\textcite{Bergland2014-ij} is not enriched for significant p-values beyond what
+we would expect from the permutation null. In fact, there appears there is more
+enrichment for low p-values when 
+
+To address this limitation, we re-ran the seasonal GLM model
+on data where the seasonal labels are randomly permuted.
 
 
 

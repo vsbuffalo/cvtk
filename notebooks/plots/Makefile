@@ -3,7 +3,8 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 	../../manuscript/figures/barghi-tailprobs-panels.pdf ../../manuscript/figures/barghi-offset-replicate-panels.pdf \
 	../../manuscript/figures/barghi-cross-validation-binsize.pdf ../../manuscript/figures/barghi-tailprobs-seqid-20.pdf \
   ../../manuscript/figures/bergland-pvalue-comparison.pdf ../../manuscript/figures/bergland-pvalue-comparison.png \
-	../../manuscript/figures/bergland-pvalue-permutation-hist.pdf ../../manuscript/figures/bergland_pvalues.pdf
+	../../manuscript/figures/bergland-pvalue-permutation-hist.pdf ../../manuscript/figures/bergland_pvalues.pdf \
+  ../../manuscript/figures/bergland-correction-plot.pdf
 
 ../../manuscript/figures/figure-1.pdf: figure-1.pdf
 		cp figure-1.pdf ../../manuscript/figures/figure-1.pdf
@@ -42,4 +43,7 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 		cp $< $@
 
 ../../manuscript/figures/bergland_pvalues.pdf: bergland_pvalues.pdf
+		cp $< $@
+
+../../manuscript/figures/bergland-correction-plot.pdf: bergland-correction-plot.pdf
 		cp $< $@

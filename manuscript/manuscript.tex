@@ -63,8 +63,8 @@
 
 
 % TODO
-% - generate figures and write about them
-% - Figure 2 has some overplotting issues.
+% - we have inconsistent notation between intro of results and figure 1 with
+%   cov() 
 
 \title{}
 
@@ -119,36 +119,30 @@ We first analyzed \textcite{Barghi2019-qy}, an evolve-and-resequence study with
 ten replicate populations exposed to a high temperature lab environment and
 evolved for 60 generations, and sequenced every ten generations. Using the
 seven timepoints and ten replicate populations, we estimated a bias-corrected
-genome-wide $6 \times 6$ temporal covariance matrix (a timepoint is lost in
-calculating all adjacent allele frequency changes). This temporal covariance
-matrix contains 
-
-
-$60 \times 60$ temporal-replicate variance-covariance matrix (see XXX for
-details). 
-
-
-Since each replicate population was sequenced every ten generations,
-the timepoints $t_0 = 0$ generations, $t_1 = 10$ generations, $t_2 = 20$
-generations, etc., lead to observed allele frequency changes across ten
-generation blocks, $\Delta p_{t_0}, \Delta p_{t_1}, \ldots, \Delta p_{t_6}$.
-Consequently, the ten temporal covariance matrices for each of the ten
-replicate populations have off-diagonal elements of the form $\cov(\Delta
-p_{t_0}, \Delta p_{t_1}) = \cov(p_{t_1} - p_{t_0}, p_{t_2} - p_{t_1}) =
-\sum_{i=0}^{10} \sum_{j=10}^{20} \cov(\Delta p_i, \Delta p_j)$. Each diagonal
-element has the form $\var(\Delta p_{t_0}) = \sum_{i=0}^{t_0} \var(\Delta
-p_{i}) + \sum_{i \ne j}^{t_0} \cov(\Delta p_{i}, \Delta p_{j})$, and is thus a
-combination of the effects of drift and selection, as both the variance in
-allele frequency changes and cumulative temporal autocovariances terms increase
-the variance in allele frequency. With sampling each generation, one could more
-accurately partition the total variance in allele frequency change
-\parencite{Buffalo2019-io}; while we cannot directly estimate the contribution
-of linked selection to the variance in allele frequency change here, the
-presence of a positive observed covariance between allele frequency change can
-only be caused linked selection. Overall, we expect observed temporal
-covariances between timepoints to be weak, some fraction of the additive
-genetic variance and linkage disequilibrium that creates temporal
-autocovariance decays in the ten generations between sequencing.
+genome-wide $6 \times 6$ temporal covariance matrix $\mathbf{Q}$ for each of
+the ten replicates (see Supplementary Material Sections
+\ref{supp:ind-depth-var-corr} and \ref{supp:matrix-correction} for details on
+the bias correction). Since the \textcite{Barghi2019-qy} study sequenced each
+replicate population every ten generations, we calculate the temporal
+covariance matrix over ten-generation allele frequency changes, which we write
+as $\cov(\Delta_{_{10}} p_s, \Delta_{_{10}} p_t)$. The diagonal elements of
+this temporal covariance matrix are the sum of all variances in allele
+frequency changes and pairwise covariances, e.g. element $\mathbf{Q}_{t,t} =
+\sum_{i=t}^{9} \var(\Delta p_i) + 2\sum_{i \ne j} \cov(\Delta p_i, \Delta
+p_j)$. Each off-diagonal element $\mathbf{Q}_{t,s}, \; t \ne s$ contains the
+sum of pairwise covariances, $\mathbf{Q}_{t,s} = \sum_{i=t}^{t+9}
+\sum_{j=s}^{s+9} \cov(\Delta p_i, \Delta p_j)$ (see Supplementary Material
+Section \ref{supp:barghi-covs} for more details). These off-diagonal
+covariances are expected to be zero when only drift is acting in the
+population, as only linked selection can create covariance between allele
+frequency changes \parencite{Buffalo2019-io}. Furthermore, since we cannot
+directly observe the temporal covariances between adjacent timepoints, but only
+the sums of temporal covariances, we expect the off-diagonal elements of
+$\mathbf{Q}$ to be weak. This is because the magnitude of a temporal covariance
+$\cov(\Delta p_i, \Delta p_j)$ is governed by the level of additive genetic
+variance and linkage disequilibrium that persists after $|i-j|$ generations of
+decay, which in \textcite{Barghi2019-qy}'s study design is on average 10
+generations.
 
 \begin{figure}[!ht]
   \centering
@@ -172,20 +166,21 @@ autocovariance decays in the ten generations between sequencing.
   \label{fig:figure-1}
 \end{figure}
 
-
-Averaging across replicate populations, we find positive temporal covariances
-across time that are statistically significant (p < XXX) consistent with linked
-selection acting to affect allele frequency changes over very short time
+Still, averaging across the ten temporal covariances matrices, we find positive
+temporal covariances across time that are statistically significant (95\% block
+bootstraps for all first off-diagonal elements do not contain zero), consistent
+with linked selection perturbing allele frequency changes over very short time
 periods. We visualize these covariances in Figure \label{figure-1} (A), which
-depicts the temporal covariances through time, for each of the five rows
-covariance matrix.  Each row represents the temporal covariance $\cov(\Delta
-p_s, \Delta p_t)$, between some initial reference generation $s$ (the row of
-the matrix), and some later timepoint $t$ (the column of the matrix). For each
-row, the covariances at first are positive, and then decay towards zero as
-expected when directional selection affects linked variants' frequency
-trajectories until ultimately linkage disequilibrium and additive genetic
-variance for decay \parencite{Buffalo2019-io}. Note that per replicate, the
-signal is a bit noisier; see Supplementary Figures XXX.
+depicts the temporal covariances through time, for each of the five
+off-diagonal rows temporal covariance matrix. Each row represents the temporal
+covariance $\cov(\Delta_{_{10}} p_s, \Delta_{_{10}} p_t)$, between some initial
+reference generation $s$ (the row of the matrix), and some later timepoint $t$
+(the column of the matrix). For each row, the covariances at first are
+positive, and then decay towards zero as expected when directional selection
+affects linked variants' frequency trajectories until ultimately linkage
+disequilibrium and additive genetic variance for decay
+\parencite{Buffalo2019-io}. Note that per replicate, the signal is a bit
+noisier; see Supplementary Figures XXX.
 
 While the presence of positive temporal covariances is consistent with linked
 selection affecting allele frequencies over time, this measure not easily
@@ -197,18 +192,15 @@ covariance components, $\var(p_t - p_0) = \sum_{i \ne j} \cov(\Delta p_i,
 \Delta p_j) / \var(p_t - p_0)$, and the covariances are zero when drift acts
 alone, this is a lower bound on how much of the variance in allele frequency
 change is caused by linked selection \parencite{Buffalo2019-io}. We call this
-measure $G(t)$, which is the total effect of linked selection between the
-initial generation $0$ and some later generation $t$, which can be varied to
-see how this quantity grows through time. As with the temporal covariances, the
-study design of \textcite{Barghi2019} leads our measure $G(t)$ to be even more
-conservative, since the temporal covariances with each ten-generation block
-between sequenced timepoints are not directly observable, and are not included
-in the numerator of $G(t)$. Still, we find a remarkably strong signal that
-greater than $20\%$ of total variation in allele frequency change over 60
-generations is directly the result of linked selection.
-
-% NOTE in supp. material why the average replicate G(t) looks lower than
-% replicates.
+measure $G(t)$, which is a lower bound on the total effect of linked selection
+between the initial generation $0$ and some later generation $t$, which can be
+varied to see how this quantity grows through time. As with the temporal
+covariances, the study design of \textcite{Barghi2019} leads our measure $G(t)$
+to be even more conservative, since the temporal covariances with each
+ten-generation block between sequenced timepoints are not directly observable,
+and are not included in the numerator of $G(t)$. Still, we find a remarkably
+strong signal that greater than $20\%$ of total variation in allele frequency
+change over 60 generations is directly the result of linked selection.
 
 The replicate design of \textcite{Barghi2019-qy} also allows us to quantify
 another covariance: the covariance in allele frequency change between replicate
@@ -226,20 +218,21 @@ across all pairs of replicates,
   \mathrm{cor}(\Delta p_s, \Delta p_t) = \frac{\E_{A\ne B} \left( \cov(\Delta p_{s,A}, \Delta p_{t,B}) \right)}{\E_{A\ne B} \left( \sqrt{\var(\Delta p_{s,A}) \var(\Delta p_{t,B})} \right)}
 \end{align}
 %
-where $A$ and $B$ here are two replicate labels.
+where $A$ and $B$ here are two replicate labels, and for the
+\textcite{Barghi2019-qy} data, we use $\Delta_{_{10}} p_t$.
 
 We've calculated the convergent correlation for all rows of the replicate
 covariance matrices, which unlike temporal covariance matrices have diagonal
-elements that are also covariances (e.g. $\cov(\Delta p_{t,A}, \Delta
-p_{t,B})$). Like temporal covariances, we visualize these through time (Figure
-\ref{fig:figure-2} A), with each line representing the convergent correlation
-from a particular reference generation $s$ as it varies with $t$ (shown on the
-x-axis). In other words, each of the colored lines corresponds to the like
-colored row of the convergence correlation matrix (upper left in Figure
-\ref{fig:figure-2} A). We find these decay very quickly, from an initial
-convergence correlation coefficient of about 0.1 (block bootstrap confidence
-intervals XXX; see the note in Supplementary Material XXX why these are so
-narrow), to around 0.01 within 20 generations.
+elements that are also covariances (e.g. $\cov(\Delta_{_{10}} p_{t,A},
+\Delta_{_{10}} p_{t,B})$). Like temporal covariances, we visualize these
+through time (Figure \ref{fig:figure-2} A), with each line representing the
+convergent correlation from a particular reference generation $s$ as it varies
+with $t$ (shown on the x-axis). In other words, each of the colored lines
+corresponds to the like colored row of the convergence correlation matrix
+(upper left in Figure \ref{fig:figure-2} A). We find these decay very quickly,
+from an initial convergence correlation coefficient of about 0.1 (95\% block
+bootstrap confidence intervals $[0.094,  0.11]$), to around 0.01 (95\% CIs
+[0.0087, 0.015]) within 20 generations.
 
 A benefit of between-replicate covariances is unlike temporal covariances,
 these can be calculated with only two sequenced timepoints and a replicated
@@ -252,10 +245,10 @@ environment. Since each replicate was exposed to the same selection pressure
 and share linkage disequilibria common to the original natural founding
 population, we expected each of the three replicate populations to have
 positive between-replicate covariances. We find all three pairwise
-between-replicate covariances are positive and statistical significant (p <
-XXX, estimated via block bootstrap). We estimate the convergent correlation
-coefficient across these replicates as 0.36 ($95\%$ block-bootstrap confidence
-interval $[0.31, 0.40]$).
+between-replicate covariances are positive and statistical significant (95\%
+CIs, [0.0063, 0.0086], [0.0064, 0.0086], [0.0061, 0.0083]). We estimate the
+convergent correlation coefficient across these replicates as 0.36 ($95\%$
+block-bootstrap confidence interval $[0.31, 0.40]$).
 
 Second, we reanalyzed the Longshanks selection experiment, which selected for
 longer tibiae length relative to body size in mice, leading to a response of
@@ -300,11 +293,11 @@ Averaging over such large numbers of loci is necessary to detect a signal of
 covariance in allele frequency changes when both drift (inflated in
 evolve-and-sequence studies which use small population sizes) and sampling
 variance can create spurious covariances. To address this limitation, we
-calculated temporal covariances over 100kb genomic windows, with on average XXX
-loci per window. While the covariance of each tile is noisy, we can analyze the
-genome-wide distribution of tile covariances for changes through time. We would
-like to compare the distribution of these tile covariances to a neutral
-expectation, but using a theoretic neutral null distribution would be
+calculated temporal covariances over 100kb genomic windows (mean loci per
+window 4,606, median 4,830). While the covariance of each tile is noisy, we can
+analyze the genome-wide distribution of tile covariances for changes through
+time. We would like to compare the distribution of these tile covariances to a
+neutral expectation, but using a theoretic neutral null distribution would be
 inappropriate given complex dependencies across the genome due to linkage
 disequilibria (which can occur over long physical distances in E\&R and
 selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). 
@@ -345,7 +338,10 @@ positive covariances between increasingly distant timepoints to decay to zero
 as additive genetic variance is exhausted by selection and linkage
 disequilibrium decays. Instead we find that for covariances 4 timepoints apart
 ($k=4 \times 10$ generations), the left tail of negative covariances is
-inflated by a factor of 1.19 (95\% CI [1.17, 1.21]). Overall, we see a striking
+inflated by a factor of 1.19 (95\% CI [1.17, 1.21]). This finding is also
+robust to sign-permuting allele frequency changes on a chromosome-level, the
+longest extent that gametic linkage disequilibria can extend (Supplementary
+Figure \ref{suppfig:barghi-tailprobs-seqid}). Overall, we see a striking
 pattern that covariances not only decay towards zero, but in fact become
 negative through time, consistent with some regions in the genome having had a
 reversed fitness effect at later timepoints.
@@ -383,6 +379,11 @@ reversed fitness effect at later timepoints.
 %   \caption{}
 %   \label{}
 % \end{figure}
+
+% \section{Materials and Methods}
+
+% \subsection{Bias Correction}
+% \subsection{}
 
 \section{Acknowledgments} 
 
@@ -550,6 +551,7 @@ of timepoint $t+1$. Thus acts to bias the covariance by subtracting off the
 noise variance term of $\var(\widetilde{p}_{t+1})$, so we add that back in.
 
 \subsection{Variance-Covariance Matrix Correction}
+\label{supp:matrix-correction}
 
 Now, we extend the bias corrections for single locus variance and covariance
 described in Supplementary Material Sections \ref{supp:depth-var-corr},
@@ -645,6 +647,27 @@ initial generation across replicates. In this case, the sampling noise is
 shared between 
 
 
+\subsection{\textcite{Barghi2019-qy} Temporal Covariances}
+\label{supp:barghi-covs}
+
+Since each replicate population was sequenced every ten generations,
+the timepoints $t_0 = 0$ generations, $t_1 = 10$ generations, $t_2 = 20$
+generations, etc., lead to observed allele frequency changes across ten
+generation blocks, $\Delta p_{t_0}, \Delta p_{t_1}, \ldots, \Delta p_{t_6}$.
+Consequently, the ten temporal covariance matrices for each of the ten
+replicate populations have off-diagonal elements of the form $\cov(\Delta
+p_{t_0}, \Delta p_{t_1}) = \cov(p_{t_1} - p_{t_0}, p_{t_2} - p_{t_1}) =
+\sum_{i=0}^{10} \sum_{j=10}^{20} \cov(\Delta p_i, \Delta p_j)$. Each diagonal
+element has the form $\var(\Delta p_{t_0}) = \sum_{i=0}^{t_0} \var(\Delta
+p_{i}) + \sum_{i \ne j}^{t_0} \cov(\Delta p_{i}, \Delta p_{j})$, and is thus a
+combination of the effects of drift and selection, as both the variance in
+allele frequency changes and cumulative temporal autocovariances terms increase
+the variance in allele frequency. With sampling each generation, one could more
+accurately partition the total variance in allele frequency change
+\parencite{Buffalo2019-io}; while we cannot directly estimate the contribution
+of linked selection to the variance in allele frequency change here, the
+presence of a positive observed covariance between allele frequency change can
+only be caused linked selection. 
 
 \subsection{Block Bootstrap Procedure}
 \label{supp:block-bootstrap}
@@ -769,30 +792,35 @@ average sample depth in 100kb genomic windows in Figure
 \begin{figure}[!ht]
   \centering
   \includegraphics[]{figures/barghi-tailprobs-panels.pdf}
-
-  \caption{ }
+  \caption{}
   \label{suppfig:barghi-tailprobs-panels}
 \end{figure}
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[]{figures/barghi-tailprobs-seqid-0.20.pdf}
 
-  \caption{}
+  \includegraphics[]{figures/barghi-tailprobs-seqid-20.pdf}
+
+  \caption{The 20\% lower and upper tail probabilities for the observed
+  windowed covariances from the \textcite{Barghi2019-qy} study, based on
+  sign-permuting at the chromosome level. This permutation empirical null
+  is robust to long-range linkage disequilibrium acting over entire chromosomes.}
+  
   \label{suppfig:barghi-tailprobs-seqid}
 \end{figure}
 
 \subsection{\textcite{Bergland2014-ij} Re-Analysis}
 
-We also applied our temporal covariance approach to \texcite{Bergland2014-ij},
-a study that finds evidence of genome-wide fluctuating selection \gc{in between Spring
-and Fall seasons across three years. As described in \textcite{Buffalo2019-io},
-we would expect positive covariances between like seasons (i.e. Spring 2010 and
-Spring 2011), negative covariances between dislike seasons (i.e. Spring 2010
-and Fall 2011) when fluctuating selection is strong and acts genome-wide, as
-the original study found. However, while we find temporal covariances that are
-non-zero, we find only weak support for a seasonal fluctuating model driving
-these covariances. In Supplementary Figure XXX, we show the temporal
+
+We also applied our temporal covariance approach to \textcite{Bergland2014-ij},
+\gc{which found} evidence of genome-wide fluctuating selection between Spring
+and Fall seasons across three years \gc{{\it in Drosophila melanogaster}}. As described in \textcite{Buffalo2019-io},
+we \gc{might} expect positive covariances between like seasons (i.e. Spring 2010 and
+Spring 2011), and negative covariances between dislike seasons (i.e. Spring
+2010 and Fall 2011) when fluctuating selection is strong and acts genome-wide,
+as the original study found. However, while we find temporal covariances that
+are non-zero, we find only weak support for a seasonal fluctuating model
+driving these covariances. In Supplementary Figure \gc{XXX}, we show the temporal
 covariances from varying reference generations, across Spring/Fall,
 Spring/Spring, and Fall/Fall pairs. The first row of temporal covariance matrix
 is consistent with fluctuating selection operating for two timepoints, as the
@@ -801,42 +829,97 @@ are not statistically differentiable from zero (which could occur if LD and
 additive genetic variance decay). However, the all other temporal covariances
 do not fit the pattern we would expect under genome-wide fluctuating selection.
 
-We were concerned that this might be due to a flaw in our methods. To address
-this concern, we first ensured that our temporal-covariance matrix bias
-correction was working as expected. We find that it corrects the relationship
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/bergland_pvalues.pdf}
+
+  \caption{A: Scatterplot of the original unadjusted p-values from
+    \textcite{Bergland2014-ij} and the p-values from our reanalysis of the same
+    data using the same statistical methods; the minor discrepancy is likely due to software
+    version differences. B: The histograms of the p-values of our reanalysis
+    and the original \textcite{Bergland2014-ij} data; again the minor
+    discrepancy is likely due to software differences. Overall, our
+    implementation of Bergland et al.'s statistical methods produces results 
+    very close to the original analysis.}
+
+  \label{suppfig:bergland-pvalue-comparison}
+\end{figure}
+
+%We were concerned that this might be due to a flaw in our methods. To address
+%this concern, we first ensured that our
+\gc{To establish that our } temporal-covariance matrix bias
+correction was working \gc{correctly}. We find that it corrects the relationship
 between depth and both variance and covariance (Supplementary Figure XXX) as
-expected. We decided to re-analyze the data of \parencite{Bergland2014-ij}
-using the same seasonal fluctuating model as the original paper. This model is
-a Binomial logit-linked GLM, where the seasons are regressed on the frequency
-data, and the binomial weights are determined by the effective number of
-chromosomes, $N_{eff} = (2 n_t d_t - 1) / (2 n_t + d_t)$ where, using our
-notation, $n_t$ and $d_t$ are the number of diploid individuals and the read
-depth at timepoint $t$, respectively. We fit this model on all loci marked as
-used in the \textcite{Bergland2014-ij} study. Overall, our p-values for the
-Wald test for each locus closely match those of the original paper (Pearson
-correlation coefficient 0.98, p-value < $2.2 \times 10^{-16}; see Supplementary
-Figure XXX), and the histograms of the p-values are identical (Supplementary
-Figure XXX). 
+expected.
 
-While \textcite{Bergland2014-ij} find significant p-values after a Benjamini
-and Hochberg FDR p-value adjustment \parencite{Benjamini1995-jy}, they do not
-construct a null distribution of p-values as would be expected if fluctuating
-selection were not acting, which they could compare their observed p-value
-distribution to. Without such a distribution, we cannot know whether we might
-expect many variants across the genome to have frequencies that spuriously fit
-the pattern of fluctuating seasons. We created this empirical null distribution
-by randomly permuting the season labels and re-running the seasonal GLM model.
-We find, regardless of whether we permute at the locus-level or the permutation
-replicate-level, that the observed seasonal p-value distribution
-\textcite{Bergland2014-ij} is not enriched for significant p-values beyond what
-we would expect from the permutation null. In fact, there appears there is more
-enrichment for low p-values when 
+\gc{It is unclear how strong the fluctuations would have to be to
+  generate a genome-wide average signal of fluctuating selection from
+  temporal covariances. For example,there many loci could still show a
+  signal of fluctuating selection, but their average signals could be
+  overwhelmed by other signals of fluctuating selection. To
+  investigate whether there was an genome-wide excess} of loci showing evidence
+  of fluctuating selection we re-analyzed the data of \parencite{Bergland2014-ij} using the
+same seasonal fluctuating model as the original paper. This model is a Binomial
+logit-linked GLM fit per-locus, where the Spring/Fall seasons are encoded as a
+dummy variable, and are regressed on the frequency data. We use the same
+binomial weighting procedure as \textcite{Bergland2014-ij}, where the weights
+are determined by the effective number of chromosomes, $N_{eff} = (2 n_t d_t -
+1) / (2 n_t + d_t)$ ($n_t$ and $d_t$ are the number of diploid individuals and
+the read depth at timepoint $t$, respectively). We fit this model on all loci
+marked as used in the VCF provided with the \textcite{Bergland2014-ij} study
+(doi:10.5061/dryad.v883p). Overall, our p-values for the Wald test for each
+locus closely match those of the original paper (Pearson correlation
+coefficient 0.98, p-value < $2.2 \times 10^{-16}$; see Supplementary Figure
+\ref{suppfig:bergland-pvalue-comparison} A), and the histograms of the p-values
+are nearly identical (Supplementary Figure
+\ref{suppfig:bergland-pvalue-comparison} B). \gc{\textcite{Bergland2014-ij} find loci with a significant association with
+season after a Benjamini and Hochberg FDR p-value adjustment
+\parencite{Benjamini1995-jy},\gc{the bionomial null model does not
+  include random evolutionary variation in allele frequencies. }
 
-To address this limitation, we re-ran the seasonal GLM model
-on data where the seasonal labels are randomly permuted.
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/bergland-pvalue-permutation-hist.pdf}
+  \caption{}
+  \label{suppfig:bergland-pvalue-hist}
+\end{figure}
+
+%Without
+%such \gc{an evolutionary null} distribution, we do not have a statistical expectation for the number of
+%variants across the genome with frequency trajectories that spuriously fit the
+%pattern of seasonal fluctuating selection. We found that we can
 
 
+\gc{To investigate whether there is a genome-wide evidence of an
+  enrichment of fluctuating selection we created an
+empirical null distribution by randomly permuting the season labels and
+re-running the per-locus seasonal GLM model \gc{, as proposed by {\bf
+    Machado ET AL)}.} We find, regardless of whether we
+permute at the locus-level or the permutation replicate-level, that the
+observed seasonal p-value distribution \textcite{Bergland2014-ij} is not
+enriched for significant p-values beyond what we would expect from the
+permutation null. In fact, there appears there is more enrichment for low
+p-values when seasonal labels are randomly permuted (Supplementary Figure
+\ref{suppfig:bergland-pvalue-hist}, suggesting by random chance we might expect
+more variants with a seasonal fluctuating pattern than found in the original
+\textcite{Bergland2014-ij} study. While surprising, this could be explained by
+the presence of temporal structure across the samples not consistent with
+seasonal fluctuating selection. Some fraction of the $\nicefrac{6!}{(6-2)!} =
+30$ permutations happen to fit this structure well, leading to an enrichment of
+small p-values. This non-seasonal temporal structure is also evident in our
+temporal covariances (Supplementary Figure XXX), where we see strong evidence
+of selection (non-zero temporal covariances), yet the pattern does not follow
+that of seasonal fluctuating selection.
+\gc{ADD MORE HERE}
 
 
+%\gc{Note that this analysis does not rule out the idea that prior
+ % analyses detected {\emph
+  %  some} loci showing a pattern of fluctuating selection. Indeed
+  %\textcite{Bergland2014-ij} provided a number of analyses that
+  %suggested that their loci might be enriched for {\bf XXX}. However,
+  %this reanalysis suggests that we currently lack genome-wide evidence
+%of many loci experiencing fluctuating selection in {\it in Drosophila
+ % melanogaster}. }
 
 \end{document}

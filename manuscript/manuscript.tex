@@ -357,71 +357,70 @@ depicted to the right.}
   \label{fig:figure-2}
 \end{figure}
 
-Finally, we observed that in the longest run evolve-and-resequence study we
+Finally, we observed that in the \gc{longest study}  we   %run evolve-and-resequence 
 analyzed \parencite{Barghi2019-qy}, some genome-wide temporal covariances
-appeared to become negative at future timepoints (see the first two rows in
-Figure \ref{fig:figure-1} A). This could be caused by advantageous fitness
-backgrounds later becoming disadvantageous, either due to frequency-dependent
-selection, recombination breaking up coupled beneficial and deleterious
-alleles, or an environmental change in the direction of selection. However, the
-signal of a change in the direction of selection localized to a particular
-region of the genome may be washed out when we calculate genome-wide temporal
-covariances.  Averaging over such large numbers of loci is necessary to detect
-a signal of covariance in allele frequency changes when both drift (inflated in
-evolve-and-sequence studies which use small population sizes) and sampling
-variance can create spurious covariances. To address this limitation, we
-calculated temporal covariances over 100kb genomic windows (mean loci per
-window 4,606, median 4,830). While the covariance of each tile is noisy, we can
-analyze the genome-wide distribution of tile covariances for changes through
-time. We would like to compare the distribution of these tile covariances to a
-neutral expectation, but using a theoretic neutral null distribution would be
-inappropriate given complex dependencies across the genome due to linkage
+\gc{become} negative at future timepoints (see the first two rows in
+Figure \ref{fig:figure-1} A). \gc{This shows that alleles that were on
+average going up initially are no going down in frequency, i.e. that
+the average direction of selection experienced by alleles has
+flipped. This must reflect either a change in the environment or the
+genetic background, due to changing epistatic relationships among
+alleles or  recombination breaking up selective alleles.}
+\gc{Such reversals of selective dynamics could be occuring at other time-points but} the
+signal of a change in the direction of selection \gc{at particular
+  loci} may be washed out when we calculate our  genome-wide \gc{average} temporal
+covariances. To address this limitation, we
+calculated \gc{the distribution of the} temporal covariances over
+100kb genomic windows \gc{(Figure \ref{fig:figure-3}, pooling
+across all replicates see Supplementary Figure \ref{suppfig:barghi-offset-replicate-panels} for individuals replicates).}
+\gc{The}
+covariance of each tile is noisy, \gc{due to sampling and genetic
+  drift, shown in }. \gc{The neutral distribution of the covariance is
+  complicated due to} linkage
 disequilibria (which can occur over long physical distances in E\&R and
 selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). 
-
-Instead, we have developed a permutation-based procedure that constructs a null
-distribution of the genome-wide covariances as they would look if only neutral
-genetic drift was acting. We do this by randomly flipping the signs of the
-allele frequency changes per-genomic window 1,000 times, which acts to destroy
+\gc{Thus} we have developed a permutation-based procedure that constructs a null
+distribution by randomly flipping the signs of the    %of the
+                                %genome-wide covariances as they would
+                                %look if only neutral genetic drift was acting. We do this 
+allele frequency changes per-genomic window. \gc{This destroys}  %%  GC bit about 1,000 times seems more like figgure caption or methods
 the systematic covariances created by linked selection but creates a sampling
-distribution of the covariances spuriously created by neutral genetic drift.
+distribution of the covariances spuriously created by neutral genetic
+drift while preserve the complex dependencies
+between adjacent loci created by linkage disequilibrium (see Supplementary
+Material Section \ref{supp:empirical-null} for more details on this approach).
 This empirical neutral null distribution is conservative in the sense that the
-variances of the covariances are wider than expected under drift alone, since
-drift also acts to inflate the magnitude of allele frequency change. By
-flipping the sign at the block-level, we preserve the complex dependencies
-between adjacent loci created by linkage disequilibrium; see Supplementary
-Material Section \ref{supp:empirical-null} for more details on this approach.
-
-Using the \textcite{Barghi2019-qy} study's data, we used the empirical neutral
-null to investigate whether there was a general trend for the temporal
-covariance $\cov(\Delta p_t, \Delta p_{t+k})$ to be positive for small $k$ (as
-expected under selection), but then become systematically negative for larger
-$k$ (as would occur under evolutionary processes that reverse the fitness of
-regions across the genome). Such a change in the fitness direction of
-haplotypes would not be discernible from genome-wide covariances like those in
-Figure \ref{fig:figure-1}. We find (Figure \ref{fig:figure-3} A and B), pooling
-across all replicates (see Supplementary Figure
-\ref{suppfig:barghi-offset-replicate-panels} for individuals replicates), that
+variances of the covariances are wider than expected under drift
+alone \gc{as they include the effect of selection on the alele
+  frequency change within a time-interval, just not between
+  time-intervals. We see, Figure \ref{fig:figure-3} A and B, that
 windowed temporal covariances between close timepoints are skewed positive (a
 heavy right tail), while between more distant timepoints these windowed
-temporal covariances tend to shift to become more negative (a heavy left tail).
-We additionally quantified the degree to which the left and right tails change
-as we look at covariances between timepoints further apart (Figure
-\ref{fig:figure-3} C). We find that for covariances 2 timepoints apart ($k=2
-\times 10$ generations), the $20\%$ right tail is inflated by a of 1.3 (95\% CI
-[1.29, 1.32]), consistent with linked selection creating positive covariance in
-allele frequency change. Under constant directional selection, we expect these
-positive covariances between increasingly distant timepoints to decay to zero
-as additive genetic variance is exhausted by selection and linkage
-disequilibrium decays. Instead we find that for covariances 4 timepoints apart
-($k=4 \times 10$ generations), the left tail of negative covariances is
-inflated by a factor of 1.19 (95\% CI [1.17, 1.21]). This finding is also
+temporal covariances tend to shift to become more negative (a heavy
+left tail).
+We quantified the degree to which the left and right
+tails \gc{are inflated compared to the null distribution as a function
+  of time}, and see excesses in both tails in Figure
+\ref{fig:figure-3} C. This finding is also
 robust to sign-permuting allele frequency changes on a chromosome-level, the
-longest extent that gametic linkage disequilibria can extend (Supplementary
-Figure \ref{suppfig:barghi-tailprobs-seqid}). Overall, we see a striking
-pattern that covariances not only decay towards zero, but in fact become
-negative through time, consistent with some regions in the genome having had a
+longest extent that gametic linkage disequilibria can extend {\bf ????} (Supplementary
+Figure \ref{suppfig:barghi-tailprobs-seqid}).  \gc{We} see a striking
+pattern that \gc{the windowed} covariances not only decay towards zero, but in fact become
+negative through time, consistent with some \gc{many} regions in the genome having had a
 reversed fitness effect at later timepoints.
+
+%We find that for covariances 2 timepoints apart ($k=2
+%\times 10$ generations), the $20\%$ right tail is inflated by a of 1.3 (95\% CI
+%[1.29, 1.32]), consistent with linked selection creating positive covariance in
+%allele frequency change. Under constant directional selection, we expect these
+%positive covariances between increasingly distant timepoints to decay to zero
+%as additive genetic variance is exhausted by selection and linkage
+%disequilibrium decays. Instead we find that for covariances 4 timepoints apart
+%($k=4 \times 10$ generations), the left tail of negative covariances is
+%inflated by a factor of 1.19 (95\% CI [1.17, 1.21]).
+
+
+
 
 
 \begin{figure}[!ht]
@@ -431,7 +430,7 @@ reversed fitness effect at later timepoints.
   \caption{A, B: The distribution of temporal covariances calculated in 100kb
     genomic windows from the \textcite{Barghi2019-qy} study, plotted alongside
     an empirical neutral null distribution created by recalculating the
-    windowed covariances on sign permuting the allele frequency changes. The
+    windowed covariances on \gc{a 1000 sign permutions} allele frequency changes. The
     bin number is 88, chosen by cross validation (Supplementary Materials
     \ref{suppfig:barghi-cross-validation-binsize}). In subfigure A, windowed
     covariances $\cov(\Delta p_t, \Delta p_{t+k})$ are separated by $k=2 \times
@@ -450,6 +449,49 @@ neutral null.}
   
     \label{fig:figure-3} 
 \end{figure}
+
+%since
+%drift also acts to inflate the magnitude of allele frequency change. By
+f%lipping the sign at the block-level, we 
+
+
+%we can  % (mean \gc{SNP} perwindow 4,606, median 4,830)
+%analyze the genome-wide distribution of tile covariances for changes through
+t%ime. We would like to compare the distribution of these tile covariances to a
+%neutral expectation, but using a theoretic neutral null distribution would be
+%inappropriate given complex dependencies across the genome due to linkage
+%disequilibria (which can occur over long physical distances in E\&R and
+%selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). 
+
+
+%Averaging over such large numbers of loci is necessary to detect
+%a signal of covariance in allele frequency changes when both drift (inflated in
+%evolve-and-sequence studies which use small population sizes) and sampling
+%variance can create spurious covariances. 
+
+
+%This could be caused by advantageous fitness
+%backgrounds later becoming disadvantageous, either due to frequency-dependent
+%selection, recombination breaking up coupled beneficial and deleterious
+%alleles, or an environmental change in the direction of selection.
+%However, the
+%signal of a change in the direction of selection localized to a particular
+%region of the genome may be washed out when we calculate genome-wide temporal
+%covariances.
+
+
+%Using the \textcite{Barghi2019-qy} study's data, we used the empirical neutral
+%null to investigate whether there was a general trend for the temporal
+%covariance $\cov(\Delta p_t, \Delta p_{t+k})$ to be positive for small $k$ (as
+%expected under selection), but then become systematically negative for larger
+%$k$ (as would occur under evolutionary processes that reverse the fitness of
+%regions across the genome). Such a change in the fitness direction of
+%haplotypes would not be discernible from genome-wide covariances like those in
+%Figure \ref{fig:figure-1}.
+
+
+
+
 
 
 % \begin{figure}[!ht]

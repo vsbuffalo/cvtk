@@ -15,8 +15,7 @@
 % line numbers:
 \RequirePackage{lineno}
 %\modulolinenumbers[5]
-\definecolor{linenogray}{gray}{0.75}
-\renewcommand\linenumberfont{\normalfont\tiny\sffamily\color{linenogray}}
+\renewcommand\linenumberfont{\normalfont\tiny\sffamily\color{black}}
 
 % spacing
 \RequirePackage{setspace}
@@ -78,7 +77,58 @@
 \begin{document}
 \maketitle
 
+\linenumbers
+\begin{abstract}
+
+
+\end{abstract}
+
+
+
 \section{Introduction}
+
+A long-standing problem in evolutionary genetics is quantifying the roles drift
+and selection have in shaping genome-wide allele frequency changes. Previous
+work on this question has focused on teasing apart the impacts of drift and
+selection on genome-wide diversity using population samples from a single
+contemporary timepoint, usually by modeling the correlation between regional
+recombination rate and diversity created in the presence of linked selection
+(XXX). While this approach has dramatically informed our present view of the
+role of linked selection in shaping genome-wide diversity across a variety of
+organisms (XXX), and has allowed us to quantity the relative roles positive
+selection (hitchhiking) and negative selection (background selection) have
+shaping patterns of genome-wide diversity (XXX), we fully lack an understanding
+of how linked selection acts over an important dimension: time.
+
+Presently, there are numerous examples of phenotypes rapidly evolving (XXX),
+yet the polygenic nature of fitness makes detecting the impact selection has on
+genome-wide variation over short timescales remarkably difficult. This is
+because the effect of selection on a polygenic trait (such as fitness) is
+distributed across loci proportional to their effect sizes, leading to subtle
+allele frequency shifts that are difficult to distinguish from background
+levels of genetic drift and sampling variance. However, increasingly genomic
+studies with multiple timepoints and, in some cases, multiple replicate
+populations are becoming available, used to detect selected loci (XXX) and
+differentiate models of selection (XXX). In a previous paper, we proposed that
+one signal of polygenic linked selection that could be detected from these
+temporal genomic studies is the temporal autocovariance in allele frequency
+changes \parencite{Buffalo2019-io}. These covariances are directly estimable
+from temporal genomic data and are created only in the presence of linked
+selection, but not genetic drift in a closed population.
+
+Here, we provide the first empirical analyses quantify the impact of linked
+selection acting over short timescales (tens of generations) across two evolve
+and re-sequence studies \parencite{Barghi2019-qy,Kelly2019-dc}, and one
+artificial selection experiment \parencite{Castro2019-uk}. We repeatedly find a
+signal of temporal covariance, consistent with linked selection acting to
+significantly perturb genome-wide allele frequency changes across the genome in
+a manner that other approaches would not be able differentiate from genetic
+drift. We estimate the lower bound of the proportion of total variation in
+allele frequency change caused by linked selection, and the correlation between
+allele frequency changes between replicate populations caused by response to
+convergent selection pressures. Overall, we demonstrate that linked selection
+has a powerful role in shaping genome-wide allele frequency changes over very
+short timescales.
 
 \section{Results}
 
@@ -752,10 +802,16 @@ right) from the regression due to large differences in average coverage.}
   \centering
   \includegraphics[]{figures/barghi-cross-validation-binsize.pdf}
 
-  \caption{We chose the binsize used in the histograms of Figure
-  \ref{fig:figure-3} via an analytic expression for the cross-validation risk,
-based on the equation 6.16 of (\cite{Wasserman2006-jl}, p. )}
-  
+  \caption{We chose number of bins used in the histograms of Figure
+    \ref{fig:figure-3} via an analytic expression for the cross-validation
+    risk, based on the equation 6.16 of (\cite{Wasserman2006-jl}, p. 129).
+    Above, we plot the cross-validation risk for various numbers of bins, for
+    each of the four off-diagonals of the temporal covariance matrix that we
+    analyze. Overall, because the number of data points is large, oversmoothing
+    is less of a problem, leading the cross-validation risk to be relatively
+    flat across a large number of bins. Each gray point indicates the minimal
+    risk for a particular off-diagonal, and the dashed line indicates the best
+    average binwidth across off-diagonals.}
   \label{suppfig:barghi-cross-validation-binsize}
 \end{figure}
 

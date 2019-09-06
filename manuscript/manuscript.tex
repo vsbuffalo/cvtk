@@ -196,12 +196,12 @@ towards zero as we look at more distant time intervals, as expected when
 directional selection affects linked variants' frequency trajectories until
 ultimately linkage disequilibrium and additive genetic variance for fitness
 decay \parencite{Buffalo2019-io}. The temporal covariances per replicate are
-noisier but this general pattern holds; see Supplementary Figures XXX.
-\textcite{Barghi2019-qy}'s design means that the covariances we see in adjacent
-time intervals are on average ten generations apart, and given the temporal
-decay in covariance we see, the covariances on shorter time-scales may well be
-higher yet (see Supplementary Material Section \ref{supp:barghi-covs} for more
-details).
+noisier but this general pattern holds; see Supplementary Figures
+\ref{suppfig:barghi-cov-panels}.  \textcite{Barghi2019-qy}'s design means that
+the covariances we see in adjacent time intervals are on average ten
+generations apart, and given the temporal decay in covariance we see, the
+covariances on shorter time-scales may well be higher yet (see Supplementary
+Material Section \ref{supp:barghi-covs} for more details).
 
 %We visualize these covariances in Figure \label{figure-1} (A), which
 %depicts the temporal covariances through time, for each of the five
@@ -508,7 +508,11 @@ t%ime. We would like to compare the distribution of these tile covariances to a
 
 \section{Acknowledgments} 
 
-Doc Edge.
+We would like to thank the authors of the original studies we've analyzed,
+including Christian Schl{\"o}tterer, John Kelly, Kimberly Hughes, Frank Chan,
+Campbell Rolian, Nick Barton, Alan Bergland, and Dmitri Petrov.  We would also
+like to thank Doc Edge for helpful statistical advice, and Matt Osmond for
+helpful discussions. 
 
 
 \section{Appendix}
@@ -916,6 +920,17 @@ right) from the regression due to large differences in average coverage.}
 \end{figure}
 
 
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-cov-panels.pdf}
+
+  \caption{The temporal covariances from the \textcite{Barghi2019-qy} study,
+  for each replicate individually.}
+
+  \label{suppfig:barghi-cov-panels}
+\end{figure}
+
+
 
 \subsection{\textcite{Barghi2019-qy} Tail Probabilities for Windowed Covariances Distributions}
 
@@ -951,14 +966,18 @@ dislike seasons (i.e. Spring 2010 and Fall 2011) when fluctuating selection is
 strong and acts genome-wide, as the original study found. However, while we
 find temporal covariances that are non-zero, we find only weak support for a
 seasonal fluctuating model driving these covariances. In Supplementary Figure
-XXX, we show the temporal covariances from varying reference generations,
-across Spring/Fall, Spring/Spring, and Fall/Fall pairs. The first row of
-temporal covariance matrix is consistent with fluctuating selection operating
-for two timepoints, as the first covariance is negative, and the second is
-positive, and later covariances are not statistically differentiable from zero
-(which could occur if LD and additive genetic variance decay). However, the all
-other temporal covariances do not fit the pattern we would expect under
-genome-wide fluctuating selection.
+\ref{suppfig:bergland-covs-figure}, we show the temporal covariances from
+\vb{varying reference generations, across seasonal transitions that are alike (e.g.
+the covariance between the allele frequency changes between Fall 2009 and
+Spring 2009, and frequency changes between Fall 2010 and Spring 2010), and
+dislike (e.g. the covariance between the allele frequency change between Fall
+2009 and Spring 2009, and the frequency changes between Spring 2010 and Fall
+2009)}. The first row of temporal covariance matrix is consistent with
+fluctuating selection operating for two timepoints, as the first covariance is
+negative, and the second is positive, and later covariances are not
+statistically differentiable from zero (which could occur if LD and additive
+genetic variance decay). However, the all other temporal covariances do not fit
+the pattern we would expect under genome-wide fluctuating selection.
 
 \begin{figure}[!ht]
   \centering
@@ -1031,7 +1050,7 @@ selection.}
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[]{figures/bergland-pvalue-permutation-hist.pdf}
+  \includegraphics[]{figures/bergland-combined-hists.pdf}
   \caption{}
   \label{suppfig:bergland-pvalue-hist}
 \end{figure}
@@ -1073,9 +1092,30 @@ the presence of temporal structure across the samples not consistent with
 seasonal fluctuating selection. Some fraction of the permutations happen to fit
 this structure well, leading to an enrichment of small p-values. This
 non-seasonal temporal structure is also evident in our temporal covariances
-(Supplementary Figure XXX), where we see strong evidence of selection (non-zero
-temporal covariances), yet the pattern does not follow that of seasonal
-fluctuating selection.  \gc{ADD MORE HERE}
+(Supplementary Figure \ref{suppfig:bergland-covs-figure}), where we see strong
+evidence of selection (non-zero temporal covariances), yet the pattern does not
+follow that of seasonal fluctuating selection.  \gc{ADD MORE HERE}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/bergland-covs-figure.pdf}
+
+  \caption{Temporal covariances from the \textcite{Bergland2014-ij} study, from
+    varying reference generations (e.g. rows along the temporal covariance
+    matrix). Each covariance is labeled indicating whether the covariance is
+    between two like seasonal transitions (e.g. the covariance between allele
+    frequency changes from fall to spring in one year, and fall to spring in
+    another or two dislike seasons (e.g. the covariance between fall to spring
+    in one year, and spring to fall in another year). Covariances between like
+    transitions are expected to be positive when there is a genome-wide effect
+    of fluctuating selection (and these labels are colored blue), while
+    covariances between dislike transitions are expected to be negative (and
+    these labels are colored red). 95\% confidence intervals were constructed
+    by a block-bootstrapping procedure where the blocks are megabase tiles.}
+
+  \label{suppfig:bergland-covs-figure}
+\end{figure}
+
 
 
 %\gc{Note that this analysis does not rule out the idea that prior

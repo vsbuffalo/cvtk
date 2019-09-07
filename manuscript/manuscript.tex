@@ -87,41 +87,63 @@
 
 \section{Introduction}
 
-A long-standing problem in evolutionary genetics is quantifying the roles drift
-and selection have in shaping genome-wide allele frequency changes. Previous
-work on this question has focused on teasing apart the impacts of drift and
+A long-standing problem in evolutionary genetics is quantifying the
+roles \gc{genetic} drift
+and selection have in shaping genome-wide allele frequency
+changes. Seletion can both directly and indirectly affect
+allele frequency change, with the indirect effect coming from the
+action of selection on \gc{correlated loci elsewhere in genome
+  e.g. linked selection \parencite{MaynardSmith,Charleseworths,etc}}.
+Previous
+work on this question has \gc{mostly} focused on teasing apart the impacts of drift and
 selection on genome-wide diversity using population samples from a single
-contemporary timepoint, usually by modeling the correlation between regional
-recombination rate and diversity created in the presence of linked selection
-\parencite{Begun1992-ey,Elyashiv2016-vt}. While this approach has dramatically
-informed our present view of the role of linked selection in shaping patterns
-of genome-wide diversity across a variety of organisms
+contemporary timepoint, \gc{often} by modeling the correlation between regional
+recombination rate, \gc{gene density,} and diversity created in the presence of linked selection
+\parencite{Begun1992-ey,Elyashiv2016-vt}. \gc{This} approach has
+\gc{shown a major }
+role \gc{for} linked selection in shaping patterns
+of genome-wide diversity across \gc{the gneomes of} a variety of organisms
 \parencite{Begun2007-bg,Beissinger2016-cm,Sattath2011-dr,Williamson2014-oy,Andersen2012-bj,Cutter2010-gi},
 and has allowed us to quantity the relative roles positive selection
 (hitchhiking) and negative selection (background selection) have shaping
 patterns of genome-wide diversity
-\parencite{Nordborg2005-dc,McVicker2009-ax,Hernandez2011-gs,Elyashiv2016-vt},
-we fully lack an understanding of how linked selection acts over an important
+\parencite{Nordborg2005-dc,McVicker2009-ax,Hernandez2011-gs,Elyashiv2016-vt}.
+\gc{However, we} lack an understanding of how \gc{genome-wide} linked selection acts over an important
 dimension: time.
 
-Presently, there are numerous examples of phenotypes rapidly evolving
-\parencite{Grant2011-wk,Grant2006-hj,Reznick1997-mh,Franks2007-dr} yet the
+Presently, there are numerous examples of \gc{rapid phenotypic adaptation}
+\parencite{Grant2011-wk,Grant2006-hj,Reznick1997-mh,Franks2007-dr}
+and \gc{rapid genomic evolution in asexual populations \parencite{Lenski,Desai}.}
+Yet the
 polygenic nature of fitness makes detecting the impact selection has on
-genome-wide variation over short timescales remarkably difficult. This is
+genome-wide variation over short timescales \gc{in sexual populations} remarkably difficult. This is
 because the effect of selection on a polygenic trait (such as fitness) is
-distributed across loci proportional to their effect sizes, leading to subtle
+distributed across loci proportional to their effect sizes, \gc{which
+  can} lead to subtle  %want to be careful here as Kevin T and
+                       %Wolfgang would say that
 allele frequency shifts that are difficult to distinguish from background
 levels of genetic drift and sampling variance. However, increasingly genomic
-studies with multiple timepoints and, in some cases, multiple replicate
+\gc{experimental evolution} studies with multiple timepoints and, in some cases, multiple replicate
 populations are becoming available, are being used to detect selected loci
-\parencite{Turner2011-sx,Turner2012-bm} and differentiate modes of selection
-\parencite{Burke2010-tz,Barghi2019-qy}. In a previous paper, we proposed that
+\parencite{Turner2011-sx,Turner2012-bm} and differentiate modes of
+selection %cite silver fish by Nina and others
+\parencite{Burke2010-tz,Barghi2019-qy}. \gc{In addition these temporal-genomic
+  studies have begun in wild populations \parencite{Bergland,Machado,Othere}
+ } In a previous paper, we proposed that
 one signal of polygenic linked selection that could be detected from these
 temporal genomic studies is the temporal autocovariance in allele frequency
 changes \parencite{Buffalo2019-io}. These covariances are directly estimable
 from temporal genomic data and are created when the loci that underly heritable
 fitness variation perturbed linked neutral alleles; when genetic drift acts
 alone in a closed population, these covariances are zero in expectation.
+\gc{The covariances provide a useful tool for understanding the
+  gneome-wide imapct of linked selection. First, because it is
+  mathematically natural
+  to decompose the total variance in temporal allele frequency change
+  across a set of time intervals into the covariances in allele
+  frequency change among time intervals. Second, because biologically
+  the covariances reflect the correlation of selection coefficients
+  experienced in different time intervals. }
 
 Here, we provide the first empirical analyses quantify the impact of linked
 selection acting over short timescales (tens of generations) across two evolve
@@ -347,12 +369,15 @@ Paragraph about large effect loci.
   \centering
   \includegraphics[width=\textwidth]{figures/figure-2.pdf}
 
-  \caption{A: The convergence correlation, averaged across replicate pairs,
+  \caption{gc{{\bf A}}: The convergence correlation, averaged across replicate pairs,
     through time. Each line represents the convergence correlation
     $\mathrm{cor}(\Delta p_{s}, \Delta p_{s})$ from a starting reference
     generation $s$ to a later time $t$, which varies along the x-axis; each
   line corresponds to a row of the temporal convergence correlation matrix
-depicted to the right.}
+depicted to the right.  \gc{{\bf B}: The convergence covariance between
+individual pairs of replicates in the \textcite{Kelly2019-dc} data. {\bf C}:  The convergence covariance between
+individual pairs of replicates in \parencite{Castro2019-uk} data, for
+the two selection lines  (LS1 and LS2) and the control (Ctrl).}}
 
   \label{fig:figure-2}
 \end{figure}
@@ -374,8 +399,8 @@ calculated \gc{the distribution of the} temporal covariances over
 100kb genomic windows \gc{(Figure \ref{fig:figure-3}, pooling
 across all replicates see Supplementary Figure \ref{suppfig:barghi-offset-replicate-panels} for individuals replicates).}
 \gc{The}
-covariance of each tile is noisy, \gc{due to sampling and genetic
-  drift, shown in }. \gc{The neutral distribution of the covariance is
+covariance of each tile \gc{will be} noisy, \gc{due to sampling and genetic
+  drift, and the neutral distribution of the covariance is
   complicated due to} linkage
 disequilibria (which can occur over long physical distances in E\&R and
 selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). 
@@ -430,8 +455,9 @@ reversed fitness effect at later timepoints.
   \caption{A, B: The distribution of temporal covariances calculated in 100kb
     genomic windows from the \textcite{Barghi2019-qy} study, plotted alongside
     an empirical neutral null distribution created by recalculating the
-    windowed covariances on \gc{a 1000 sign permutions} allele frequency changes. The
-    bin number is 88, chosen by cross validation (Supplementary Materials
+    windowed covariances on \gc{a 1000 sign permutions of} allele
+    frequency changes \gc{within tiles}. The
+    \gc{histogram} bin number is 88, chosen by cross validation (Supplementary Materials
     \ref{suppfig:barghi-cross-validation-binsize}). In subfigure A, windowed
     covariances $\cov(\Delta p_t, \Delta p_{t+k})$ are separated by $k=2 \times
     10$ generations and in subfigure B the covariances are separated by $k=4

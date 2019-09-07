@@ -12,6 +12,7 @@
 \RequirePackage{bbm}
 \RequirePackage{tikz}
 
+
 % line numbers:
 \RequirePackage{lineno}
 %\modulolinenumbers[5]
@@ -499,15 +500,20 @@ variation over very short timescales.
 We re-analyzed three published temporal genomic datasets and detected the
 genome-wide signature of linked selection acting over tens of generations.
 Furthermore, we find the dynamics of temporal autocovariance are consistent
-with theory; as linkage disequilibria and additive variation for fitness decay
-through time, temporal covariance decays. In reanalyzing one study
+with theory; \gc{the temporal covariance in allele frequencies decay}
+as \gc{presumably due to the} linkage disequilibria and additive variation \gc{for
+fitness present in a particular generation} decay through time \graham{So we need to be careful here. As
+  the additive var for fitness may be constant. It's that the VA from
+  a particular gen is decaying. Not sure if }. In reanalyzing one study
 \parencite{Barghi2019-qy}, we find that after sixty generations, greater than
 20\% of the variation in allele frequency change is directly due to the action
 linked selection. Capitalizing on replicated evolve-and-resequence study
 designs, we characterized the extent to which convergent selection pressures
 lead to parallel changes in allele frequency across replicate populations,
 finding that the correlation in allele frequency changes varies from 0.1 (in
-the \cite{Barghi2019-qy} study) to 0.36 (in the \cite{Kelly2019-dc} study).
+the \cite{Barghi2019-qy} study) to 0.36 (in the \cite{Kelly2019-dc}
+study). \graham{Are these just repeat numbers from main text? If so
+  nix this sentence}
 
 While we must keep in mind that the studies analyzed here were all laboratory
 populations and natural selection in the wild will likely differ, overall we
@@ -541,13 +547,13 @@ re-analyzed had linkage disequilibria data for the evolved populations. Our
 theory of temporal autocovariance tells us that the temporal autocovariances a
 neutral site experiences is determined by the product of the expected linkage
 disequilibrium and additive fitness variation that persists through the
-generations. This leads to a clear prediction: regions of higher linkage
+generations \gc{ \parencite{Buffalo}}. This leads to a clear prediction: regions of higher linkage
 disequilibrium and lower recombination should have greater temporal
 autocovariance than regions with lower LD and higher recombination.
 Unfortunately, we lack a high-resolution recombination map for \emph{D.
 simulans} and while there are LD data for \emph{D. simulans}
 \parencite{Signor2018-wg} we did not find a relationship between temporal
-covariance and LD. 
+covariance and LD. \graham{Is important point. We'll likely need plots for supp}
 
 We believe this is driven by the idiosyncratic nature of LD in
 evolve-and-resequence populations \parencite{Nuzhdin2013-gf,Kelly2019-dc}, and
@@ -586,9 +592,11 @@ classic hitchhiking events, they could perhaps play less of a role in polygenic
 linked selection. However, with only three cases here, further studies on
 different taxa are needed.
 
+%more complex than expected under a model of
+%directional selection occurring until fitness variation is exhausted
+
 Finally, in re-analyzing the \textcite{Barghi2019-qy} study, we find evidence
-of linked selection dynamics more complex than expected under a model of
-directional selection occurring until fitness variation is exhausted. This is
+of \gc{complex} linked selection dynamics. This is
 due either to a change in the environment and its consequences for the fitness
 of regions in the genome, recombination breaking up selected alleles, or
 epistatic interactions between loci. It is important to note that the original
@@ -597,9 +605,11 @@ attained without intentionally seeking it out. Discerning which of these is
 creating negative temporal autocovariance is a sizable challenge, requiring
 sequencing each generation and LD data.
 
+%help us finally
+
 Overall, we hope this will encourage more temporal genomic studies in both
 laboratory and natural populations. Understanding the dynamics of linked
-selection over short timescales can help us finally unite phenotypic studies of
+selection over short timescales \gc{will help to} unite phenotypic studies of
 rapid adaptation of polygenic adaptations with a detectable genomic signature,
 to address long-standing questions on linked selection, evolutionary
 quantitative genetics, and the overall impact selection has on genetic

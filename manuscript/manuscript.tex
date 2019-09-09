@@ -6,6 +6,7 @@
 \RequirePackage{graphicx}
 \RequirePackage[normalem]{ulem}
 \RequirePackage[hidelinks]{hyperref}
+\RequirePackage{wrapfig}
 \RequirePackage{subcaption}
 \RequirePackage{authblk}
 \RequirePackage{bm}
@@ -67,7 +68,7 @@
 %   cov() 
 % - address the weird barghi rep correlation point for last time
 
-\title{Estimating the contribution of selection to temporal allele frequency change. }
+\title{Estimating the contribution of selection to temporal allele frequency change}
 
 
 \author[$\ast$,$\dag$,$1$]{Vince Buffalo}
@@ -82,39 +83,33 @@
 \linenumbers
 
 \begin{abstract}
-%Natural selection  as evident from numerous studies demonstrating
-%rapid phenotypic change
-  %As we developed
-%  in another paper \parencite{Buffalo2019-io}, o
-  \gc{Adaptation} can proceed in natural populations and \gc{selection
-  experiments over} very short timescales.
-  However, detecting these changes genome-wide is difficult, as rapid
-  adaptation often proceeds from standing variation or is the result of
-  polygenic selection, both of which \gc{may} leave faint genomic signals
-  indistinguishable from a noisy background of genetic drift. One promising signal comes from
-  the \gc{genome-wide} covariance between allele frequency changes observable from temporal
-  genomic data, e.g. evolve-and-resequence studies. These temporal covariances
-  reflect how the change in neutral allele frequency at one timepoint is
-  predictive of the changes at later timepoints when there is heritable fitness
-  variation in the population, as neutral alleles \gc{can remain
-  associated with their random selected background over time.}
-  %become stochastically linked
- % with selected loci.
-  Since genetic drift does not lead to temporal covariance,
-  we can \gc{use these covariances to} begin to directly estimate what fraction of the variation in allele
-  frequency change through time is drift by linked selection. Here, we
-  reanalyze two \emph{Drosophila simulans} evolve-and-resequence studies, and
-  one artificial selection experiment in mice, to quantify the effects of
-  linked selection over short timescales. Additionally, taking advantage of
-  selection on replicated populations, we can directly estimate the covariance
-  in allele frequency between replicates due to convergent selection
-  pressure.
-  \gc{We also identify signals of negative temporal covariance that
-   show that selection reverses its direction for a reasonable
-   proportion of loci over the time course of a selection experiment.}
+
+  Adaptation can proceed in natural populations and selection experiments over
+  very short timescales.  However, detecting these changes genome-wide is
+  difficult, as rapid adaptation often proceeds from standing variation or is
+  the result of polygenic selection, both of which may leave faint genomic
+  signals indistinguishable from a noisy background of genetic drift. One
+  promising signal comes from the genome-wide covariance between allele
+  frequency changes observable from temporal genomic data, e.g.
+  evolve-and-resequence studies. These temporal covariances reflect how the
+  change in neutral allele frequency at one timepoint is predictive of the
+  changes at later timepoints when there is heritable fitness variation in the
+  population, as neutral alleles can remain associated with their random
+  selected background over time. Since genetic drift does not lead to temporal
+  covariance, we can use these covariances to begin to directly estimate what
+  fraction of the variation in allele frequency change through time is drift by
+  linked selection. Here, we reanalyze two \emph{Drosophila simulans}
+  evolve-and-resequence studies, and one artificial selection experiment in
+  mice, to quantify the effects of linked selection over short timescales.
+  Additionally, taking advantage of selection on replicated populations, we can
+  directly estimate the covariance in allele frequency between replicates due
+  to convergent selection pressure.  We also identify signals of negative
+  temporal covariance that show that selection reverses its direction for a
+  reasonable proportion of loci over the time course of a selection experiment.
   Overall, we find that in the three studies we analyzed, linked selection has
   a remarkable impact on short term allele frequency dynamics that previously
   may have been attributed to genetic drift
+
 \end{abstract}
 
 
@@ -132,13 +127,13 @@ focused on teasing apart the impacts of drift and selection on genome-wide
 diversity using population samples from a single contemporary timepoint, often
 by modeling the correlation between regional recombination rate, gene density,
 and diversity created in the presence of linked selection
-\parencite{Begun1992-ey,Elyashiv2016-vt}. This approach \vb{has shown linked
-  selection has a major role in shaping patterns of genome-wide diversity
-across the genomes of some of organisms}
+\parencite{Begun1992-ey,Elyashiv2016-vt}. This approach has shown linked
+selection has a major role in shaping patterns of genome-wide diversity across
+the genomes of some of organisms
 \parencite{Begun2007-bg,Beissinger2016-cm,Sattath2011-dr,Williamson2014-oy,Andersen2012-bj,Cutter2010-gi},
 and has allowed us to quantify the relative influence of positive selection
-(hitchhiking) and \vb{negative selection (background selection;
-\cite{Nordborg2005-dc,McVicker2009-ax,Hernandez2011-gs,Elyashiv2016-vt}}.
+(hitchhiking) and negative selection (background selection;
+\cite{Nordborg2005-dc,McVicker2009-ax,Hernandez2011-gs,Elyashiv2016-vt}.
 However, we lack an understanding of how genome-wide linked selection acts over
 an important dimension: time.
 
@@ -150,29 +145,28 @@ of fitness makes detecting the impact selection has on genome-wide variation
 over short timescales in sexual populations remarkably difficult. This is
 because the effect of selection on a polygenic trait (such as fitness) is
 distributed across loci proportional to their effect sizes, which can lead to
-subtle allele frequency shifts \vb{on standing variation} that are difficult to
+subtle allele frequency shifts on standing variation that are difficult to
 distinguish from background levels of genetic drift and sampling variance.
 However, increasingly genomic experimental evolution studies with multiple
 timepoints, and in some cases multiple replicate populations, are being used to
 detect selected loci \parencite{Turner2011-sx,Turner2012-bm} and differentiate
 modes of selection \parencite{Burke2010-tz,Barghi2019-qy,Therkildsen2019-zy}.
-In addition these temporal-genomic studies have begun in wild populations,
-\gc{some} with the goal of finding variants that exhibit frequency changes consistent
-with fluctuating selection \parencite{Bergland2014-ij,Machado2018-cs}. \vb{In
-a previous paper, we proposed that one useful signal for understanding the
-genome-wide impact of polygenic linked selection detectable from temporal
+In addition these temporal-genomic studies have begun in wild populations, some
+with the goal of finding variants that exhibit frequency changes consistent
+with fluctuating selection \parencite{Bergland2014-ij,Machado2018-cs}. \vb{In a
+  previous paper, we proposed that one useful signal for understanding the
+  genome-wide impact of polygenic linked selection detectable from temporal
 genomic studies} is the temporal autocovariance in allele frequency changes
 \parencite{Buffalo2019-io}.  These covariances are directly estimable from
 temporal genomic data and are created when the loci that underly heritable
-fitness variation perturb linked neutral alleles; \vb{in contrast}, when
-genetic drift acts alone in a closed population, these covariances are zero in
-expectation. Mathematically, temporal covariances \gc{are useful} because it is
-  natural to decompose the total variance in allele frequency change across a
-  set of time intervals into the variances and covariances in allele frequency
-  change among time intervals.  Furthermore, biologically, these covariances
-  reflect the extent to which allele frequency changes in one generation
-predict changes in another due to a shared fitness background and shared
-selection pressures.
+fitness variation perturb linked neutral alleles; in contrast, when genetic
+drift acts alone in a closed population, these covariances are zero in
+expectation. Mathematically, temporal covariances are useful because it is
+natural to decompose the total variance in allele frequency change across a set
+of time intervals into the variances and covariances in allele frequency change
+among time intervals.  Furthermore, biologically, these covariances reflect the
+extent to which allele frequency changes in one generation predict changes in
+another due to a shared fitness background and shared selection pressures.
 
 Here, we provide the first empirical analyses to quantify the impact of linked
 selection acting over short timescales (tens of generations) across two evolve
@@ -188,6 +182,7 @@ convergent selection pressures. Overall, we demonstrate that linked selection
 has a powerful role in shaping genome-wide allele frequency changes over very
 short timescales.
 
+\clearpage
 \section{Results}
 
 
@@ -230,7 +225,7 @@ seven timepoints and ten replicate populations, we estimated the genome-wide $6
 \times 6$ temporal covariance matrix $\mathbf{Q}$ for each of the ten
 replicates. Each row of these matrices represent the temporal covariance
 $\cov(\Delta_{_{10}} p_s, \Delta_{_{10}} p_t)$, between the allele frequency
-change (\vb{in ten generation intervals, denoted} $\Delta_{_{10}} p_t$) in some
+change (in ten generation intervals, denoted $\Delta_{_{10}} p_t$) in some
 initial reference generation $s$ (the row of the matrix), and some later
 timepoint $t$ (the column of the matrix). We corrected these matrices for
 biases created due to sampling noise, and normalize the entries for
@@ -247,13 +242,13 @@ covariances between all adjacent time intervals are positive and then decay
 towards zero as we look at more distant time intervals, as expected when
 directional selection affects linked variants' frequency trajectories until
 ultimately linkage disequilibrium and the additive genetic variance for fitness
-\vb{associated with neutral alleles} decays \parencite{Buffalo2019-io}. The
-temporal covariances per replicate are noisier but this general pattern holds;
-see Supplementary Figures \ref{suppfig:barghi-cov-panels}.
+associated with neutral alleles decays \parencite{Buffalo2019-io}. The temporal
+covariances per replicate are noisier but this general pattern holds; see
+Supplementary Figures \ref{suppfig:barghi-cov-panels}.
 \textcite{Barghi2019-qy}'s design means that the covariances we see in adjacent
 time intervals are on average ten generations apart, and given the temporal
-decay in covariance we see, the covariances on shorter time-scales (\vb{e.g. if
-adjacent generations had been sequenced}) may well be higher yet (see
+decay in covariance we see, the covariances on shorter time-scales (e.g. if
+adjacent generations had been sequenced) may well be higher yet (see
 Supplementary Material Section \ref{supp:barghi-covs} for more details).
 
 %We visualize these covariances in Figure \label{figure-1} (A), which
@@ -318,12 +313,12 @@ selection affecting allele frequencies over time, this measure not easily
 interpretable. Additionally, we can quantify the impact of linked selection on
 allele frequency change as the ratio of total covariance in allele frequency
 change to the total variance in allele frequency change. Since the total
-variation in allele frequency change can be \vb{partitioned} into variance and
+variation in allele frequency change can be partitioned into variance and
 covariance components, $\var(p_t - p_0) = \sum_{i \ne j} \cov(\Delta p_i,
 \Delta p_j) / \var(p_t - p_0)$, and the covariances are zero when drift acts
 alone, this is a lower bound on how much of the variance in allele frequency
 change is caused by linked selection \parencite{Buffalo2019-io}. We call this
-measure $G(t)$, which is \vb{this measure of} the effect of linked selection
+measure $G(t)$, which is this measure of the effect of linked selection
 between the initial generation $0$ and some later generation $t$, which can be
 varied to see how this quantity grows through time. As with the temporal
 covariances, the study design of \textcite{Barghi2019-qy} leads our measure
@@ -337,17 +332,17 @@ The replicate design of \textcite{Barghi2019-qy} also allows us to quantify
 another covariance: the covariance in allele frequency change between replicate
 populations experiencing convergent selection pressures. These
 between-replicate covariances are created in the same way as temporal
-covariances are: neutral alleles linked to a particular fitness background
+covariances: neutral alleles linked to a particular fitness background
 experience are expected to have allele frequency changes in the same direction
-if the selection pressures are similar. \vb{Intuitively, where temporal
-  covariances reflect that neutral alleles associated with heritable fitness
-  backgrounds are predictive of frequency changes between generations,
-  replicate covariances reflect that heritable fitness backgrounds common to
-each replicate predict (under the same selection pressures) frequency changes
-between replicates.} We measure this through a statistic similar to a
-correlation, which we call the convergent correlation: the ratio of average
-between-replicate covariance across all pairs to the average standard deviation
-across all pairs of replicates, 
+if the selection pressures are similar. Intuitively, where temporal covariances
+reflect that neutral alleles associated with heritable fitness backgrounds are
+predictive of frequency changes between generations, replicate covariances
+reflect that heritable fitness backgrounds common to each replicate predict
+(under the same selection pressures) frequency changes between replicates. We
+measure this through a statistic similar to a correlation, which we call the
+convergent correlation: the ratio of average between-replicate covariance
+across all pairs to the average standard deviation across all pairs of
+replicates, 
 
 \begin{align}
   \label{eq:conv-corr}
@@ -363,10 +358,12 @@ covariance matrices. Like temporal covariances, we visualize these through time
 correlation from a particular reference generation $s$ as it varies with $t$
 (shown on the x-axis). In other words, each of the colored lines corresponds to
 the like-colored row of the convergence correlation matrix (upper left in
-Figure \ref{fig:figure-2} A). We find these convergent covariances decay very
-quickly, from an initial value of about 0.1 (95\% block bootstrap confidence
-intervals $[0.094, 0.11]$), to around 0.01 (95\% CIs [0.0087, 0.015]) within 20
-generations.
+Figure \ref{fig:figure-2} A). We find these convergent covariances are
+relatively weak, and decay very quickly from an initial value of about 0.1
+(95\% block bootstrap confidence intervals $[0.094, 0.11]$) to around 0.01
+(95\% CIs [0.0087, 0.015]) within 20 generations. This seems to confirm a
+primary finding of the original \textcite{Barghi2019-qy} study: that
+alternative loci contribute to adaptation in different replicates.
 
 \begin{figure}[!htb]
   \centering
@@ -389,79 +386,7 @@ generations.
   \label{fig:figure-2}
 \end{figure}
 
-Finally, we observed that in the longest study  we analyzed
-\parencite{Barghi2019-qy}, some genome-wide temporal covariances become
-negative at future timepoints (see the first two rows in Figure
-\ref{fig:figure-1} A). This shows that alleles that were on average going up
-initially are later going down in frequency, i.e. that the average direction of
-selection experienced by alleles has flipped. This must reflect either a change
-in the environment or the genetic background, due to changing epistatic
-relationships among alleles or  recombination breaking up selective alleles.
-Such reversals of selective dynamics could be occurring at other timepoints but
-the signal of a change in the direction of selection at particular loci may be
-washed out when we calculate our genome-wide average temporal covariances.  To
-address this limitation, we calculated the distribution of the temporal
-covariances over 100kb genomic windows (Figure \ref{fig:figure-3}, pooling
-across all replicates; see Supplementary Figure
-\ref{suppfig:barghi-offset-replicate-panels} for individuals replicates). The
-covariance of each tile will be noisy, due to sampling and genetic drift, and
-the neutral distribution of the covariance is complicated due to linkage
-disequilibria (which can occur over long physical distances in E\&R and
-selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). \vb{To address
-this}, we have developed a permutation-based procedure that constructs a null
-distribution by randomly flipping the signs of the   allele frequency changes
-per-genomic window. This destroys the systematic covariances created by linked
-selection \vb{and} creates a sampling distribution of the covariances
-spuriously created by neutral genetic drift while preserving the complex
-dependencies between adjacent loci created by linkage disequilibrium (see
-Supplementary Material Section \ref{supp:empirical-null} for more details on
-this approach). This empirical neutral null distribution is conservative in
-the sense that the variances of the covariances are wider than expected under
-drift alone as they include the effect of selection on the allele frequency
-change within a time-interval, just not between time-intervals. We see (Figure
-\ref{fig:figure-3} A and B) that windowed temporal covariances between close
-timepoints are skewed positive (a heavy right tail), while between more distant
-timepoints these windowed temporal covariances tend to shift to become more
-negative (a heavy left tail).  We quantified the degree to which the left and
-right tails are inflated compared to the null distribution as a function of
-time, and see excesses in both tails in Figure \ref{fig:figure-3} C. This
-finding is also robust to sign-permuting allele frequency changes on a
-chromosome-level, the longest extent that gametic linkage disequilibria can
-extend (Supplementary Figure \ref{suppfig:barghi-tailprobs-seqid}). We see a
-striking pattern that the windowed covariances not only decay towards zero, but
-in fact become negative through time, consistent with many regions in the
-genome having had a reversed fitness effect at later timepoints.
-
 % TODO \vince{GC: you had ??? here, not sure I see the issue.} 
-
-\begin{figure}[!htb]
-  \centering
-  \includegraphics[]{figures/figure-3.pdf}
-
-  \caption{{\bf A}, {\bf B}: The distribution of temporal covariances
-    calculated in 100kb genomic windows from the \textcite{Barghi2019-qy}
-    study, plotted alongside an empirical neutral null distribution created by
-    recalculating the windowed covariances on a 1,000 sign permutations of
-    allele frequency changes within tiles. The histogram bin number is 88,
-    chosen by cross validation (Supplementary Materials
-    \ref{suppfig:barghi-cross-validation-binsize}). In subfigure {\bf A}, windowed
-    covariances $\cov(\Delta p_t, \Delta p_{t+k})$ are separated by $k=2 \times
-    10$ generations and in subfigure {\bf A} the covariances are separated by $k=4
-    \times 10$ generations; each $k$ is an off-diagonal from the variance
-    diagonal of the temporal covariance matrix (see cartoon of upper-triangle
-    of covariance matrix in subfigures {\bf A} and {\bf B}, where the first diagonal is the
-    variance, and the dark gray indicates which off-diagonal of the covariance
-    matrix is plotted in the histograms). {\bf C}: The lower and upper tail
-    probabilities of the observed windowed covariances, at 20\% and 80\%
-    quintiles of the empirical neutral null distribution, for varying time
-    between allele frequency changes (i.e. which off-diagonal $k$). The
-  confidence intervals are  $95\%$ block-bootstrap confidence interval, and the
-light gray dashed line indicates the 20\% tail probability expected under the
-neutral null.}
-  
-    \label{fig:figure-3} 
-\end{figure}
-
 
 A benefit of between-replicate covariances is unlike temporal covariances,
 these can be calculated with only two sequenced timepoints and a replicated
@@ -480,7 +405,6 @@ convergent correlation coefficient across these replicates as 0.36 ($95\%$
 block-bootstrap confidence interval $[0.31, 0.40]$).
 
 %\gc{TODO GIVE conversion \% var due to linked selection. }
-
 Second, we reanalyzed the Longshanks selection experiment, which selected for
 longer tibiae length relative to body size in mice, leading to a response of
 selection of about 5 standard deviations over the course of twenty generations
@@ -507,7 +431,7 @@ loci, we took the conservative precaution of excluding the entire chromosomes
 these loci reside on (chromosomes 5 and 10), and re-calculating the temporal
 covariances. We find excluding these large effect loci has little impact on the
 confidence intervals (blue confidence intervals in Figure \ref{fig:figure-2}),
-indicating that we these across-replicate covariances are indeed driven by a
+indicating that these across-replicate covariances are indeed driven by a
 polygenic signal.
 
 %We find that for covariances 2 timepoints apart ($k=2
@@ -519,6 +443,81 @@ polygenic signal.
 %disequilibrium decays. Instead we find that for covariances 4 timepoints apart
 %($k=4 \times 10$ generations), the left tail of negative covariances is
 %inflated by a factor of 1.19 (95\% CI [1.17, 1.21]).
+
+\begin{figure}
+  \begin{center}
+  \includegraphics[]{figures/figure-3.pdf}
+
+  \caption{\footnotesize {\bf A}, {\bf B}: The distribution of temporal covariances
+    calculated in 100kb genomic windows from the \textcite{Barghi2019-qy}
+    study, plotted alongside an empirical neutral null distribution created by
+    recalculating the windowed covariances on a 1,000 sign permutations of
+    allele frequency changes within tiles. The histogram bin number is 88,
+    chosen by cross validation (Supplementary Materials
+    \ref{suppfig:barghi-cross-validation-binsize}). In subfigure {\bf A}, windowed
+    covariances $\cov(\Delta p_t, \Delta p_{t+k})$ are separated by $k=2 \times
+    10$ generations and in subfigure {\bf A} the covariances are separated by $k=4
+    \times 10$ generations; each $k$ is an off-diagonal from the variance
+    diagonal of the temporal covariance matrix (see cartoon of upper-triangle
+    of covariance matrix in subfigures {\bf A} and {\bf B}, where the first diagonal is the
+    variance, and the dark gray indicates which off-diagonal of the covariance
+    matrix is plotted in the histograms). {\bf C}: The lower and upper tail
+    probabilities of the observed windowed covariances, at 20\% and 80\%
+    quintiles of the empirical neutral null distribution, for varying time
+    between allele frequency changes (i.e. which off-diagonal $k$). The
+  confidence intervals are  $95\%$ block-bootstrap confidence interval, and the
+light gray dashed line indicates the 20\% tail probability expected under the
+neutral null.}
+    \end{center}
+    \label{fig:figure-3} 
+\end{figure}
+
+\clearpage
+
+
+Finally, we observed that in the longest study  we analyzed
+\parencite{Barghi2019-qy}, some genome-wide temporal covariances become
+negative at future timepoints (see the first two rows in Figure
+\ref{fig:figure-1} A). This shows that alleles that were on average going up
+initially are later going down in frequency, i.e. that the average direction of
+selection experienced by alleles has flipped. This must reflect either a change
+in the environment or the genetic background, due to changing epistatic
+relationships among alleles or  recombination breaking up selective alleles.
+Such reversals of selective dynamics could be occurring at other timepoints but
+the signal of a change in the direction of selection at particular loci may be
+washed out when we calculate our genome-wide average temporal covariances.  To
+address this limitation, we calculated the distribution of the temporal
+covariances over 100kb genomic windows (Figure \ref{fig:figure-3}, pooling
+across all replicates; see Supplementary Figure
+\ref{suppfig:barghi-offset-replicate-panels} for individuals replicates). The
+covariance of each tile will be noisy, due to sampling and genetic drift, and
+the neutral distribution of the covariance is complicated due to linkage
+disequilibria (which can occur over long physical distances in E\&R and
+selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). To address
+this, we have developed a permutation-based procedure that constructs a null
+distribution by randomly flipping the signs of the  allele frequency changes
+per-genomic window. This destroys the systematic covariances created by linked
+selection and creates a sampling distribution of the covariances
+spuriously created by neutral genetic drift while preserving the complex
+dependencies between adjacent loci created by linkage disequilibrium (see
+Supplementary Material Section \ref{supp:empirical-null} for more details on
+this approach). This empirical neutral null distribution is conservative in
+the sense that the variances of the covariances are wider than expected under
+drift alone as they include the effect of selection on the allele frequency
+change within a time-interval, just not between time-intervals. We see (Figure
+\ref{fig:figure-3} A and B) that windowed temporal covariances between close
+timepoints are skewed positive (a heavy right tail), while between more distant
+timepoints these windowed temporal covariances tend to shift to become more
+negative (a heavy left tail).  We quantified the degree to which the left and
+right tails are inflated compared to the null distribution as a function of
+time, and see excesses in both tails in Figure \ref{fig:figure-3} C. This
+finding is also robust to sign-permuting allele frequency changes on a
+chromosome-level, the longest extent that gametic linkage disequilibria can
+extend (Supplementary Figure \ref{suppfig:barghi-tailprobs-seqid}). We see a
+striking pattern that the windowed covariances not only decay towards zero, but
+in fact become negative through time, consistent with many regions in the
+genome having had a reversed fitness effect at later timepoints.
+
 
 \section{Discussion}
 
@@ -546,19 +545,20 @@ difficult endeavor \parencite{Przeworski2005-bg} met with new coalescent models
 the genome-wide effects of selection on standing variation, e.g. selection on
 an infinitesimal polygenic trait, stems from an early quantitative genetic
 model of linked selection \parencite{Robertson1961-ho} and its later
-developments \parencite{Santiago1995-hx,Santiago1998-bs}. Implicit in these
-models is that autocovariance between allele frequency change is created when
-there is heritable fitness variation in the population, a signal that can be
-readily detected from temporal genomic data \parencite{Buffalo2019-io}. Here,
-we provide the first empirical evidence of linked selection acting on standing
-variation over very short timescales.
+developments (\cite{Santiago1995-hx,Santiago1998-bs}; see also
+\cite{Barton2000-zg} for a comparison of these models with classic hitchhiking
+models). Implicit in these models is that autocovariance between allele
+frequency change is created when there is heritable fitness variation in the
+population, a signal that can be readily detected from temporal genomic data
+\parencite{Buffalo2019-io}. Here, we provide the first empirical evidence of
+linked selection acting on standing variation over very short timescales.
 
 We reanalyzed three published temporal genomic datasets and detected the
 genome-wide signature of linked selection acting over tens of generations.
 Furthermore, we find the dynamics of temporal autocovariance are consistent
-with theory; the temporal covariance in allele frequencies decays \vb{as both
+with theory; the temporal covariance in allele frequencies decays as both
 the fitness variation associated with particular haplotypes and the linkage
-disequilibria between selected and neutral loci decay through time}. In
+disequilibria between selected and neutral loci decay through time. In
 reanalyzing one study \parencite{Barghi2019-qy}, we find that after sixty
 generations, greater than 20\% of the variation in allele frequency change is
 directly due to the action linked selection. Capitalizing on replicated
@@ -1193,12 +1193,12 @@ and acts genome-wide, as the original study found. However, while we find
 temporal covariances that are non-zero, we find only weak support for a
 seasonal fluctuating model driving these covariances.  In Supplementary Figure
 \ref{suppfig:bergland-covs-figure}, we show the temporal covariances from
-\vb{varying reference generations, across seasonal transitions that are alike
-  (e.g.  the covariance between the allele frequency changes between Fall 2009
-  and Spring 2009, and frequency changes between Fall 2010 and Spring 2010),
-and dislike (e.g. the covariance between the allele frequency change between
-Fall 2009 and Spring 2009, and the frequency changes between Spring 2010 and
-Fall 2009)}. The first row of temporal covariance matrix is consistent with
+varying reference generations, across seasonal transitions that are alike (e.g.
+the covariance between the allele frequency changes between Fall 2009 and
+Spring 2009, and frequency changes between Fall 2010 and Spring 2010), and
+dislike (e.g. the covariance between the allele frequency change between Fall
+2009 and Spring 2009, and the frequency changes between Spring 2010 and Fall
+2009). The first row of temporal covariance matrix is consistent with
 fluctuating selection operating for two timepoints, as the first covariance is
 negative, and the second is positive, and later covariances are not
 statistically differentiable from zero (which could occur if LD and additive
@@ -1247,10 +1247,10 @@ see Supplementary Figure \ref{suppfig:bergland-pvalue-comparison} A), and the
 histograms of the p-values are nearly identical (Supplementary Figure
 \ref{suppfig:bergland-pvalue-comparison} B). \textcite{Bergland2014-ij} find
 loci with a significant association with season after a Benjamini and Hochberg
-FDR p-value adjustment \parencite{Benjamini1995-jy}, \vb{however, the null
+FDR p-value adjustment \parencite{Benjamini1995-jy}, however, the null
 hypothesis of the Wald test does not give us an idea of the expected number of
 variants that may spuriously fit the pattern of seasonal fluctuating
-selection.}
+selection.
 
 % ======= We were concerned that this might be due to a flaw in our methods. To
 % address this concern, we first ensured that our temporal-covariance matrix

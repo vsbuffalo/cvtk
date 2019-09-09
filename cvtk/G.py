@@ -77,6 +77,7 @@ def convergence_corr_numerator(stacked_replicate_covs):
     E_{A≠B} cov(Δp_{t,A}, Δp_{s,B})
     """
     assert(stacked_replicate_covs.ndim == 4)
+    #return stacked_replicate_covs
     return np.mean(stacked_replicate_covs, axis=3)
 
 def convergence_corr_denominator(stacked_temporal_covs):

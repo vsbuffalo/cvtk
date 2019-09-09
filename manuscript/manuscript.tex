@@ -80,8 +80,32 @@
 \maketitle
 
 \linenumbers
+
 \begin{abstract}
 
+  Natural selection can proceed in natural populations over short timescales,
+  as evident from numerous studies demonstrating rapid phenotypic change.
+  However, detecting these changes genome-wide is difficult, as rapid
+  adaptation often proceeds from standing variation or is the result of
+  polygenic selection, both of which leave faint genomic signals
+  indistinguishable from a noisy background of genetic drift. As we developed
+  in another paper \parencite{Buffalo2019-io}, one promising signal comes from
+  the covariance between allele frequency changes observable from temporal
+  genomic data, e.g. evolve-and-resequence studies. These temporal covariances
+  reflect how the change in neutral allele frequency at one timepoint is
+  predictive of the changes at later timepoints when there is heritable fitness
+  variation in the population, as neutral alleles become stochastically linked
+  with selected loci. Since genetic drift does not lead to temporal covariance,
+  we can begin to directly estimate what fraction of the variation in allele
+  frequency change through time is drift by linked selection. Here, we
+  re-analyze two \emph{Drosophila simulans} evolve-and-resequence studies, and
+  one artificial selection experiment in mice, to quantify the effects of
+  linked selection over short timescales. Additionally, taking advantage of
+  selection on replicated populations, we can directly estimate the covariance
+  in allele frequency between replicates due to convergent selection pressure.
+  Overall, we find that in the three studies we analyzed, linked selection has
+  a remarkable impact on short term allele frequency dynamics that previously
+  may have been attributed to genetic drift.
 
 \end{abstract}
 
@@ -256,7 +280,7 @@ Material Section \ref{supp:barghi-covs} for more details).
 % decay, which in \textcite{Barghi2019-qy}'s study design is on average 10
 % generations.
 
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\textwidth]{figures/figure-1.pdf}
 
@@ -328,52 +352,20 @@ quickly, from an initial value of about 0.1 (95\% block bootstrap confidence
 intervals $[0.094, 0.11]$), to around 0.01 (95\% CIs [0.0087, 0.015]) within 20
 generations.
 
-A benefit of between-replicate covariances is unlike temporal covariances,
-these can be calculated with only two sequenced timepoints and a replicated
-study design. This allowed allowed us to assess the impact of linked selection
-in driving convergent patterns of allele frequency change across replicate
-populations in two other studies. First, we reanalyzed the selection experiment
-of \textcite{Kelly2019-dc}, which evolved three replicate wild populations of
-\emph{Drosophila simulans} for 14 generations adapting to a novel laboratory
-environment. Since each replicate was exposed to the same selection pressure
-and share linkage disequilibria common to the original natural founding
-population, we expected each of the three replicate populations to have
-positive between-replicate covariances. We find all three pairwise
-between-replicate covariances are positive and statistical significant (95\%
-CIs, [0.0063, 0.0086], [0.0064, 0.0086], [0.0061, 0.0083]). We estimate the
-convergent correlation coefficient across these replicates as 0.36 ($95\%$
-block-bootstrap confidence interval $[0.31, 0.40]$). \gc{GIVE conversion \% var
-due to linked selection. }
-
-Second, we reanalyzed the Longshanks selection experiment, which selected for
-longer tibiae length relative to body size in mice, leading to a response of
-selection of about 5 standard deviations over the course of twenty generations
-\parencite{Castro2019-uk}. This study includes two independent selection lines,
-Longshanks 1 and 2 (LS1 and LS2), and an unselected control line (Ctrl).
-Consequently, this selection experiment offers a useful control to test our
-between-replicate covariances: we expect to see positive between-replicate
-covariance in the comparison between the two Longshanks selection lines, but
-not between the two pairwise comparisons between the control line and the two
-Longshanks lines. We find that this is the case (Figure \ref{fig:figure-2} C),
-with the two Longshanks comparisons to the control line not being significantly
-different from zero, while the comparison between the two Longshanks line is
-statistically significantly different from zero (CIs XXX).
-
-Paragraph about large effect loci.
-
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[width=\textwidth]{figures/figure-2.pdf}
 
-  \caption{gc{{\bf A}}: The convergence correlation, averaged across replicate pairs,
-    through time. Each line represents the convergence correlation
+  \caption{{\bf A}: The convergence correlation, averaged across replicate
+    pairs, through time. Each line represents the convergence correlation
     $\mathrm{cor}(\Delta p_{s}, \Delta p_{s})$ from a starting reference
     generation $s$ to a later time $t$, which varies along the x-axis; each
-  line corresponds to a row of the temporal convergence correlation matrix
-depicted to the right.  \gc{{\bf B}: The convergence covariance between
-individual pairs of replicates in the \textcite{Kelly2019-dc} data. {\bf C}:  The convergence covariance between
-individual pairs of replicates in \parencite{Castro2019-uk} data, for
-the two selection lines  (LS1 and LS2) and the control (Ctrl).}}
+    line corresponds to a row of the temporal convergence correlation matrix
+    depicted to the right.  {\bf B}: The convergence covariance between
+    individual pairs of replicates in the \textcite{Kelly2019-dc} data. {\bf
+    C}:  The convergence covariance between individual pairs of replicates in
+\parencite{Castro2019-uk} data, for the two selection lines  (LS1 and LS2) and
+the control (Ctrl).}
 
   \label{fig:figure-2}
 \end{figure}
@@ -422,38 +414,24 @@ windowed covariances not only decay towards zero, but in fact become negative
 through time, consistent with many regions in the genome having had a reversed
 fitness effect at later timepoints.
 
-%We find that for covariances 2 timepoints apart ($k=2
-%\times 10$ generations), the $20\%$ right tail is inflated by a of 1.3 (95\% CI
-%[1.29, 1.32]), consistent with linked selection creating positive covariance in
-%allele frequency change. Under constant directional selection, we expect these
-%positive covariances between increasingly distant timepoints to decay to zero
-%as additive genetic variance is exhausted by selection and linkage
-%disequilibrium decays. Instead we find that for covariances 4 timepoints apart
-%($k=4 \times 10$ generations), the left tail of negative covariances is
-%inflated by a factor of 1.19 (95\% CI [1.17, 1.21]).
-
-
-
-
-
-\begin{figure}[!ht]
+\begin{figure}[!htb]
   \centering
   \includegraphics[]{figures/figure-3.pdf}
 
-  \caption{A, B: The distribution of temporal covariances calculated in 100kb
-    genomic windows from the \textcite{Barghi2019-qy} study, plotted alongside
-    an empirical neutral null distribution created by recalculating the
-    windowed covariances on \gc{a 1000 sign permutions of} allele
-    frequency changes \gc{within tiles}. The
-    \gc{histogram} bin number is 88, chosen by cross validation (Supplementary Materials
-    \ref{suppfig:barghi-cross-validation-binsize}). In subfigure A, windowed
+  \caption{{\bf A}, {\bf B}: The distribution of temporal covariances
+    calculated in 100kb genomic windows from the \textcite{Barghi2019-qy}
+    study, plotted alongside an empirical neutral null distribution created by
+    recalculating the windowed covariances on a 1,000 sign permutations of
+    allele frequency changes within tiles. The histogram bin number is 88,
+    chosen by cross validation (Supplementary Materials
+    \ref{suppfig:barghi-cross-validation-binsize}). In subfigure {\bf A}, windowed
     covariances $\cov(\Delta p_t, \Delta p_{t+k})$ are separated by $k=2 \times
-    10$ generations and in subfigure B the covariances are separated by $k=4
+    10$ generations and in subfigure {\bf A} the covariances are separated by $k=4
     \times 10$ generations; each $k$ is an off-diagonal from the variance
     diagonal of the temporal covariance matrix (see cartoon of upper-triangle
-    of covariance matrix in subfigures A and B, where the first diagonal is the
+    of covariance matrix in subfigures {\bf A} and {\bf B}, where the first diagonal is the
     variance, and the dark gray indicates which off-diagonal of the covariance
-    matrix is plotted in the histograms). C: The lower and upper tail
+    matrix is plotted in the histograms). {\bf C}: The lower and upper tail
     probabilities of the observed windowed covariances, at 20\% and 80\%
     quintiles of the empirical neutral null distribution, for varying time
     between allele frequency changes (i.e. which off-diagonal $k$). The
@@ -463,6 +441,49 @@ neutral null.}
   
     \label{fig:figure-3} 
 \end{figure}
+
+
+A benefit of between-replicate covariances is unlike temporal covariances,
+these can be calculated with only two sequenced timepoints and a replicated
+study design. This allowed allowed us to assess the impact of linked selection
+in driving convergent patterns of allele frequency change across replicate
+populations in two other studies. First, we reanalyzed the selection experiment
+of \textcite{Kelly2019-dc}, which evolved three replicate wild populations of
+\emph{Drosophila simulans} for 14 generations adapting to a novel laboratory
+environment. Since each replicate was exposed to the same selection pressure
+and share linkage disequilibria common to the original natural founding
+population, we expected each of the three replicate populations to have
+positive between-replicate covariances. We find all three pairwise
+between-replicate covariances are positive and statistical significant (95\%
+CIs, [0.0063, 0.0086], [0.0064, 0.0086], [0.0061, 0.0083]). We estimate the
+convergent correlation coefficient across these replicates as 0.36 ($95\%$
+block-bootstrap confidence interval $[0.31, 0.40]$). \gc{GIVE conversion \% var
+due to linked selection. }
+
+Second, we reanalyzed the Longshanks selection experiment, which selected for
+longer tibiae length relative to body size in mice, leading to a response of
+selection of about 5 standard deviations over the course of twenty generations
+\parencite{Castro2019-uk}. This study includes two independent selection lines,
+Longshanks 1 and 2 (LS1 and LS2), and an unselected control line (Ctrl).
+Consequently, this selection experiment offers a useful control to test our
+between-replicate covariances: we expect to see positive between-replicate
+covariance in the comparison between the two Longshanks selection lines, but
+not between the two pairwise comparisons between the control line and the two
+Longshanks lines. We find that this is the case (Figure \ref{fig:figure-2} C),
+with the two Longshanks comparisons to the control line not being significantly
+different from zero, while the comparison between the two Longshanks line is
+statistically significantly different from zero (CIs XXX).
+
+\gc{Paragraph about large effect loci.}
+%We find that for covariances 2 timepoints apart ($k=2
+%\times 10$ generations), the $20\%$ right tail is inflated by a of 1.3 (95\% CI
+%[1.29, 1.32]), consistent with linked selection creating positive covariance in
+%allele frequency change. Under constant directional selection, we expect these
+%positive covariances between increasingly distant timepoints to decay to zero
+%as additive genetic variance is exhausted by selection and linkage
+%disequilibrium decays. Instead we find that for covariances 4 timepoints apart
+%($k=4 \times 10$ generations), the left tail of negative covariances is
+%inflated by a factor of 1.19 (95\% CI [1.17, 1.21]).
 
 \section{Discussion}
 
@@ -500,20 +521,18 @@ variation over very short timescales.
 We re-analyzed three published temporal genomic datasets and detected the
 genome-wide signature of linked selection acting over tens of generations.
 Furthermore, we find the dynamics of temporal autocovariance are consistent
-with theory; \gc{the temporal covariance in allele frequencies decay}
-as \gc{presumably due to the} linkage disequilibria and additive variation \gc{for
-fitness present in a particular generation} decay through time \graham{So we need to be careful here. As
-  the additive var for fitness may be constant. It's that the VA from
-  a particular gen is decaying. Not sure if }. In reanalyzing one study
-\parencite{Barghi2019-qy}, we find that after sixty generations, greater than
-20\% of the variation in allele frequency change is directly due to the action
-linked selection. Capitalizing on replicated evolve-and-resequence study
-designs, we characterized the extent to which convergent selection pressures
-lead to parallel changes in allele frequency across replicate populations,
-finding that the correlation in allele frequency changes varies from 0.1 (in
-the \cite{Barghi2019-qy} study) to 0.36 (in the \cite{Kelly2019-dc}
-study). \graham{Are these just repeat numbers from main text? If so
-  nix this sentence}
+with theory; the temporal covariance in allele frequencies decays \vb{as both
+  the fitness variation associated with particular haplotypes and the linkage
+disequilibria between selected and neutral loci decay through time}. In
+reanalyzing one study \parencite{Barghi2019-qy}, we find that after sixty
+generations, greater than 20\% of the variation in allele frequency change is
+directly due to the action linked selection. Capitalizing on replicated
+evolve-and-resequence study designs, we characterized the extent to which
+convergent selection pressures lead to parallel changes in allele frequency
+across replicate populations, finding correlation in allele frequency
+changes varies from 0.1 (in the \cite{Barghi2019-qy} study) to 0.36 (in the
+\cite{Kelly2019-dc} study). \graham{Are these just repeat numbers from main
+text? If so nix this sentence}
 
 While we must keep in mind that the studies analyzed here were all laboratory
 populations and natural selection in the wild will likely differ, overall we
@@ -547,13 +566,14 @@ re-analyzed had linkage disequilibria data for the evolved populations. Our
 theory of temporal autocovariance tells us that the temporal autocovariances a
 neutral site experiences is determined by the product of the expected linkage
 disequilibrium and additive fitness variation that persists through the
-generations \gc{ \parencite{Buffalo}}. This leads to a clear prediction: regions of higher linkage
-disequilibrium and lower recombination should have greater temporal
-autocovariance than regions with lower LD and higher recombination.
-Unfortunately, we lack a high-resolution recombination map for \emph{D.
-simulans} and while there are LD data for \emph{D. simulans}
+generations \parencite{Buffalo2019-ion}. This leads to a clear prediction:
+regions of higher linkage disequilibrium and lower recombination should have
+greater temporal autocovariance than regions with lower LD and higher
+recombination. Unfortunately, we lack a high-resolution recombination map for
+\emph{D. simulans} and while there are LD data for \emph{D. simulans}
 \parencite{Signor2018-wg} we did not find a relationship between temporal
-covariance and LD. \graham{Is important point. We'll likely need plots for supp}
+covariance and LD. \graham{Is important point. We'll likely need plots for
+supp}
 
 We believe this is driven by the idiosyncratic nature of LD in
 evolve-and-resequence populations \parencite{Nuzhdin2013-gf,Kelly2019-dc}, and
@@ -592,28 +612,22 @@ classic hitchhiking events, they could perhaps play less of a role in polygenic
 linked selection. However, with only three cases here, further studies on
 different taxa are needed.
 
-%more complex than expected under a model of
-%directional selection occurring until fitness variation is exhausted
-
 Finally, in re-analyzing the \textcite{Barghi2019-qy} study, we find evidence
-of \gc{complex} linked selection dynamics. This is
-due either to a change in the environment and its consequences for the fitness
-of regions in the genome, recombination breaking up selected alleles, or
-epistatic interactions between loci. It is important to note that the original
-study did not intentionally alter the environment in any way; this signal is
-attained without intentionally seeking it out. Discerning which of these is
-creating negative temporal autocovariance is a sizable challenge, requiring
-sequencing each generation and LD data.
-
-%help us finally
+of complex linked selection dynamics. This is due either to a change in the
+environment and its consequences for the fitness of regions in the genome,
+recombination breaking up selected alleles, or epistatic interactions between
+loci. It is important to note that the original study did not intentionally
+alter the environment in any way; this signal is attained without intentionally
+seeking it out. Discerning which of these is creating negative temporal
+autocovariance is a sizable challenge, requiring sequencing each generation and
+LD data.
 
 Overall, we hope this will encourage more temporal genomic studies in both
 laboratory and natural populations. Understanding the dynamics of linked
-selection over short timescales \gc{will help to} unite phenotypic studies of
-rapid adaptation of polygenic adaptations with a detectable genomic signature,
-to address long-standing questions on linked selection, evolutionary
-quantitative genetics, and the overall impact selection has on genetic
-variation. 
+selection over short timescales will help to unite phenotypic studies of rapid
+adaptation of polygenic adaptations with a detectable genomic signature, to
+address long-standing questions on linked selection, evolutionary quantitative
+genetics, and the overall impact selection has on genetic variation. 
 
 
 

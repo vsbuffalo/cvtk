@@ -380,8 +380,11 @@ generations.
     depicted to the right.  {\bf B}: The convergence covariance between
     individual pairs of replicates in the \textcite{Kelly2019-dc} data. {\bf
     C}:  The convergence covariance between individual pairs of replicates in
-\parencite{Castro2019-uk} data, for the two selection lines  (LS1 and LS2) and
-the control (Ctrl).}
+    \parencite{Castro2019-uk} data, for the two selection lines  (LS1 and LS2)
+    and the control (Ctrl); gray CIs are those using the complete dataset, blue
+    CIs exclude chromosomes 5 and 10 which harbor the two regions
+    \textcite{Castro2019-uk} found to have signals of parallel selection between
+    LS1 and LS2.}
 
   \label{fig:figure-2}
 \end{figure}
@@ -412,7 +415,7 @@ selection \vb{and} creates a sampling distribution of the covariances
 spuriously created by neutral genetic drift while preserving the complex
 dependencies between adjacent loci created by linkage disequilibrium (see
 Supplementary Material Section \ref{supp:empirical-null} for more details on
-this approach).  This empirical neutral null distribution is conservative in
+this approach). This empirical neutral null distribution is conservative in
 the sense that the variances of the covariances are wider than expected under
 drift alone as they include the effect of selection on the allele frequency
 change within a time-interval, just not between time-intervals. We see (Figure
@@ -424,11 +427,12 @@ right tails are inflated compared to the null distribution as a function of
 time, and see excesses in both tails in Figure \ref{fig:figure-3} C. This
 finding is also robust to sign-permuting allele frequency changes on a
 chromosome-level, the longest extent that gametic linkage disequilibria can
-extend \vince{GC: you had ??? here, not sure I see the issue.} (Supplementary
-Figure \ref{suppfig:barghi-tailprobs-seqid}). We see a striking pattern that
-the windowed covariances not only decay towards zero, but in fact become
-negative through time, consistent with many regions in the genome having had a
-reversed fitness effect at later timepoints.
+extend (Supplementary Figure \ref{suppfig:barghi-tailprobs-seqid}). We see a
+striking pattern that the windowed covariances not only decay towards zero, but
+in fact become negative through time, consistent with many regions in the
+genome having had a reversed fitness effect at later timepoints.
+
+% TODO \vince{GC: you had ??? here, not sure I see the issue.} 
 
 \begin{figure}[!htb]
   \centering
@@ -486,12 +490,26 @@ Consequently, this selection experiment offers a useful control to test our
 between-replicate covariances: we expect to see positive between-replicate
 covariance in the comparison between the two Longshanks selection lines, but
 not between the two pairwise comparisons between the control line and the two
-Longshanks lines. We find that this is the case (Figure \ref{fig:figure-2} C),
-with the two Longshanks comparisons to the control line not being significantly
-different from zero, while the comparison between the two Longshanks line is
-statistically significantly different from zero (CIs [0.013, 0.037]).
+Longshanks lines. We find that this is the case (gray confidence intervals in
+Figure \ref{fig:figure-2} C), with the two Longshanks comparisons to the
+control line not being significantly different from zero, while the comparison
+between the two Longshanks line is statistically significantly different from
+zero (CIs [0.013, 0.037]).
 
-\gc{Paragraph about large effect loci.}
+A major finding in the Longshanks study were two major-effect loci that showed
+parallel frequency shifts between the two selection lines: a region harboring
+the gene Nkx3-2 known to be involved in limb development, and another region
+harboring six other candidate genes. We were curious to what extent our
+genome-wide covariances were being driven by these two outlier large-effect
+loci, so we excluded them from the analysis. Since we do not know the extent to
+which linkage disequilibrium around these large-effect loci affects neighboring
+loci, we took the conservative precaution of excluding the entire chromosomes
+these loci reside on (chromosomes 5 and 10), and re-calculating the temporal
+covariances. We find excluding these large effect loci has little impact on the
+confidence intervals (blue confidence intervals in Figure \ref{fig:figure-2}),
+indicating that we these across-replicate covariances are indeed driven by a
+polygenic signal.
+
 %We find that for covariances 2 timepoints apart ($k=2
 %\times 10$ generations), the $20\%$ right tail is inflated by a of 1.3 (95\% CI
 %[1.29, 1.32]), consistent with linked selection creating positive covariance in

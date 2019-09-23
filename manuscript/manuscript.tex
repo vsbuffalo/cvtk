@@ -68,7 +68,7 @@
 %   cov() 
 % - address the weird barghi rep correlation point for last time
 
-\title{Estimating the \gc{genome-wide} contribution of selection to temporal allele frequency change.}
+\title{Estimating the genome-wide contribution of selection to temporal allele frequency change.}
 
 
 \author[$\ast$,$\dag$,$1$]{Vince Buffalo}
@@ -83,38 +83,32 @@
 \linenumbers
 
 \begin{abstract}
-% Adaptation can proceed in natural populations and selection experiments over
-% very short timescales.
- \gc{Rapid phenotypic adaptation is often observed in natural populations and selection experiments.}
- However, detecting the \gc{impact of this selection} genome-wide is
-  difficult, as\gc{such} adaptation often proceeds from standing
-  variation \gc{and} selection on \gc{highly} polygenic traits, both of which may leave faint
-  genomic signals indistinguishable from a noisy background of genetic drift.
-  One promising signal comes from the genome-wide covariance between allele
-  frequency changes observable from temporal genomic data, e.g.
-  evolve-and-resequence studies. These temporal covariances reflect how the
-  change in neutral allele frequency at one timepoint is predictive of the
-  changes at later timepoints when there is heritable fitness variation in the
-  population, as neutral alleles can remain associated with selected alleles
-  over time. Since genetic drift does not lead to temporal covariance, we can
-  use these covariances to estimate what fraction of the variation in allele
-  frequency change through time is driven by linked selection. Here, we
-  reanalyze two \emph{Drosophila simulans} evolve-and-resequence studies, and
-  one artificial selection experiment in mice, to quantify the effects of
-  linked selection over short timescales using covariance among
-  time-points and across replicates. \gc{We estimate that over 20\% {\bf ??} of allele frequency
-  change in these experiments is driven by selection.} \gc{Against
-  this background of positive genome-wide tmeporal covariances} We also
-  identify signals of negative temporal covariance corresponding to reversals
-  in the direction of selection for a reasonable proportion of loci over the time
-  course of a selection experiment.  Overall, we find that in the three studies
-  we analyzed, linked selection has a \gc{large} impact on short-term allele
-  frequency dynamics \gc{that is readily distinguishable from} genetic drift.
 
-  %  Additionally, taking advantage of
-  %selection on replicated populations, we can estimate the covariance in allele
-  %frequency between replicates due to convergent selection
-  %\gc{pressures}.
+ Rapid phenotypic adaptation is often observed in natural populations and
+ selection experiments.  However, detecting the impact of this selection
+ genome-wide is difficult, since adaptation often proceeds from standing
+ variation and selection on highly polygenic traits, both of which may leave
+ faint genomic signals indistinguishable from a noisy background of genetic
+ drift.  One promising signal comes from the genome-wide covariance between
+ allele frequency changes observable from temporal genomic data, e.g.
+ evolve-and-resequence studies. These temporal covariances reflect how the
+ change in neutral allele frequency at one timepoint is predictive of the
+ changes at later timepoints when there is heritable fitness variation in the
+ population, as neutral alleles can remain associated with selected alleles
+ over time. Since genetic drift does not lead to temporal covariance, we can
+ use these covariances to estimate what fraction of the variation in allele
+ frequency change through time is driven by linked selection. Here, we
+ reanalyze two \emph{Drosophila simulans} evolve-and-resequence studies, and
+ one artificial selection experiment in mice, to quantify the effects of linked
+ selection over short timescales using covariance among time-points and across
+ replicates. We estimate that over 20\% of allele frequency change in these
+ experiments is driven by selection in some experiments. Against this
+ background of positive genome-wide temporal covariances we also identify
+ signals of negative temporal covariance corresponding to reversals in the
+ direction of selection for a reasonable proportion of loci over the time
+ course of a selection experiment.  Overall, we find that in the three studies
+ we analyzed, linked selection has a large impact on short-term allele
+ frequency dynamics that is readily distinguishable from genetic drift.
 
 \end{abstract}
 
@@ -157,10 +151,10 @@ selected loci \parencite{Turner2011-sx,Turner2012-bm} and differentiate modes
 of selection \parencite{Burke2010-tz,Barghi2019-qy,Therkildsen2019-zy}.  In
 addition these temporal-genomic studies have begun in wild populations, some
 with the goal of finding variants that exhibit frequency changes consistent
-with fluctuating selection \parencite{Bergland2014-ij,Machado2018-cs}. \vb{In a
-  previous paper, we proposed that one useful signal for understanding the
-  genome-wide impact of polygenic linked selection detectable from temporal
-genomic studies} is the temporal autocovariance in allele frequency changes
+with fluctuating selection \parencite{Bergland2014-ij,Machado2018-cs}. In a
+previous paper, we proposed that one useful signal for understanding the
+genome-wide impact of polygenic linked selection detectable from temporal
+genomic studies is the temporal autocovariance in allele frequency changes
 \parencite{Buffalo2019-io}.  These covariances are directly estimable from
 temporal genomic data and are created when the loci that underly heritable
 fitness variation perturb the frequencies of linked neutral alleles; in
@@ -318,9 +312,9 @@ While the presence of positive temporal covariances is consistent with linked
 selection affecting allele frequencies over time, this measure not easily
 interpretable. Additionally, we can quantify the impact of linked selection on
 allele frequency change as the ratio of total covariance in allele frequency
-change to the total variance in allele frequency change. \vb{We denote the
+change to the total variance in allele frequency change. We denote the
 change in allele frequency as $\Delta p_t = p_{t+1}-p_t$, where $p_t$ is the
-allele frequency in generation $t$}. Since the total variation in allele
+allele frequency in generation $t$. Since the total variation in allele
 frequency change can be partitioned into variance and covariance components,
 $\var(p_t - p_0) = \sum_{i} \var(\Delta p_i) + \sum_{i \ne j} \cov(\Delta
 p_i, \Delta p_j)$, and the covariances are zero when drift acts alone, this is
@@ -331,23 +325,23 @@ by linked selection \parencite{Buffalo2019-io}. We call this measure $G(t)$, def
   G(t) = \frac{\sum_{i\ne j}^t \cov(\Delta p_i, \Delta p_j)}{\var(p_t - p_0)}
 \end{align}
 %
-\vb{which estimates} the effect of linked selection between the initial
+which estimates the effect of linked selection between the initial
 generation $0$ and some later generation $t$, which can be varied to see how
 this quantity grows through time. As with the temporal covariances, the study
 design of \textcite{Barghi2019-qy} leads our measure $G(t)$ to be even more
 conservative, since the temporal covariances within each ten-generation block
 between sequenced timepoints are not directly observable, and are not included
-in the numerator of $G(t)$. Still, we find a \vb{remarkably strong signal.
-Greater} than $20\%$ of total variation in allele frequency change over 60
+in the numerator of $G(t)$. Still, we find a remarkably strong signal.
+Greater than $20\%$ of total variation in allele frequency change over 60
 generations is the result of linked selection.
 
-\vb{Additionally, we looked for a signal of temporal autocovariance in
+Additionally, we looked for a signal of temporal autocovariance in
 \textcite{Bergland2014-ij}, a study that collected \emph{Drosophila
 melanogaster} through Spring-Fall seasons across three years. With a pattern of
 genome-wide fluctuating selection, we might expect a pattern of positive
 covariances between similar seasonal changes, and negative covariances between
 dissimilar seasonal changes. However, we find no such signal; we discuss this
-in more depth in Supplementary Materials Section \ref{bergland-reanalysis}.}
+in more depth in Supplementary Materials Section \ref{bergland-reanalysis}.
 
 The replicate design of \textcite{Barghi2019-qy} allows us to quantify another
 covariance: the covariance in allele frequency change between replicate
@@ -502,7 +496,7 @@ negative at future timepoints (see the first two rows in Figure
 initially are later going down in frequency, i.e. that the average direction of
 selection experienced by alleles has flipped. This must reflect either a change
 in the environment or the genetic background, due to epistatic relationships
-among alleles \vb{altered by frequency changes} or recombination breaking up
+among alleles altered by frequency changes or recombination breaking up
 selective alleles.  Such reversals of selective dynamics could be occurring at
 other timepoints but the signal of a change in the direction of selection at
 particular loci may be washed out when we calculate our genome-wide average
@@ -559,9 +553,9 @@ caused by background selection \parencite{Elyashiv2016-vt}. However, as other
 models of soft sweeps from standing variation emerged
 \parencite{Hermisson2005-hs,Pennings2006-lj}, attention shifted towards
 detecting other modes of linked selection \parencite{Pritchard2010-tk}, a more
-difficult endeavor \parencite{Przeworski2005-bg} \vb{addressed using} new coalescent
+difficult endeavor \parencite{Przeworski2005-bg} addressed using new coalescent
 models \parencite{Berg2015-xj} and machine learning methods
-\parencite{Schrider2017-yx}. An \vb{alternative} approach to understanding the
+\parencite{Schrider2017-yx}. An alternative approach to understanding the
 genome-wide effects of selection on standing variation, e.g. selection on an
 infinitesimal polygenic trait, stems from an early quantitative genetic model
 of linked selection \parencite{Robertson1961-ho} and its later developments
@@ -602,7 +596,7 @@ case: polygenic selection on an infinitesimal trait. In our reanalysis of the
 after excluding the chromosomes containing two large-effect loci, we showed the
 covariance signal we detect is indeed driven by polygenic fitness variation
 (and confirm a point in the original study that tibiae length, aside from these
-two large effect loci, \vb{is a highly polygenic trait).}
+two large effect loci, is a highly polygenic trait).
 
 It is worth building some intuition why temporal covariance allows us to detect
 such faint signals of polygenic linked selection from temporal genomic data.
@@ -614,7 +608,7 @@ spurious covariances do not share a common sign across timepoints whereas the
 covariances created by linked selection do; consequently, averaging across the
 entire genome, the temporal signal exceeds sampling noise.
 
-One limitation \vb{of these analyses is} that none of the studies we reanalyzed
+One limitation of these analyses is that none of the studies we reanalyzed
 estimated linkage disequilibria data for the evolved populations. Our theory of
 temporal autocovariance tells us that the temporal autocovariances a neutral
 site experiences is determined by the product of the expected linkage
@@ -663,7 +657,7 @@ and, in the case of mice, moderately-sized genetic maps (around 14 Morgans;
 \cite{Cox2009-hf}), we still see a fairly strong effect of linked selection.
 This suggests that while these factors may govern the dynamics of classic
 hitchhiking events, they could perhaps play less of a role in polygenic linked
-selection. However, with only three cases \vb{analyzed}, further studies on
+selection. However, with only three cases analyzed, further studies on
 different taxa are needed.
 
 Finally, in reanalyzing the \textcite{Barghi2019-qy} study, we find evidence

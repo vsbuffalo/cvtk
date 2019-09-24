@@ -337,11 +337,14 @@ generations is the result of linked selection.
 
 Additionally, we looked for a signal of temporal autocovariance in
 \textcite{Bergland2014-ij}, a study that collected \emph{Drosophila
-melanogaster} through Spring-Fall seasons across three years. With a pattern of
+melanogaster} through Spring-Fall seasons across three years. \gc{If
+there was a strong}  pattern of
 genome-wide fluctuating selection, we might expect a pattern of positive
-covariances between similar seasonal changes, and negative covariances between
-dissimilar seasonal changes. However, we find no such signal; we discuss this
-in more depth in Supplementary Materials Section \ref{bergland-reanalysis}.
+covariances between similar seasonal changes\gc{, e.g. Spring-Fall in
+  two adjacent years,} and negative covariances between
+dissimilar seasonal changes, \gc{e.g. Spring-Fall and Fall-Spring in
+  two adjacent years}. However, we find no such signal \gc{over years}; we discuss this
+in more depth in Supplementary Materials Section \ref{}.
 
 The replicate design of \textcite{Barghi2019-qy} allows us to quantify another
 covariance: the covariance in allele frequency change between replicate
@@ -1202,11 +1205,11 @@ right) from the regression due to large differences in average coverage.}
 We also applied our temporal covariance approach to \textcite{Bergland2014-ij},
 which found evidence of genome-wide fluctuating selection between Spring and
 Fall seasons across three years \emph{Drosophila melanogaster}. As described in
-\textcite{Buffalo2019-io}, we might expect positive covariances between like
-seasons changes (i.e. Spring 2010 to Fall 2010 and Spring 2011 to Fall 2011),
-and negative covariances between dislike seasonal changes (i.e. Fall 2009 to
-Spring 2010 and Fall 2010 to Spring 2011) when fluctuating selection is strong
-and acts genome-wide, as the original study found. However, while we find
+\textcite{Buffalo2019-io}, \gc{if fluctuating selection pressure among
+ time-periodsare the dominant genome-wide pattern,} we might expect positive covariances between like
+seasons changes \gc{(e.g.} Spring 2010 to Fall 2010 and Spring 2011 to Fall 2011),
+and negative covariances between dislike seasonal changes \gc{(e.g.} Fall 2009 to
+Spring 2010 and Fall 2010 to Spring 2011). However, while we find
 temporal covariances that are non-zero, we find only weak support for a
 seasonal fluctuating model driving these covariances.  In Supplementary Figure
 \ref{suppfig:bergland-covs-figure}, we show the temporal covariances from
@@ -1267,7 +1270,8 @@ loci with a significant association with season after a Benjamini and Hochberg
 FDR p-value adjustment \parencite{Benjamini1995-jy}, however, the null
 hypothesis of the Wald test does not give us an idea of the expected number of
 variants that may spuriously fit the pattern of seasonal fluctuating
-selection.
+selection \gc{as it does not account for genetic drift or other forms
+  of hitchhiking.}
 
 % ======= We were concerned that this might be due to a flaw in our methods. To
 % address this concern, we first ensured that our temporal-covariance matrix
@@ -1294,7 +1298,7 @@ selection.
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/bergland-combined-hists.pdf}
-  \caption{}
+  \caption{\gc{WRITE CAPTION}}
   \label{suppfig:bergland-pvalue-hist}
 \end{figure}
 

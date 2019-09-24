@@ -68,7 +68,7 @@
 %   cov() 
 % - address the weird barghi rep correlation point for last time
 
-\title{Estimating the genome-wide contribution of selection to temporal allele frequency change.}
+\title{Estimating the genome-wide contribution of selection to temporal allele frequency change}
 
 
 \author[$\ast$,$\dag$,$1$]{Vince Buffalo}
@@ -121,7 +121,7 @@ Selection can both directly and indirectly affect allele frequencies, with the
 indirect effect coming from the action of selection on correlated loci
 elsewhere in genome e.g. linked selection (\cite{Maynard_Smith1974-lc},
 \cite{Charlesworth1993-gb,Nordborg1996-nq}; see \cite{Barton2000-zg} for a
-review).  Previous work on this question has mostly focused on teasing apart
+review). Previous work on this question has mostly focused on teasing apart
 the impacts of drift and selection on genome-wide diversity using population
 samples from a single contemporary timepoint, often by modeling the correlation
 between regional recombination rate, gene density, and diversity created in the
@@ -337,14 +337,13 @@ generations is the result of linked selection.
 
 Additionally, we looked for a signal of temporal autocovariance in
 \textcite{Bergland2014-ij}, a study that collected \emph{Drosophila
-melanogaster} through Spring-Fall seasons across three years. \gc{If
-there was a strong}  pattern of
-genome-wide fluctuating selection, we might expect a pattern of positive
-covariances between similar seasonal changes\gc{, e.g. Spring-Fall in
-  two adjacent years,} and negative covariances between
-dissimilar seasonal changes, \gc{e.g. Spring-Fall and Fall-Spring in
-  two adjacent years}. However, we find no such signal \gc{over years}; we discuss this
-in more depth in Supplementary Materials Section \ref{}.
+melanogaster} through Spring-Fall season pairs across three years. If there was
+a strong  pattern of genome-wide fluctuating selection, we might expect a
+pattern of positive covariances between similar seasonal changes, e.g.
+Spring-Fall in two adjacent years, and negative covariances between dissimilar
+seasonal changes, e.g. Spring-Fall and Fall-Spring in two adjacent years.
+However, we find no such signal over years; we discuss this in more depth in
+Supplementary Materials Section \ref{bergland-reanalysis}.
 
 The replicate design of \textcite{Barghi2019-qy} allows us to quantify another
 covariance: the covariance in allele frequency change between replicate
@@ -680,71 +679,13 @@ adaptation of polygenic adaptations with a detectable genomic signature, to
 address long-standing questions concerning linked selection, evolutionary quantitative
 genetics, and the overall impact selection has on genetic variation. 
 
-
-
-%since
-%drift also acts to inflate the magnitude of allele frequency change. By
-%flipping the sign at the block-level, we 
-
-
-%we can  % (mean \gc{SNP} perwindow 4,606, median 4,830)
-%analyze the genome-wide distribution of tile covariances for changes through
-%time. We would like to compare the distribution of these tile covariances to a
-%neutral expectation, but using a theoretic neutral null distribution would be
-%inappropriate given complex dependencies across the genome due to linkage
-%disequilibria (which can occur over long physical distances in E\&R and
-%selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). 
-
-
-%Averaging over such large numbers of loci is necessary to detect
-%a signal of covariance in allele frequency changes when both drift (inflated in
-%evolve-and-sequence studies which use small population sizes) and sampling
-%variance can create spurious covariances. 
-
-
-%This could be caused by advantageous fitness
-%backgrounds later becoming disadvantageous, either due to frequency-dependent
-%selection, recombination breaking up coupled beneficial and deleterious
-%alleles, or an environmental change in the direction of selection.
-%However, the
-%signal of a change in the direction of selection localized to a particular
-%region of the genome may be washed out when we calculate genome-wide temporal
-%covariances.
-
-
-%Using the \textcite{Barghi2019-qy} study's data, we used the empirical neutral
-%null to investigate whether there was a general trend for the temporal
-%covariance $\cov(\Delta p_t, \Delta p_{t+k})$ to be positive for small $k$ (as
-%expected under selection), but then become systematically negative for larger
-%$k$ (as would occur under evolutionary processes that reverse the fitness of
-%regions across the genome). Such a change in the fitness direction of
-%haplotypes would not be discernible from genome-wide covariances like those in
-%Figure \ref{fig:figure-1}.
-
-
-
-
-
-
-% \begin{figure}[!ht]
-%   \centering
-%   \includegraphics[width=\textwidth]{}
-%   \caption{}
-%   \label{}
-% \end{figure}
-
-% \section{Materials and Methods}
-
-% \subsection{Bias Correction}
-% \subsection{}
-
 \section{Acknowledgments} 
 
 We would like to thank the authors of the original studies we've analyzed,
-including Christian Schl{\"o}tterer, John Kelly, Kimberly Hughes, Frank Chan,
-Campbell Rolian, Nick Barton, Alan Bergland, and Dmitri Petrov.  We would also
-like to thank Doc Edge for helpful statistical advice, and Matt Osmond for
-helpful discussions. 
+including Neda Barghi, Christian Schl{\"o}tterer, John Kelly, Kimberly Hughes,
+Frank Chan, Campbell Rolian, Nick Barton, Alan Bergland, and Dmitri Petrov.  We
+would also like to thank Doc Edge for helpful statistical advice, and Matt
+Osmond for helpful discussions. 
 
 \printbibliography
 
@@ -1080,6 +1021,7 @@ probability $x$.
 \subsection{The Empirical Neutral Null Windowed Covariance Distribution}
 \label{supp:empirical-null}
 
+\clearpage
 \section{Supplementary Figures}
 
 
@@ -1181,7 +1123,10 @@ right) from the regression due to large differences in average coverage.}
 \begin{figure}[!ht]
   \centering
   \includegraphics[]{figures/barghi-tailprobs-panels.pdf}
-  \caption{}
+
+  \caption{\textcite{Barghi2019-qy} tail probabilities compared to
+  sign-permuted empirical null distribution for various $\alpha$ levels.}
+
   \label{suppfig:barghi-tailprobs-panels}
 \end{figure}
 
@@ -1205,17 +1150,17 @@ right) from the regression due to large differences in average coverage.}
 We also applied our temporal covariance approach to \textcite{Bergland2014-ij},
 which found evidence of genome-wide fluctuating selection between Spring and
 Fall seasons across three years \emph{Drosophila melanogaster}. As described in
-\textcite{Buffalo2019-io}, \gc{if fluctuating selection pressure among
- time-periodsare the dominant genome-wide pattern,} we might expect positive covariances between like
-seasons changes \gc{(e.g.} Spring 2010 to Fall 2010 and Spring 2011 to Fall 2011),
-and negative covariances between dislike seasonal changes \gc{(e.g.} Fall 2009 to
-Spring 2010 and Fall 2010 to Spring 2011). However, while we find
-temporal covariances that are non-zero, we find only weak support for a
-seasonal fluctuating model driving these covariances.  In Supplementary Figure
-\ref{suppfig:bergland-covs-figure}, we show the temporal covariances from
-varying reference generations, across seasonal transitions that are alike (e.g.
-the covariance between the allele frequency changes between Fall 2009 and
-Spring 2009, and frequency changes between Fall 2010 and Spring 2010), and
+\textcite{Buffalo2019-io}, if fluctuating selection pressure among time-periods
+are the dominant genome-wide pattern, we might expect positive covariances
+between like seasons changes (e.g. Spring 2010 to Fall 2010 and Spring
+2011 to Fall 2011), and negative covariances between dislike seasonal changes
+(e.g. Fall 2009 to Spring 2010 and Fall 2010 to Spring 2011). However,
+while we find temporal covariances that are non-zero, we find only weak support
+for a seasonal fluctuating model driving these covariances. In Supplementary
+Figure \ref{suppfig:bergland-covs-figure}, we show the temporal covariances
+from varying reference generations, across seasonal transitions that are alike
+(e.g.  the covariance between the allele frequency changes between Fall 2009
+and Spring 2009, and frequency changes between Fall 2010 and Spring 2010), and
 dislike (e.g. the covariance between the allele frequency change between Fall
 2009 and Spring 2009, and the frequency changes between Spring 2010 and Fall
 2009). The first row of temporal covariance matrix is consistent with
@@ -1229,14 +1174,14 @@ the pattern we would expect under genome-wide fluctuating selection.
   \centering
   \includegraphics[width=\textwidth]{figures/bergland_pvalues.pdf}
 
-  \caption{A: Scatterplot of the original unadjusted p-values from
+  \caption{\textbf{A}: Scatterplot of the original unadjusted p-values from
     \textcite{Bergland2014-ij} and the p-values from our reanalysis of the same
-    data using the same statistical methods; the minor discrepancy is likely due to software
-    version differences. B: The histograms of the p-values of our reanalysis
-    and the original \textcite{Bergland2014-ij} data; again the minor
-    discrepancy is likely due to software differences. Overall, our
-    implementation of Bergland et al.'s statistical methods produces results 
-    very close to the original analysis.}
+    data using the same statistical methods; the minor discrepancy is likely
+    due to software version differences. \textbf{B}: The histograms of the
+    p-values of our reanalysis and the original \textcite{Bergland2014-ij}
+    data; again the minor discrepancy is likely due to software differences.
+    Overall, our implementation of Bergland et al.'s statistical methods
+    produces results very close to the original analysis.}
 
   \label{suppfig:bergland-pvalue-comparison}
 \end{figure}
@@ -1269,9 +1214,8 @@ histograms of the p-values are nearly identical (Supplementary Figure
 loci with a significant association with season after a Benjamini and Hochberg
 FDR p-value adjustment \parencite{Benjamini1995-jy}, however, the null
 hypothesis of the Wald test does not give us an idea of the expected number of
-variants that may spuriously fit the pattern of seasonal fluctuating
-selection \gc{as it does not account for genetic drift or other forms
-  of hitchhiking.}
+variants that may spuriously fit the pattern of seasonal fluctuating selection
+as it does not account for genetic drift or other forms of hitchhiking.
 
 % ======= We were concerned that this might be due to a flaw in our methods. To
 % address this concern, we first ensured that our temporal-covariance matrix
@@ -1298,7 +1242,13 @@ selection \gc{as it does not account for genetic drift or other forms
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/bergland-combined-hists.pdf}
-  \caption{\gc{WRITE CAPTION}}
+
+  \caption{\textbf{A}: Histogram of original \textcite{Bergland2014-ij}
+    seasonal p-values and p-values creating by randomly permuting the seasons
+    at each locus. \textbf{B}: Histogram of original \textcite{Bergland2014-ij}
+    p-values alongside all unique permutations (ignoring symmetries that lead
+  to identical p-values).}
+
   \label{suppfig:bergland-pvalue-hist}
 \end{figure}
 

@@ -343,7 +343,7 @@ pattern of positive covariances between similar seasonal changes, e.g.
 Spring-Fall in two adjacent years, and negative covariances between dissimilar
 seasonal changes, e.g. Spring-Fall and Fall-Spring in two adjacent years.
 However, we find no such signal over years; we discuss this in more depth in
-Supplementary Materials Section \ref{bergland-reanalysis}.
+Supplementary Materials Section \ref{supp:bergland-reanalysis}.
 
 The replicate design of \textcite{Barghi2019-qy} allows us to quantify another
 covariance: the covariance in allele frequency change between replicate
@@ -502,25 +502,26 @@ among alleles altered by frequency changes or recombination breaking up
 selective alleles.  Such reversals of selective dynamics could be occurring at
 other timepoints but the signal of a change in the direction of selection at
 particular loci may be washed out when we calculate our genome-wide average
-temporal covariances.  To address this limitation, we calculated the
-distribution of the temporal covariances over 100kb genomic windows (Figure
-\ref{fig:figure-3}, pooling across all replicates; see Supplementary Figure
-\ref{suppfig:barghi-offset-replicate-panels} for individuals replicates). The
-covariance of each tile will be noisy, due to sampling and genetic drift, and
-the neutral distribution of the covariance is complicated due to linkage
-disequilibria (which can occur over long physical distances in E\&R and
-selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). To address
-this, we have developed a permutation-based procedure that constructs a null
-distribution by randomly flipping the signs of the  allele frequency changes
-per-genomic window. This destroys the systematic covariances created by linked
-selection and creates a sampling distribution of the covariances spuriously
-created by neutral genetic drift while preserving the complex dependencies
-between adjacent loci created by linkage disequilibrium (see Supplementary
-Material Section \ref{supp:empirical-null} for more details on this approach).
-This empirical neutral null distribution is conservative in the sense that the
-variances of the covariances are wider than expected under drift alone as they
-include the effect of selection on the allele frequency change within a
-time-interval, just not between time-intervals. We see (Figure
+temporal covariances. To address this limitation, we calculated the
+distribution of the temporal covariances over 100kb genomic windows \vb{which
+we refer to as \emph{windowed covariances}} (Figure \ref{fig:figure-3}
+\vb{shows these distributions} pooling across all replicates; see Supplementary
+Figure \ref{suppfig:barghi-offset-replicate-panels} for individuals
+replicates). The covariance of each tile will be noisy, due to sampling and
+genetic drift, and the neutral distribution of the covariance is complicated
+due to linkage disequilibria (which can occur over long physical distances in
+E\&R and selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). To
+address this, we have developed a permutation-based procedure that constructs a
+null distribution by randomly flipping the signs of the  allele frequency
+changes per-genomic window. This destroys the systematic covariances created by
+linked selection and creates a sampling distribution of the covariances
+spuriously created by neutral genetic drift while preserving the complex
+dependencies between adjacent loci created by linkage disequilibrium (see
+Supplementary Material Section \ref{supp:empirical-null} for more details on
+this approach).  This empirical neutral null distribution is conservative in
+the sense that the variances of the covariances are wider than expected under
+drift alone as they include the effect of selection on the allele frequency
+change within a time-interval, just not between time-intervals. We see (Figure
 \ref{fig:figure-3} A and B) that windowed temporal covariances between close
 timepoints are skewed positive (a heavy right tail), while between more distant
 timepoints these windowed temporal covariances tend to shift to become more
@@ -696,7 +697,7 @@ Osmond for helpful discussions.
 \subsection{Correcting variance bias with a single depth sampling process}
 \label{supp:depth-var-corr}
 
-Following \textcite{Waples1989-sj}, we have that that the variance in allele
+Following \textcite{Waples1989-sj}, we have that the variance in allele
 frequency change at a locus in the initial generation, which is entirely due to
 the binomial sampling process, is $\var(p_0) = \nicefrac{p_0(1-p_0)}{d_0}$
 where $d_0$ is the number of binomial draws (e.g. read depth). At a later
@@ -717,18 +718,18 @@ need to consider the covariance in allele frequency changes across generations
 \parencite{Buffalo2019-io}. We can write
 
 \begin{align}
-  V(p_t) &= V\left(p_0 + (p_1 - p_0) + (p_2 - p_1) + \ldots + (p_t - p_{t-1}) \right) \\
-         &= V\left(p_0 + \Delta p_0 + \Delta p_1 + \ldots + \Delta p_{t-1} \right) \\
-         &= V(p_0) + \sum_{i=0}^{t-1} \cov(p_0, \Delta p_i) + \sum_{i=0}^{t-1} \var(\Delta p_i) + \sum_{0 \le i < j}^{t-1} \cov(\Delta p_i, \Delta p_j).
+  \var(p_t) &= \var\left(p_0 + (p_1 - p_0) + (p_2 - p_1) + \ldots + (p_t - p_{t-1}) \right) \\
+         &= \var\left(p_0 + \Delta p_0 + \Delta p_1 + \ldots + \Delta p_{t-1} \right) \\
+         &= \var(p_0) + \sum_{i=0}^{t-1} \cov(p_0, \Delta p_i) + \sum_{i=0}^{t-1} \var(\Delta p_i) + \sum_{0 \le i < j}^{t-1} \cov(\Delta p_i, \Delta p_j).
 \end{align}
 %
 
 Each allele frequency change is equally like to be positive as it is to be
-negative; thus by symmetry this second term is zero. Additionally $V(p_0) = 0$,
+negative; thus by symmetry this second term is zero. Additionally $\var(p_0) = 0$,
 as we treat $p_0$ as a fixed initial frequency. We can write, 
 
 \begin{align}
-  V(p_t) &= \sum_{i=0}^{t-1} \var(\Delta p_i) + \sum_{0 \le i < j}^{t-1} \cov(\Delta p_i, \Delta p_j).
+  \var(p_t) &= \sum_{i=0}^{t-1} \var(\Delta p_i) + \sum_{0 \le i < j}^{t-1} \cov(\Delta p_i, \Delta p_j).
 \end{align}
 
 The second term, the cumulative impact of variance in allele frequency change
@@ -736,7 +737,7 @@ can be partitioned into heritable fitness and drift components
 \parencite{Santiago1995-hx,Buffalo2019-io}
 
 \begin{align}
-  V(p_t) &= \sum_{i=0}^{t-1} \var(\Delta_{_D} p_i) + \sum_{i=0}^{t-1} \var(\Delta_{_H} p_i) + \sum_{0 \le i < j}^{t-1} \cov(\Delta p_i, \Delta p_j).
+  \var(p_t) &= \sum_{i=0}^{t-1} \var(\Delta_{_D} p_i) + \sum_{i=0}^{t-1} \var(\Delta_{_H} p_i) + \sum_{0 \le i < j}^{t-1} \cov(\Delta p_i, \Delta p_j).
 \end{align}
 
 where $\Delta_{_H} p_t$ and $\Delta_{_D} p_t$ indicate the allele frequency
@@ -774,8 +775,8 @@ and using the fact that $\cov(\widetilde{p}_t, \widetilde{p}_0) =
 %
 where $C = 1$ if Plan I is used, and $C=0$ if Plan II is used (see
 \cite{Waples1989-sj}, p. 380 and Figure 1 for a description of these sampling
-procedures; throughout the paper we use sampling Plan II). We move terms
-creating a bias-corrected estimator for the population variance in allele
+procedures; throughout the paper we use sampling Plan II). Rearranging, we can
+create a bias-corrected estimator for the population variance in allele
 frequency change, and replace all population heterozygosity terms with the
 unbiased sample estimators, e.g. $\frac{d_t}{d_t-1} \widetilde{p}_t (1-
 \widetilde{p}_t)$,
@@ -1021,6 +1022,8 @@ probability $x$.
 \subsection{The Empirical Neutral Null Windowed Covariance Distribution}
 \label{supp:empirical-null}
 
+XXX
+
 \clearpage
 \section{Supplementary Figures}
 
@@ -1053,6 +1056,7 @@ right) from the regression due to large differences in average coverage.}
   \label{suppfig:barghi-correction}
 \end{figure}
 
+\clearpage
 \subsection{\textcite{Barghi2019-qy} Empirical Null and Windowed Covariance Distributions}
 
 \begin{figure}[!ht]
@@ -1117,7 +1121,7 @@ right) from the regression due to large differences in average coverage.}
 \end{figure}
 
 
-
+\clearpage
 \subsection{\textcite{Barghi2019-qy} Tail Probabilities for Windowed Covariances Distributions}
 
 \begin{figure}[!ht]
@@ -1144,7 +1148,7 @@ right) from the regression due to large differences in average coverage.}
 \end{figure}
 
 \subsection{\textcite{Bergland2014-ij} Re-Analysis}
-\label{bergland-reanalysis}
+\label{supp:bergland-reanalysis}
 
 
 We also applied our temporal covariance approach to \textcite{Bergland2014-ij},
@@ -1243,11 +1247,11 @@ as it does not account for genetic drift or other forms of hitchhiking.
   \centering
   \includegraphics[width=\textwidth]{figures/bergland-combined-hists.pdf}
 
-  \caption{\textbf{A}: Histogram of original \textcite{Bergland2014-ij}
+  \caption{\vb{\textbf{A}: Histogram of original \textcite{Bergland2014-ij}
     seasonal p-values and p-values creating by randomly permuting the seasons
     at each locus. \textbf{B}: Histogram of original \textcite{Bergland2014-ij}
     p-values alongside all unique permutations (ignoring symmetries that lead
-  to identical p-values).}
+    to identical p-values).}}
 
   \label{suppfig:bergland-pvalue-hist}
 \end{figure}

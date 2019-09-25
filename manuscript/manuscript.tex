@@ -181,7 +181,6 @@ convergent selection pressures. Overall, we demonstrate that linked selection
 has a powerful role in shaping genome-wide allele frequency changes over very
 short timescales.
 
-\clearpage
 \section{Results}
 
 
@@ -488,7 +487,6 @@ neutral null.}
     \label{fig:figure-3} 
 \end{figure}
 
-\clearpage
 
 
 Finally, we observed that in the longest study  we analyzed
@@ -503,36 +501,36 @@ selective alleles.  Such reversals of selective dynamics could be occurring at
 other timepoints but the signal of a change in the direction of selection at
 particular loci may be washed out when we calculate our genome-wide average
 temporal covariances. To address this limitation, we calculated the
-distribution of the temporal covariances over 100kb genomic windows \vb{which
-we refer to as \emph{windowed covariances}} (Figure \ref{fig:figure-3}
-\vb{shows these distributions} pooling across all replicates; see Supplementary
-Figure \ref{suppfig:barghi-offset-replicate-panels} for individuals
-replicates). The covariance of each tile will be noisy, due to sampling and
-genetic drift, and the neutral distribution of the covariance is complicated
-due to linkage disequilibria (which can occur over long physical distances in
-E\&R and selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). To
-address this, we have developed a permutation-based procedure that constructs a
-null distribution by randomly flipping the signs of the  allele frequency
-changes per-genomic window. This destroys the systematic covariances created by
-linked selection and creates a sampling distribution of the covariances
-spuriously created by neutral genetic drift while preserving the complex
-dependencies between adjacent loci created by linkage disequilibrium. This
-empirical neutral null distribution is conservative in the sense that the
-variances of the covariances are wider than expected under drift alone as they
-include the effect of selection on the allele frequency change within a
-time-interval, just not between time-intervals. We see (Figure
-\ref{fig:figure-3} A and B) that windowed temporal covariances between close
-timepoints are skewed positive (a heavy right tail), while between more distant
-timepoints these windowed temporal covariances tend to shift to become more
-negative (a heavy left tail).  We quantified the degree to which the left and
-right tails are inflated compared to the null distribution as a function of
-time, and see excesses in both tails in Figure \ref{fig:figure-3} C. This
-finding is also robust to sign-permuting allele frequency changes on a
-chromosome-level, the longest extent that gametic linkage disequilibria can
-extend (Supplementary Figure \ref{suppfig:barghi-tailprobs-seqid}). We see a
-striking pattern that the windowed covariances not only decay towards zero, but
-in fact become negative through time, consistent with many regions in the
-genome having had a reversed fitness effect at later timepoints.
+distribution of the temporal covariances over 100kb genomic windows which we
+refer to as \emph{windowed covariances} (Figure \ref{fig:figure-3} shows these
+distributions pooling across all replicates; see Supplementary Figure
+\ref{suppfig:barghi-offset-replicate-panels} for individuals replicates). The
+covariance of each tile will be noisy, due to sampling and genetic drift, and
+the neutral distribution of the covariance is complicated due to linkage
+disequilibria (which can occur over long physical distances in E\&R and
+selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). To address
+this, we have developed a permutation-based procedure that constructs a null
+distribution by randomly flipping the signs of the  allele frequency changes
+per-genomic window. This destroys the systematic covariances created by linked
+selection and creates a sampling distribution of the covariances spuriously
+created by neutral genetic drift while preserving the complex dependencies
+between adjacent loci created by linkage disequilibrium. This empirical neutral
+null distribution is conservative in the sense that the variances of the
+covariances are wider than expected under drift alone as they include the
+effect of selection on the allele frequency change within a time-interval, just
+not between time-intervals. We see (Figure \ref{fig:figure-3} A and B) that
+windowed temporal covariances between close timepoints are skewed positive (a
+heavy right tail), while between more distant timepoints these windowed
+temporal covariances tend to shift to become more negative (a heavy left tail).
+We quantified the degree to which the left and right tails are inflated
+compared to the null distribution as a function of time, and see excesses in
+both tails in Figure \ref{fig:figure-3} C. This finding is also robust to
+sign-permuting allele frequency changes on a chromosome-level, the longest
+extent that gametic linkage disequilibria can extend (Supplementary Figure
+\ref{suppfig:barghi-tailprobs-seqid}). We see a striking pattern that the
+windowed covariances not only decay towards zero, but in fact become negative
+through time, consistent with many regions in the genome having had a reversed
+fitness effect at later timepoints.
 
 % (see
 % Supplementary Material Section \ref{supp:empirical-null} for more details on
@@ -1179,6 +1177,31 @@ the pattern we would expect under genome-wide fluctuating selection.
 
 \begin{figure}[!ht]
   \centering
+  \includegraphics[]{figures/bergland-covs-figure.pdf}
+
+  \caption{Temporal covariances from the \textcite{Bergland2014-ij} study, from
+    varying reference generations (e.g. rows along the temporal covariance
+    matrix). Each covariance is labeled indicating whether the covariance is
+    between two like seasonal transitions (e.g. the covariance between allele
+    frequency changes from fall to spring in one year, and fall to spring in
+    another) or two dislike seasons (e.g. the covariance between fall to spring
+    in one year, and spring to fall in another year). Covariances between like
+    transitions are expected to be positive when there is a genome-wide effect
+    of fluctuating selection (and these labels are colored blue), while
+    covariances between dislike transitions are expected to be negative (and
+    these labels are colored red). 95\% confidence intervals were constructed
+    by a block-bootstrapping procedure where the blocks are megabase tiles.}
+
+  \label{suppfig:bergland-covs-figure}
+\end{figure}
+
+We wanted to establish that our temporal-covariance matrix bias correction was
+working correctly. We find that it corrects the relationship between depth and
+both variance and covariance (Supplementary Figure
+\ref{suppfig:bergland-correction}) as expected.
+
+\begin{figure}[!ht]
+  \centering
   \includegraphics[width=\textwidth]{figures/bergland_pvalues.pdf}
 
   \caption{\textbf{A}: Scatterplot of the original unadjusted p-values from
@@ -1193,10 +1216,6 @@ the pattern we would expect under genome-wide fluctuating selection.
   \label{suppfig:bergland-pvalue-comparison}
 \end{figure}
 
-We wanted to establish that our temporal-covariance matrix bias correction was
-working correctly. We find that it corrects the relationship between depth and
-both variance and covariance (Supplementary Figure
-\ref{suppfig:bergland-correction}) as expected.
 
 It is unclear how strong the fluctuations would have to be to generate a
 genome-wide average signal of fluctuating selection from temporal covariances.
@@ -1250,11 +1269,11 @@ as it does not account for genetic drift or other forms of hitchhiking.
   \centering
   \includegraphics[width=\textwidth]{figures/bergland-combined-hists.pdf}
 
-  \caption{\vb{\textbf{A}: Histogram of original \textcite{Bergland2014-ij}
+  \caption{\textbf{A}: Histogram of original \textcite{Bergland2014-ij}
     seasonal p-values and p-values creating by randomly permuting the seasons
     at each locus. \textbf{B}: Histogram of original \textcite{Bergland2014-ij}
     p-values alongside all unique permutations (ignoring symmetries that lead
-    to identical p-values).}}
+    to identical p-values).}
 
   \label{suppfig:bergland-pvalue-hist}
 \end{figure}
@@ -1301,26 +1320,6 @@ evidence of selection (non-zero temporal covariances), yet the pattern does not
 follow that of seasonal fluctuating selection.  
 
 %\gc{ADD MORE HERE} TODO
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[]{figures/bergland-covs-figure.pdf}
-
-  \caption{Temporal covariances from the \textcite{Bergland2014-ij} study, from
-    varying reference generations (e.g. rows along the temporal covariance
-    matrix). Each covariance is labeled indicating whether the covariance is
-    between two like seasonal transitions (e.g. the covariance between allele
-    frequency changes from fall to spring in one year, and fall to spring in
-    another or two dislike seasons (e.g. the covariance between fall to spring
-    in one year, and spring to fall in another year). Covariances between like
-    transitions are expected to be positive when there is a genome-wide effect
-    of fluctuating selection (and these labels are colored blue), while
-    covariances between dislike transitions are expected to be negative (and
-    these labels are colored red). 95\% confidence intervals were constructed
-    by a block-bootstrapping procedure where the blocks are megabase tiles.}
-
-  \label{suppfig:bergland-covs-figure}
-\end{figure}
 
 
 

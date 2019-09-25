@@ -516,12 +516,11 @@ null distribution by randomly flipping the signs of the  allele frequency
 changes per-genomic window. This destroys the systematic covariances created by
 linked selection and creates a sampling distribution of the covariances
 spuriously created by neutral genetic drift while preserving the complex
-dependencies between adjacent loci created by linkage disequilibrium (see
-Supplementary Material Section \ref{supp:empirical-null} for more details on
-this approach).  This empirical neutral null distribution is conservative in
-the sense that the variances of the covariances are wider than expected under
-drift alone as they include the effect of selection on the allele frequency
-change within a time-interval, just not between time-intervals. We see (Figure
+dependencies between adjacent loci created by linkage disequilibrium. This
+empirical neutral null distribution is conservative in the sense that the
+variances of the covariances are wider than expected under drift alone as they
+include the effect of selection on the allele frequency change within a
+time-interval, just not between time-intervals. We see (Figure
 \ref{fig:figure-3} A and B) that windowed temporal covariances between close
 timepoints are skewed positive (a heavy right tail), while between more distant
 timepoints these windowed temporal covariances tend to shift to become more
@@ -534,6 +533,10 @@ extend (Supplementary Figure \ref{suppfig:barghi-tailprobs-seqid}). We see a
 striking pattern that the windowed covariances not only decay towards zero, but
 in fact become negative through time, consistent with many regions in the
 genome having had a reversed fitness effect at later timepoints.
+
+% (see
+% Supplementary Material Section \ref{supp:empirical-null} for more details on
+% this approach).
 
 
 \section{Discussion}
@@ -1019,10 +1022,10 @@ estimate the $1-\alpha = 95\%$ pivot confidence intervals (p. 33
 where $\widehat{\theta}$ is the estimate, and $q_x$ is bootstrap quantile for
 probability $x$.
 
-\subsection{The Empirical Neutral Null Windowed Covariance Distribution}
-\label{supp:empirical-null}
+% \subsection{The Empirical Neutral Null Windowed Covariance Distribution}
+% \label{supp:empirical-null}
 
-XXX
+% XXX
 
 \clearpage
 \section{Supplementary Figures}

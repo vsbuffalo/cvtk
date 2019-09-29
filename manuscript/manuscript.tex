@@ -542,24 +542,9 @@ fitness effect at later timepoints.
 Since the seminal analysis of \textcite{Maynard_Smith1974-lc} demonstrating
 that diversity is reduced at linked neutral variation as an advantageous
 polymorphism sweeps to fixation, over four decades of theoretical and empirical
-research has enriched our understanding of linked selection. This work has led
-to the discovery of selected genes from genomic signals of hitchhiking
-\parencite{Nair2003-tw,Voight2006-rn}, found genome-wide signals of linked
-selection
-\parencite{Aguade1989-jx,Begun1992-ey,Cutter2010-gi,Andersen2012-bj,Cutter2003-tl}
-leading to the development of recurrent hitchhiking \parencite{Stephan1992-jc}
-and background selection \parencite{Charlesworth1993-gb} models that attempt
-explain this pattern. Since, much attention has focused on quantifying the
-impact of background selection \parencite{McVicker2009-ax} and developing
-theoretic machinery \parencite{Coop2012-cd} to differentiate the regional
-reductions in diversity into those caused by full and partial sweeps, and those
-caused by background selection \parencite{Elyashiv2016-vt}. However, as other
-models of soft sweeps from standing variation emerged
-\parencite{Hermisson2005-hs,Pennings2006-lj}, attention shifted towards
-detecting other modes of linked selection \parencite{Pritchard2010-tk}, a more
-difficult endeavor \parencite{Przeworski2005-bg} addressed using new coalescent
-models \parencite{Berg2015-xj} and machine learning methods
-\parencite{Schrider2017-yx}. An alternative approach to understanding the
+research has enriched our understanding of linked selection.
+
+An alternative approach to understanding the
 genome-wide effects of selection on standing variation, e.g. selection on an
 infinitesimal polygenic trait, stems from an early quantitative genetic model
 of linked selection \parencite{Robertson1961-ho} and its later developments
@@ -570,6 +555,52 @@ there is heritable fitness variation in the population, a signal that can be
 readily detected from temporal genomic data \parencite{Buffalo2019-io}. Here,
 we provide the first empirical evidence of linked selection acting on standing
 variation over very short timescales.
+
+It is worth building some intuition why temporal covariance allows us to detect
+such faint signals of polygenic linked selection from temporal genomic data.
+Each variant is subject to both variance in allele frequency due to drift and
+two levels of sampling noise (as individuals are sampled from the population
+and reads are sampled from amplified DNA), which at any locus swamps the
+temporal covariance signal and creates spurious covariances. However, these
+spurious covariances do not share a common sign across timepoints whereas the
+covariances created by linked selection do; consequently, averaging across the
+entire genome, the temporal signal exceeds sampling noise.
+
+Depending on how many loci affect fitness, such a strong
+effect of linked selection may not be differentiable from genetic drift using
+only single contemporary population samples. In this way, temporal data allows
+us to sidestep the key problem of detecting selection from standing variation:
+that the genomic footprint leaves too soft of a signature to differentiate from
+a background of genetic drift. In fact we find that the temporal covariance
+signal is detectable even in the most extremely difficult to detect soft sweep
+case: polygenic selection on an infinitesimal trait.
+
+%In our reanalysis of the
+%\textcite{Castro2019-uk} data, by showing the covariance signal remains even
+%after excluding the chromosomes containing two large-effect loci, we showed the
+%covariance signal we detect is indeed driven by polygenic fitness variation
+%(and confirm a point in the original study that tibiae length, aside from these
+%two large effect loci, is a highly polygenic trait).
+
+%This work has led
+%to the discovery of selected genes from genomic signals of hitchhiking
+%\parencite{Nair2003-tw,Voight2006-rn}, found genome-wide signals of linked
+%selection
+%\parencite{Aguade1989-jx,Begun1992-ey,Cutter2010-gi,Andersen2012-bj,Cutter2003-tl}
+%leading to the development of recurrent hitchhiking \parencite{Stephan1992-jc}
+%and background selection \parencite{Charlesworth1993-gb} models that attempt
+%explain this pattern. Since, much attention has focused on quantifying the
+%impact of background selection \parencite{McVicker2009-ax} and developing
+% theoretic machinery \parencite{Coop2012-cd} to differentiate the regional
+% reductions in diversity into those caused by full and partial sweeps, and those
+% caused by background selection \parencite{Elyashiv2016-vt}. However, as other
+% models of soft sweeps from standing variation emerged
+% \parencite{Hermisson2005-hs,Pennings2006-lj}, attention shifted towards
+% detecting other modes of linked selection \parencite{Pritchard2010-tk}, a more
+% difficult endeavor \parencite{Przeworski2005-bg} addressed using new coalescent
+% models \parencite{Berg2015-xj} and machine learning methods
+%\parencite{Schrider2017-yx}.
+
 
 We reanalyzed three published temporal genomic datasets and detected the
 genome-wide signature of linked selection acting over tens of generations.
@@ -588,29 +619,9 @@ changes.
 While we must keep in mind that the studies analyzed here were all laboratory
 populations and natural selection in the wild will likely differ, overall we
 have found that linked selection has a remarkably strong effect for such short
-study durations. Depending on how many loci affect fitness, such a strong
-effect of linked selection may not be differentiable from genetic drift using
-only single contemporary population samples. In this way, temporal data allows
-us to sidestep the key problem of detecting selection from standing variation:
-that the genomic footprint leaves too soft of a signature to differentiate from
-a background of genetic drift. In fact we find that the temporal covariance
-signal is detectable even in the most extremely difficult to detect soft sweep
-case: polygenic selection on an infinitesimal trait. In our reanalysis of the
-\textcite{Castro2019-uk} data, by showing the covariance signal remains even
-after excluding the chromosomes containing two large-effect loci, we showed the
-covariance signal we detect is indeed driven by polygenic fitness variation
-(and confirm a point in the original study that tibiae length, aside from these
-two large effect loci, is a highly polygenic trait).
+study durations. 
 
-It is worth building some intuition why temporal covariance allows us to detect
-such faint signals of polygenic linked selection from temporal genomic data.
-Each variant is subject to both variance in allele frequency due to drift and
-two levels of sampling noise (as individuals are sampled from the population
-and reads are sampled from amplified DNA), which at any locus swamps the
-temporal covariance signal and creates spurious covariances. However, these
-spurious covariances do not share a common sign across timepoints whereas the
-covariances created by linked selection do; consequently, averaging across the
-entire genome, the temporal signal exceeds sampling noise.
+
 
 One limitation of these analyses is that none of the studies we reanalyzed
 estimated linkage disequilibria data for the evolved populations. Our theory of

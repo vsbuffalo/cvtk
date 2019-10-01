@@ -183,28 +183,6 @@ short timescales.
 
 \section{Results}
 
-
-% We measure two types of covariances between allele frequency caused by
-% selection: temporal autocovariances, and across-replicate covariances. First,
-% positive temporal autocovariance in a neutral allele frequency's trajectory
-% occurs when the allele becomes associated with a high or low fitness
-% chromosomal background, and this association persists through the generations
-% due to linkage disequilibrium. As long as the direction of selection remains
-% constant, the fitness background is predictive of the direction in the neutral
-% allele's frequency changes, creating positive covariance. Even though these
-% magnitude of frequency changes at each site may be subtle, as they would be
-% under polygenic selection, cumulatively these perturb neighboring sites in a
-% predictable manner and build up temporal autocovariance which acts as a
-% genome-wide signal of linked selection. Second, if evolution occurs in
-% replicate populations undergoing convergent selection pressure, neutral sites
-% linked to fitness backgrounds shared across replicates are expected to change
-% in the same direction. This creates across-replicate covariance, which is a
-% measure of the extent to which convergent selection pressures across replicate
-% populations cause similar allele frequency changes. Finally, it is important to
-% note that under the null model where the fitness differences between
-% individuals are entirely random and non-heritable (e.g. when selection is not
-% acting), both forms of covariances are expected to be zero. 
-
 \begin{center}
   \footnotesize
   \begin{tabular}{l c c c c c c}
@@ -424,7 +402,7 @@ block-bootstrap confidence interval $[0.31, 0.40]$).
 Second, we reanalyzed the Longshanks selection experiment, which selected for
 longer tibiae length relative to body size in mice, leading to a response to
 selection of about 5 standard deviations over the course of twenty generations
-\parencite{Castro2019-uk}. This study includes two independent selection lines,
+\parencite{Castro2019-uk,Marchini2014-de}. This study includes two independent selection lines,
 Longshanks 1 and 2 (LS1 and LS2), and an unselected control line (Ctrl).
 Consequently, this selection experiment offers a useful control to test our
 between-replicate covariances: we expect to see positive between-replicate
@@ -509,28 +487,28 @@ covariance of each tile will be noisy, due to sampling and genetic drift, and
 the neutral distribution of the covariance is complicated due to linkage
 disequilibria (which can occur over long physical distances in E\&R and
 selection studies, \cite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}). To address
-this, we have developed a permutation-based procedure that constructs a null
-distribution by randomly flipping the signs of the  allele frequency changes
-per-genomic window. This destroys the systematic covariances created by linked
-selection and creates a sampling distribution of the covariances spuriously
-created by neutral genetic drift while preserving the complex dependencies
-between adjacent loci created by linkage disequilibrium. This empirical neutral
-null distribution is conservative in the sense that the variances of the
-covariances are wider than expected under drift alone as they include the
-effect of selection on the allele frequency change within a time-interval, just
-not between time-intervals. We see (Figure \ref{fig:figure-3} A and B) that
-windowed temporal covariances between close timepoints are skewed positive (a
-heavy right tail), while between more distant timepoints these windowed
-temporal covariances tend to shift to become more negative (a heavy left tail).
-We quantified the degree to which the left and right tails are inflated
-compared to the null distribution as a function of time, and see excesses in
-both tails in Figure \ref{fig:figure-3} C. This finding is also robust to
-sign-permuting allele frequency changes on a chromosome-level, the longest
-extent that gametic linkage disequilibria can extend (Supplementary Figure
-\ref{suppfig:barghi-tailprobs-seqid}). We see a striking pattern that the
-windowed covariances not only decay towards zero, but in fact become negative
-through time, consistent with many regions in the genome having had a reversed
-fitness effect at later timepoints.
+this, we have developed a permutation-based procedure that constructs an
+empirical null distribution by randomly flipping the signs of the allele
+frequency changes per-genomic window. This destroys the systematic covariances
+created by linked selection and creates a sampling distribution of the
+covariances spuriously created by neutral genetic drift while preserving the
+complex dependencies between adjacent loci created by linkage disequilibrium.
+This empirical neutral null distribution is conservative in the sense that the
+variances of the covariances are wider than expected under drift alone as they
+include the effect of selection on the allele frequency change within a
+time-interval, just not between time-intervals. We see (Figure
+\ref{fig:figure-3} A and B) that windowed temporal covariances between close
+timepoints are skewed positive (a heavy right tail), while between more distant
+timepoints these windowed temporal covariances tend to shift to become more
+negative (a heavy left tail).  We quantified the degree to which the left and
+right tails are inflated compared to the null distribution as a function of
+time, and see excesses in both tails in Figure \ref{fig:figure-3} C. This
+finding is also robust to sign-permuting allele frequency changes on a
+chromosome-level, the longest extent that gametic linkage disequilibria can
+extend (Supplementary Figure \ref{suppfig:barghi-tailprobs-seqid}). We see a
+striking pattern that the windowed covariances not only decay towards zero, but
+in fact become negative through time, consistent with many regions in the
+genome having had a reversed fitness effect at later timepoints.
 
 % (see
 % Supplementary Material Section \ref{supp:empirical-null} for more details on
@@ -628,20 +606,22 @@ covariance and LD.
 % \graham{TODO Is important point. We'll likely need plots for supp}
 
 We believe this is driven by the idiosyncratic nature of LD in
-evolve-and-resequence populations \parencite{Nuzhdin2013-gf,Kelly2019-dc}, and
-that we might find such a relationship if LD data from the evolved population
-were available. Unfortunately, sequencing multiple timepoints is expensive and
-the low-coverage and/or pooled-sequencing approaches common in these studies
-prohibit estimating linkage disequilibrium. Future studies complete with LD
-data and recombination maps would allow one to disentangle the influence of
-closely linked sites from more distant sites in causing temporal
-autocovariance, and allow us to better understand whether sites in high
-recombination regions are free from the effects of linked selection.
-Furthermore, such additional data would allow for localizing the effects of
-temporal covariance, which would allow us to estimate not just the genome-wide
-fraction of variation in frequency change ($G(t)$), but also the fraction of
-the genome impacted by linked selection, allowing us to synthesize the temporal
-approach with single-timepoint studies like that of \textcite{Elyashiv2016-vt}.
+evolve-and-resequence populations
+\parencite{Nuzhdin2013-gf,Kelly2019-dc,Franssen2015-uc} \vince{put the Franssen
+citation Christian suggested here}, and that we might find such a relationship
+if LD data from the evolved population were available.  Unfortunately,
+sequencing multiple timepoints is expensive and the low-coverage and/or
+pooled-sequencing approaches common in these studies prohibit estimating
+linkage disequilibrium. Future studies complete with LD data and recombination
+maps would allow one to disentangle the influence of closely linked sites from
+more distant sites in causing temporal autocovariance, and allow us to better
+understand whether sites in high recombination regions are free from the
+effects of linked selection.  Furthermore, such additional data would allow for
+localizing the effects of temporal covariance, which would allow us to estimate
+not just the genome-wide fraction of variation in frequency change ($G(t)$),
+but also the fraction of the genome impacted by linked selection, allowing us
+to synthesize the temporal approach with single-timepoint studies like that of
+\textcite{Elyashiv2016-vt}.
 
 %Why the variation in convergence correlations?
 
@@ -1020,10 +1000,28 @@ estimate the $1-\alpha = 95\%$ pivot confidence intervals (p. 33
 where $\widehat{\theta}$ is the estimate, and $q_x$ is bootstrap quantile for
 probability $x$.
 
-% \subsection{The Empirical Neutral Null Windowed Covariance Distribution}
-% \label{supp:empirical-null}
+\subsection{The Empirical Neutral Null Windowed Covariance Distribution}
+\label{supp:empirical-null}
 
-% XXX
+To detect an excess of genomic regions with unusually high or low covariances,
+we need to compare the distribution of observed windowed covariances to a null
+distribution of windowed covariances that we would expect under no selection.
+While we could construct a theoretic sampling distribution of the spurious
+covariances created by neutral genetic drift at particular site, the unknown
+linkage disequilibrium between sites would mean that this is not an adequate
+null model for the distribution of windowed covariances in our data. 
+
+To address this limitation, we construct a neutral null model with the most
+important feature of the neutral null: the systematic covariances between
+allele frequency changes are destroyed by sign-flipping the allele frequency
+changes. This is a conservative approach, since not only does selection create
+temporal covariance, but it also acts to increase the magnitude of allele
+frequency changes (see equation 1 of \cite{Buffalo2019-io}).
+
+Since variants have unknown dependency structure due to LD, we sign-permute at
+the window level, analogous to our block bootstrap approach. 
+
+
 
 \clearpage
 \section{Supplementary Figures}

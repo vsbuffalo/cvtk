@@ -254,7 +254,7 @@ def stack_replicate_covs_by_group(covs, R, T, stack=True, **kwargs):
 
 
 
-def temporal_replicate_cov(freqs, depths=None, diploids=None, center=True, 
+def temporal_replicate_cov(freqs, depths=None, diploids=None, 
                            bias_correction=True, standardize=True, deltas=None, 
                            use_masked=False, share_first=False, 
                            return_ratio_parts=False, warn=False):

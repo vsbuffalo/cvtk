@@ -510,156 +510,103 @@ striking pattern that the windowed covariances not only decay towards zero, but
 in fact become negative through time, consistent with many regions in the
 genome having had a reversed fitness effect at later timepoints.
 
-% (see
-% Supplementary Material Section \ref{supp:empirical-null} for more details on
-% this approach).
-
-
 \section{Discussion}
 
 Since the seminal analysis of \textcite{Maynard_Smith1974-lc} demonstrating
-that diversity is reduced at linked neutral variation as an advantageous
-polymorphism sweeps to fixation, over four decades of theoretical and empirical
-research has enriched our understanding of linked selection. This work has led
-to the discovery of selected genes from genomic signals of hitchhiking
-\parencite{Nair2003-tw,Voight2006-rn}, found genome-wide signals of linked
-selection
-\parencite{Aguade1989-jx,Begun1992-ey,Cutter2010-gi,Andersen2012-bj,Cutter2003-tl}
-leading to the development of recurrent hitchhiking \parencite{Stephan1992-jc}
-and background selection \parencite{Charlesworth1993-gb} models that attempt
-explain this pattern. Since, much attention has focused on quantifying the
-impact of background selection \parencite{McVicker2009-ax} and developing
-theoretic machinery \parencite{Coop2012-cd} to differentiate the regional
-reductions in diversity into those caused by full and partial sweeps, and those
-caused by background selection \parencite{Elyashiv2016-vt}. However, as other
-models of soft sweeps from standing variation emerged
-\parencite{Hermisson2005-hs,Pennings2006-lj}, attention shifted towards
-detecting other modes of linked selection \parencite{Pritchard2010-tk}, a more
-difficult endeavor \parencite{Przeworski2005-bg} addressed using new coalescent
-models \parencite{Berg2015-xj} and machine learning methods
-\parencite{Schrider2017-yx}. An alternative approach to understanding the
-genome-wide effects of selection on standing variation, e.g. selection on an
-infinitesimal polygenic trait, stems from an early quantitative genetic model
-of linked selection \parencite{Robertson1961-ho} and its later developments
-(\cite{Santiago1995-hx,Santiago1998-bs}; see also \cite{Barton2000-zg} for a
-comparison of these models with classic hitchhiking models). Implicit in these
-models is that autocovariance between allele frequency change is created when
-there is heritable fitness variation in the population, a signal that can be
-readily detected from temporal genomic data \parencite{Buffalo2019-io}. Here,
-we provide the first empirical evidence of linked selection acting on standing
-variation over very short timescales.
-
-We reanalyzed three published temporal genomic datasets and detected the
-genome-wide signature of linked selection acting over tens of generations.
-Furthermore, we find the dynamics of temporal autocovariance are consistent
-with theory; the temporal covariance in allele frequencies decays as both
-the fitness variation associated with particular haplotypes and the linkage
-disequilibria between selected and neutral loci decay through time. In
-reanalyzing one study \parencite{Barghi2019-qy}, we find that after sixty
-generations, greater than 20\% of the variation in allele frequency change is
-directly due to the action linked selection. Capitalizing on replicated
-evolve-and-resequence study designs, we characterized the extent to which
-convergent selection pressures lead to parallel changes in allele frequencies
-across replicate populations, finding moderate correlations in allele frequency
-changes.
-
-While we must keep in mind that the studies analyzed here were all laboratory
-populations and natural selection in the wild will likely differ, overall we
-have found that linked selection has a remarkably strong effect for such short
-study durations. Depending on how many loci affect fitness, such a strong
-effect of linked selection may not be differentiable from genetic drift using
-only single contemporary population samples. In this way, temporal data allows
-us to sidestep the key problem of detecting selection from standing variation:
-that the genomic footprint leaves too soft of a signature to differentiate from
-a background of genetic drift. In fact we find that the temporal covariance
-signal is detectable even in the most extremely difficult to detect soft sweep
-case: polygenic selection on an infinitesimal trait. In our reanalysis of the
-\textcite{Castro2019-uk} data, by showing the covariance signal remains even
-after excluding the chromosomes containing two large-effect loci, we showed the
-covariance signal we detect is indeed driven by polygenic fitness variation
-(and confirm a point in the original study that tibiae length, aside from these
-two large effect loci, is a highly polygenic trait).
+that linked neutral diversity is reduced as an advantageous polymorphism arises
+and sweeps to fixation, over four decades of theoretical and empirical research
+has enriched our understanding of linked selection.  One under-used approach to
+understand the genome-wide effects of selection on standing variation, e.g.
+selection on an infinitesimal polygenic trait, stems from an early quantitative
+genetic model of linked selection \parencite{Robertson1961-ho} and its later
+developments (\cite{Santiago1995-hx,Santiago1998-bs}; see also
+\cite{Barton2000-zg} for a comparison of these models with classic hitchhiking
+models). Implicit in these models is that autocovariance between allele
+frequency change is created when there is heritable fitness variation in the
+population, a signal that may be readily detected from temporal genomic data
+\parencite{Buffalo2019-io}.  Depending on how many loci affect fitness, such a
+strong effect of linked selection may not be differentiable from genetic drift
+using only single contemporary population samples or looking at at temporal
+allele frequency change at each locus in isolation.  In this way, averaging
+summaries of temporal data allows us to sidestep the key problem of detecting
+selection from standing variation: that the genomic footprint leaves too soft
+of a signature to differentiate from a background of genetic drift. In fact we
+find that the temporal covariance signal is detectable even in the most
+extremely difficult to detect soft sweep case: polygenic selection on highly
+polygenic traits \parencite{Buffalo2019-io}.
 
 It is worth building some intuition why temporal covariance allows us to detect
 such faint signals of polygenic linked selection from temporal genomic data.
 Each variant is subject to both variance in allele frequency due to drift and
-two levels of sampling noise (as individuals are sampled from the population
-and reads are sampled from amplified DNA), which at any locus swamps the
-temporal covariance signal and creates spurious covariances. However, these
-spurious covariances do not share a common sign across timepoints whereas the
+sampling noise, which at any locus may swamp the temporal covariance signal and creates spurious covariances. However, these
+spurious covariances do not share a directional signal whereas the
 covariances created by linked selection do; consequently, averaging across the
-entire genome, the temporal signal exceeds sampling noise.
+entire genome, the temporal signal exceeds sampling noise. 
 
-One limitation of these analyses is that none of the studies we reanalyzed
-estimated linkage disequilibria data for the evolved populations. Our theory of
-temporal autocovariance tells us that the temporal autocovariances a neutral
-site experiences is determined by the product of the expected linkage
-disequilibrium and additive fitness variation that persists through the
-generations \parencite{Buffalo2019-io}. This leads to a clear prediction:
-regions of higher linkage disequilibrium and lower recombination should have
-greater temporal autocovariance than regions with lower LD and higher
-recombination. Unfortunately, we lack a high-resolution recombination map for
-\emph{D. simulans} and while there are LD data for \emph{D. simulans}
-\parencite{Signor2018-wg} we did not find a relationship between temporal
-covariance and LD. 
+Our analyses reveal that a sizable proportion of allele frequency
+change in these populations is due to the (indirect) action of
+selection. Capitalizing on replicated designs, we characterized the extent to which
+convergent selection pressures lead to parallel changes in allele frequencies
+across replicate populations, and found that a reasonably proportion
+of the response is shared across short timescales. These likely
+represent substantial under-estimates of the contribution of linked
+selection because ....
 
-% \graham{TODO Is important point. We'll likely need plots for supp}
+These estimates of the contribution of selection could be refined by using
+patterns of LD and recombination which would allow us to more fully
+parameterize a linked-selection model of temporal allele frequency change
+\parencite{Buffalo2019-io}. The basic prediction is that regions of higher
+linkage disequilibrium and lower recombination should have greater temporal
+autocovariance than regions with lower LD and higher recombination. However,
+one limitation of these pooled sequence datasets is that none of the studies we
+reanalyzed estimated linkage disequilibria data for the evolved populations.
+There are LD data for a natural population of \emph{D. simulans}
+\parencite{Signor2018-wg},  we did not find a relationship between temporal
+covariance and LD.  We believe this is driven by the idiosyncratic nature of LD
+in evolve-and-resequence populations, which often extends over large genomic
+distances \parencite{Nuzhdin2013-gf,Kelly2019-dc}. Future studies complete with
+LD data and recombination maps would allow one to disentangle the influence of
+closely linked sites from more distant sites in causing temporal
+autocovariance, and allow the fitting of more parameteric model to estimate
+population parameters such as the additive genetic variation for fitness
+directly from temporal gneomic data alone  \parencite{Buffalo2019-io}.
 
-We believe this is driven by the idiosyncratic nature of LD in
-evolve-and-resequence populations
-\parencite{Nuzhdin2013-gf,Kelly2019-dc,Franssen2015-uc} \vince{put the Franssen
-citation Christian suggested here}, and that we might find such a relationship
-if LD data from the evolved population were available.  Unfortunately,
-sequencing multiple timepoints is expensive and the low-coverage and/or
-pooled-sequencing approaches common in these studies prohibit estimating
-linkage disequilibrium. Future studies complete with LD data and recombination
-maps would allow one to disentangle the influence of closely linked sites from
-more distant sites in causing temporal autocovariance, and allow us to better
-understand whether sites in high recombination regions are free from the
-effects of linked selection.  Furthermore, such additional data would allow for
-localizing the effects of temporal covariance, which would allow us to estimate
-not just the genome-wide fraction of variation in frequency change ($G(t)$),
-but also the fraction of the genome impacted by linked selection, allowing us
-to synthesize the temporal approach with single-timepoint studies like that of
-\textcite{Elyashiv2016-vt}.
+Our primary focus here has been on evolution in laboratory
+populations. It is unclear whether we should expect a similar impact
+of selection in natural populations. In some of these experiments, selection pressures may
+have been stronger or more sustained that in natural populations REF.
+Conversely, they these lab populations were maintained at very small
+population sizes, small effective population sizes 300, 450, and 45 for the
+\textcite{Kelly2019-dc}, and \textcite{Castro2019-uk} studies
+respectively, which will amplify the role of genetic drift. The
+advantage of lab experiments is that they are closed populations, in
+natural populations temporal covariance could also arise from
+the systematic migration of alleles from differentiated
+populations. To these methods to natural populations will require
+either populations that are reasonably closed to migration, or for the effect of migration to
+be accounted for possibly either by knowledge of allele frequencies in source
+populations or the identification of migrant individuals. 
 
-%Why the variation in convergence correlations?
+While it challenging to apply temporal methods to natural populations there is
+a lot of promise for these approaches
+\parencite{Bergland2014-ij,Machado2018-cs}. Efforts to estimate and quantify
+the impact of linked selection in humans and \emph{Drosophila melanogaster}
+have suggested that XXX to XXX of allele frequency change over long time
+periods is driven by selection \parencite{}. Thus there is reason to be hopeful
+that we could detect this from temporal data, which would help to resolve the
+timescales that linked selection act over. In our reanalysis of the
+\textcite{Barghi2019-qy} study, we find evidence of complex linked selection
+dynamics, with selection pressures flipping over time due to either
+environmental change, the breakup of epistatic combinations or advantageous
+haplotypes. Such patterns would be completely obscured in samples only from
+contemporary populations, thus we can hope to have a much richer picture of
+linked selection as temporal sequencing becomes more common. 
 
-Thus far, the most comprehensive studies implicating linked selection in
-affecting genome-wide diversity have been in \emph{Drosophila}
-\parencite{Begun1992-ey,Elyashiv2016-vt,Sattath2011-dr} and
-\emph{Caenorhabditis} \parencite{Cutter2003-tl,Cutter2003-tl,Andersen2012-bj},
-whereas the evidence for linked selection in plant and yeast species is weak
-\parencite{Cutter2013-ba}. Both \emph{Drosophila} and \emph{Caenorhabditis}
-have short genetic maps (or in the case of selfing \emph{C.  elegans}, small
-effective recombination rates), and large effect population sizes, two factors
-predicted to increase the degree to which hitchhiking impacts genome-wide
-diversity \parencite{Barton2000-zg}. However, our results here show that even
-with small effective population sizes (300, 450, and 45 for the
-\textcite{Kelly2019-dc}, and \textcite{Castro2019-uk} studies respectively)
-and, in the case of mice, moderately-sized genetic maps (around 14 Morgans;
-\cite{Cox2009-hf}), we still see a fairly strong effect of linked selection.
-This suggests that while these factors may govern the dynamics of classic
-hitchhiking events, they could perhaps play less of a role in polygenic linked
-selection. However, with only three cases analyzed, further studies on
-different taxa are needed.
-
-Finally, in reanalyzing the \textcite{Barghi2019-qy} study, we find evidence
-of complex linked selection dynamics. This is due either to a change in the
-environment and its consequences for the fitness of regions in the genome,
-recombination breaking up selected alleles, or epistatic interactions between
-loci. It is important to note that the original study did not intentionally
-alter the environment in any way; this signal is attained without intentionally
-seeking it out. Discerning which of these is creating negative temporal
-autocovariance is a sizable challenge, requiring sequencing each generation and
-LD data.
-
-Overall, we hope this will encourage more temporal genomic studies in both
-laboratory and natural populations. Understanding the dynamics of linked
-selection over short timescales will help to unite phenotypic studies of rapid
-adaptation of polygenic adaptations with a detectable genomic signature, to
-address long-standing questions concerning linked selection, evolutionary quantitative
-genetics, and the overall impact selection has on genetic variation. 
+Understanding the dynamics of linked selection over short timescales will help
+to unite phenotypic studies of rapid adaptation with a detectable genomic
+signature, to address long-standing questions concerning linked selection,
+evolutionary quantitative genetics, and the overall impact selection has on
+genetic variation. 
 
 \section{Acknowledgments} 
 
@@ -1003,7 +950,7 @@ probability $x$.
 \subsection{The Empirical Neutral Null Windowed Covariance Distribution}
 \label{supp:empirical-null}
 
-To detect an excess of genomic regions with unusually high or low covariances,
+\vb{To detect an excess of genomic regions with unusually high or low covariances,
 we need to compare the distribution of observed windowed covariances to a null
 distribution of windowed covariances that we would expect under no selection.
 While we could construct a theoretic sampling distribution of the spurious
@@ -1011,17 +958,44 @@ covariances created by neutral genetic drift at particular site, the unknown
 linkage disequilibrium between sites would mean that this is not an adequate
 null model for the distribution of windowed covariances in our data. 
 
-To address this limitation, we construct a neutral null model with the most
-important feature of the neutral null: the systematic covariances between
-allele frequency changes are destroyed by sign-flipping the allele frequency
-changes. This is a conservative approach, since not only does selection create
-temporal covariance, but it also acts to increase the magnitude of allele
-frequency changes (see equation 1 of \cite{Buffalo2019-io}).
+To address this limitation, we construct a neutral null model by sign-permuting
+the observed allele frequency changes. This destroys the covariances built up
+by selection, mimicking a neutral allele's frequency trajectory. This approach
+is conservative, since selection also acts to increase the magnitude of allele
+frequency changes (see equation 1 of \cite{Buffalo2019-io}), but this magnitude
+is not affected by the sign-permutation procedure. Consequently, the resulting
+empirical null distribution has higher variance than would be expected under
+neutrality alone.
 
 Since variants have unknown dependency structure due to LD, we sign-permute at
-the window level, analogous to our block bootstrap approach. 
+the window level (analogous to our block bootstrap approach). Our covariance
+statistic, $Q_{t,s} = \nicefrac{1}{L} \sum_l \Delta p_{t,l} \Delta p_{t,l}$
+(for simplicity, we drop the replicate index for clarity, do not center
+observations since their expected change is zero, and assume $|t-s| > 1$ to
+avoid the need for a bias correction) has a variance that depends on the LD:
 
+\begin{align}
+  \var(Q_{t,s}) &= \frac{1}{L^2} \sum_l \var(\Delta p_{t,l} \Delta p_{s,l}) + \frac{1}{L^2} \sum_{i \ne j} \cov(\Delta p_{t,i}\Delta p_{s,i}, \Delta p_{t,j}\Delta p_{s,j}) 
+\end{align}
 
+Under neutrality alone, we can simplify this, using the fact that allele
+frequency changes are independent through time,
+
+\begin{align}
+  \var(Q_{t,s}) &= \frac{1}{L^2} \sum_l \E(\Delta p_{t,l}^2) \E(\Delta p_{s,l}^2) + \frac{1}{L^2} \sum_{i \ne j} \E(\Delta p_{t,i} \Delta p_{s,i} \Delta p_{t,j} \Delta p_{t,j}) \\
+  &= \frac{1}{L^2} \sum_l \frac{p_{t,l}(1-p_{t,l}) p_{s,l}(1-p_{s,l})}{4N^2} + \\ \nonumber 
+  & \;\;\;\;\;\; \frac{1}{L^2} \sum_{i \ne j} \frac{\left(p_{s,i} p_{s,j}-4 D^2 \left(1-2 N r^2\right) \right) \left( p_{t,i} p_{t,j}-4 D^2 \left(1-2 N r^2\right) \right)}{4 N^2}
+\end{align}
+%
+
+where this last line can be found by assuming haplotype frequencies are sampled
+according to a Multinomial process, and recombination occurs after sampling
+(see Barton and Otto, 2005). This indicates that the variance of the covariance
+statistic, averaged over loci, depends on the linkage disequilibrium term $D^2$
+even without the presence of linked selection. However, under neutrality alone,
+the covariance statistic is unaffected by LD with sites outside averaged over.
+Still, we sign-permute loci at the chromosome level and find that the tail
+probabilities do still indicate a reverse in the direction of selection. }
 
 \clearpage
 \section{Supplementary Figures}
@@ -1139,9 +1113,10 @@ right) from the regression due to large differences in average coverage.}
   \includegraphics[]{figures/barghi-tailprobs-seqid-20.pdf}
 
   \caption{The 20\% lower and upper tail probabilities for the observed
-  windowed covariances from the \textcite{Barghi2019-qy} study, based on
-  sign-permuting at the chromosome level. This permutation empirical null
-  is robust to long-range linkage disequilibrium acting over entire chromosomes.}
+    windowed covariances from the \textcite{Barghi2019-qy} study, based on
+    sign-permuting at the chromosome level. This permutation empirical null is
+    robust to long-range linkage disequilibrium acting over entire chromosomes
+  (see Supplementary Material section \ref{supp:empirical-null}).}
   
   \label{suppfig:barghi-tailprobs-seqid}
 \end{figure}

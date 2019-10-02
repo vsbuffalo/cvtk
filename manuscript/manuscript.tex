@@ -228,41 +228,6 @@ decay in covariance we see, the covariances on shorter time-scales (e.g. if
 adjacent generations had been sequenced) may well be higher yet (see
 Supplementary Material Section \ref{supp:barghi-covs} for more details).
 
-%We visualize these covariances in Figure \label{figure-1} (A), which
-%depicts the temporal covariances through time, for each of the five
-%off-diagonal rows temporal covariance matrix. Each row represents the temporal
-%covariance $\cov(\Delta_{_{10}} p_s, \Delta_{_{10}} p_t)$, between some initial
-%reference generation $s$ (the row of the matrix), and some later timepoint $t$
-%(the column of the matrix). For each row, the covariances at first are
-%positive, and then decay towards zero as expected when directional selection
-%affects linked variants' frequency trajectories until ultimately linkage
-%disequilibrium and additive genetic variance for decay
-%\parencite{Buffalo2019-io}. Note that per replicate, the signal is a bit
-%noisier; see Supplementary Figures XXX.
-
- 
-%Since the \textcite{Barghi2019-qy} study sequenced each
-% replicate population every ten generations, we calculate the temporal
-% covariance matrix over ten-generation allele frequency changes, which we write
-% as $\cov(\Delta_{_{10}} p_s, \Delta_{_{10}} p_t)$. The diagonal elements of
-% this temporal covariance matrix are the sum of all variances in allele
-% frequency changes and pairwise covariances, e.g. element $\mathbf{Q}_{t,t} =
-% \sum_{i=t}^{9} \var(\Delta p_i) + 2\sum_{i \ne j} \cov(\Delta p_i, \Delta
-% p_j)$. Each off-diagonal element $\mathbf{Q}_{t,s}, \; t \ne s$ contains the
-% sum of pairwise covariances, $\mathbf{Q}_{t,s} = \sum_{i=t}^{t+9}
-% \sum_{j=s}^{s+9} \cov(\Delta p_i, \Delta p_j)$ (see Supplementary Material
-% Section \ref{supp:barghi-covs} for more details). These off-diagonal
-% covariances are expected to be zero when only drift is acting in the
-% population, as only linked selection can create covariance between allele
-% frequency changes \parencite{Buffalo2019-io}. Furthermore, since we cannot
-% directly observe the temporal covariances between adjacent timepoints, but only
-% the sums of temporal covariances, we expect the off-diagonal elements of
-% $\mathbf{Q}$ to be weak. This is because the magnitude of a temporal covariance
-% $\cov(\Delta p_i, \Delta p_j)$ is governed by the level of additive genetic
-% variance and linkage disequilibrium that persists after $|i-j|$ generations of
-% decay, which in \textcite{Barghi2019-qy}'s study design is on average 10
-% generations.
-
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=\textwidth]{figures/figure-1.pdf}
@@ -398,7 +363,6 @@ CIs, [0.0063, 0.0086], [0.0064, 0.0086], [0.0061, 0.0083]). We estimate the
 convergent correlation coefficient across these replicates as 0.36 ($95\%$
 block-bootstrap confidence interval $[0.31, 0.40]$).
 
-%\gc{TODO GIVE conversion \% var due to linked selection. }
 Second, we reanalyzed the Longshanks selection experiment, which selected for
 longer tibiae length relative to body size in mice, leading to a response to
 selection of about 5 standard deviations over the course of twenty generations
@@ -427,16 +391,6 @@ covariances. We find excluding these large effect loci has little impact on the
 confidence intervals (blue confidence intervals in Figure \ref{fig:figure-2}),
 indicating that these across-replicate covariances are indeed driven by a
 polygenic signal.
-
-%We find that for covariances 2 timepoints apart ($k=2
-%\times 10$ generations), the $20\%$ right tail is inflated by a of 1.3 (95\% CI
-%[1.29, 1.32]), consistent with linked selection creating positive covariance in
-%allele frequency change. Under constant directional selection, we expect these
-%positive covariances between increasingly distant timepoints to decay to zero
-%as additive genetic variance is exhausted by selection and linkage
-%disequilibrium decays. Instead we find that for covariances 4 timepoints apart
-%($k=4 \times 10$ generations), the left tail of negative covariances is
-%inflated by a factor of 1.19 (95\% CI [1.17, 1.21]).
 
 \begin{figure}
   \centering
@@ -538,19 +492,24 @@ polygenic traits \parencite{Buffalo2019-io}.
 It is worth building some intuition why temporal covariance allows us to detect
 such faint signals of polygenic linked selection from temporal genomic data.
 Each variant is subject to both variance in allele frequency due to drift and
-sampling noise, which at any locus may swamp the temporal covariance signal and creates spurious covariances. However, these
-spurious covariances do not share a directional signal whereas the
-covariances created by linked selection do; consequently, averaging across the
-entire genome, the temporal signal exceeds sampling noise. 
+sampling noise, which at any locus may swamp the temporal covariance signal and
+creates spurious covariances. However, these spurious covariances do not share
+a directional signal whereas the covariances created by linked selection do;
+consequently, averaging across the entire genome, the temporal signal exceeds
+sampling noise. 
 
-Our analyses reveal that a sizable proportion of allele frequency
-change in these populations is due to the (indirect) action of
-selection. Capitalizing on replicated designs, we characterized the extent to which
-convergent selection pressures lead to parallel changes in allele frequencies
-across replicate populations, and found that a reasonably proportion
-of the response is shared across short timescales. These likely
-represent substantial under-estimates of the contribution of linked
-selection because ....
+Our analyses reveal that a sizable proportion of allele frequency change in
+these populations is due to the (indirect) action of selection. Capitalizing on
+replicated designs, we characterized the extent to which convergent selection
+pressures lead to parallel changes in allele frequencies across replicate
+populations, and found that a reasonable proportion of the response is shared
+across short timescales. These likely represent substantial under-estimates of
+the contribution of linked selection because \vb{the studies we have reanalyzed
+do not sequence the population each generation, preventing us from including
+the effects of stronger correlations between adjacent generations.
+Furthermore, estimation methods are intentionally conservative, further
+leading our estimates to be closer to a lower bound of the effects of linked
+selection than a measure of central tendency.}
 
 These estimates of the contribution of selection could be refined by using
 patterns of LD and recombination which would allow us to more fully
@@ -560,53 +519,56 @@ linkage disequilibrium and lower recombination should have greater temporal
 autocovariance than regions with lower LD and higher recombination. However,
 one limitation of these pooled sequence datasets is that none of the studies we
 reanalyzed estimated linkage disequilibria data for the evolved populations.
-There are LD data for a natural population of \emph{D. simulans}
+\vb{While} there are LD data for a natural population of \emph{D. simulans}
 \parencite{Signor2018-wg},  we did not find a relationship between temporal
 covariance and LD.  We believe this is driven by the idiosyncratic nature of LD
 in evolve-and-resequence populations, which often extends over large genomic
 distances \parencite{Nuzhdin2013-gf,Kelly2019-dc}. Future studies complete with
 LD data and recombination maps would allow one to disentangle the influence of
 closely linked sites from more distant sites in causing temporal
-autocovariance, and allow the fitting of more parameteric model to estimate
+autocovariance, and allow the fitting of more parametric models to estimate
 population parameters such as the additive genetic variation for fitness
-directly from temporal gneomic data alone  \parencite{Buffalo2019-io}.
+directly from temporal genomic data alone \parencite{Buffalo2019-io}.
 
-Our primary focus here has been on evolution in laboratory
-populations. It is unclear whether we should expect a similar impact
-of selection in natural populations. In some of these experiments, selection pressures may
-have been stronger or more sustained that in natural populations REF.
-Conversely, they these lab populations were maintained at very small
-population sizes, small effective population sizes 300, 450, and 45 for the
-\textcite{Kelly2019-dc}, and \textcite{Castro2019-uk} studies
-respectively, which will amplify the role of genetic drift. The
-advantage of lab experiments is that they are closed populations, in
-natural populations temporal covariance could also arise from
-the systematic migration of alleles from differentiated
-populations. To these methods to natural populations will require
-either populations that are reasonably closed to migration, or for the effect of migration to
-be accounted for possibly either by knowledge of allele frequencies in source
-populations or the identification of migrant individuals. 
+Our primary focus here has been on evolution in laboratory populations. It is
+unclear whether we should expect a similar impact of selection in natural
+populations. In some of these experiments, selection pressures may have been
+stronger or more sustained that in natural populations
+\vb{\parencite{Hendry1999-zu,Hairston2005-ga}}. Conversely, these lab
+populations were maintained at very small population sizes, small effective
+population sizes 300, 450, and 45 for the \textcite{Kelly2019-dc}, and
+\textcite{Castro2019-uk} studies respectively, which will amplify the role of
+genetic drift. The advantage of lab experiments is that they are closed
+populations, in natural populations temporal covariance could also arise from
+the systematic migration of alleles from differentiated populations.
+\vb{Adapting} these methods to natural populations will require either
+populations that are reasonably closed to migration, or for the effect of
+migration to be accounted for possibly either by knowledge of allele
+frequencies in source populations or the identification of migrant individuals. 
 
 While it challenging to apply temporal methods to natural populations there is
 a lot of promise for these approaches
 \parencite{Bergland2014-ij,Machado2018-cs}. Efforts to estimate the quantify
-the impact of linked selection in have suggested that XXX to XXX of allele
-frequency change over long time periods is driven by selection
-\parencite{Mcvicker,Comeron,Elyashiv2016-vt,Russ,Coop}. Thus there is reason to
-be hopeful that we could detect this from temporal data, which would help to
-resolve the time-scales that linked selection act over. In our reanalysis of
-the \textcite{Barghi2019-qy} study, we find evidence of complex linked
-selection dynamics, with selection pressures flipping over time due to either
-environmental change, the breakup of epistatic combinations or advantageous
-haplotypes. Such patterns would be completely obscured in samples only from
-contemporary populations, thus we can hope to have a much richer picture of
-linked selection as temporal sequencing becomes more common. 
+the impact of linked selection in have suggested a 19\% to 89\% \vb{reduction
+in genome-wide diversity} over long time periods is driven by \vb{linked
+selection}
+\parencite{McVicker2009-ax,Elyashiv2016-vt,Corbett-Detig2015-gt,Coop2016-gx,Comeron2014-nh}
+Thus there is reason to be hopeful that we could detect this from temporal
+data, which would help to resolve the timescales that linked selection act
+over. In our reanalysis of the \textcite{Barghi2019-qy} study, we find evidence
+of complex linked selection dynamics, with selection pressures flipping over
+time due to either environmental change, the breakup of epistatic combinations
+or advantageous haplotypes. Such patterns would be completely obscured in
+samples only from contemporary populations, thus we can hope to have a much
+richer picture of linked selection as temporal sequencing becomes more common,
+\vb{perhaps allowing us to observe the effects of ecological dynamics in
+genomic data \parencite{Hairston2005-ga}.}
 
-Understanding the dynamics of linked
-selection over short timescales will help to unite phenotypic studies of rapid
-adaptation with a detectable genomic signature, to
-address long-standing questions concerning linked selection, evolutionary quantitative
-genetics, and the overall impact selection has on genetic variation. 
+Understanding the dynamics of linked selection over short timescales will help
+to unite phenotypic studies of rapid adaptation with a detectable genomic
+signature, to address long-standing questions concerning linked selection,
+evolutionary quantitative genetics, and the overall impact selection has on
+genetic variation. 
 
 \section{Acknowledgments} 
 
@@ -802,16 +764,6 @@ L$ matrix, such that rows are grouped by replicate, e.g. for timepoint $t$,
 replicate $r$, and locus $l$ such that for allele frequencies $p_{t, r, l}$,
 the frequency change entries are 
 
-% \begin{align}
-%   \mathbf{\Delta F} &= 
-%                     &\begin{bmatrix} 
-%     p_{1, 0, 0} - p_{0, 0, 0} & p_{2, 0, 0} - p_{1, 0, 0} & \ldots & p_{1, 1, 0} - p_{0, 1, 0} & p_{2, 1, 0} - p_{1, 1, 0} & \ldots & p_{T+1, R, 0} - p_{T, R, 0}  \\
-%     p_{1, 0, 1} - p_{0, 0, 1} & p_{2, 0, 1} - p_{1, 0, 1} & \ldots & p_{1, 1, 1} - p_{0, 1, 1} & p_{2, 1, 1} - p_{1, 1, 1} & \ldots & p_{T+1, R, 1} - p_{T, R, 1}  \\
-%     \vdots & \vdots & \ddots & \vdots & \vdots & \ddots & \vdots  \\
-%     p_{1, 0, L} - p_{0, 0, L} & p_{2, 0, L} - p_{1, 0, L} & \ldots & p_{1, 1, L} - p_{0, 1, L} & p_{2, 1, L} - p_{1, 1, L} & \ldots & p_{T+1, R, L} - p_{T, R, L}  \\
-%   \end{bmatrix} 
-% \end{align}
-
 \begin{align}
     \flt(\mathbf{\Delta F}) &=
                     &\begin{bmatrix} 
@@ -879,11 +831,6 @@ for replicate $r$, $\mathbf{Q}_{r,r}$, we apply the following correction
 %
 where $b_{r,t}$ is element in row $r$ and column $t$ of $\mathbf{B}$.
 
-%Additionally, in some study designs, a single timepoint is shared for the
-%initial generation across replicates. In this case, the sampling noise is
-%shared between 
-% TODO
-
 \subsection{\textcite{Barghi2019-qy} Temporal Covariances}
 \label{supp:barghi-covs}
 
@@ -946,6 +893,42 @@ estimate the $1-\alpha = 95\%$ pivot confidence intervals (p. 33
 %
 where $\widehat{\theta}$ is the estimate, and $q_x$ is bootstrap quantile for
 probability $x$.
+
+\subsection{Proportion of Variance Explained by Linked Selection across Replicates}
+
+We define a statistic similar to $G$ for estimating the proportion of allele
+frequency change common between two replicate populations due to linked
+selection. Covariance in allele frequency change between two replicate
+populations is due to convergent selection pressure selecting haplotypes shared
+between the two replicate populations, which acts to perturb linked neutral
+variation in parallel way. Similar to \textcite{Buffalo2019-io} equation (1).
+We can similarly partition the allele frequency change,
+
+\begin{align}
+  \label{eq:}
+  \Delta p_t &= \underbrace{\Delta_{_N} p_t  + \Delta_{_M} p_t}_\text{drift} + \underbrace{\Delta_{_S} p_t}_\text{shared} + \underbrace{\Delta_{_U} p_t}_\text{unique}
+\end{align}
+
+where $\Delta_{_N} p_t$ and $\Delta_{_M} p_t$ are the allele frequency changes
+due to non-heritable variation in fitness (e.g. environmental differences in
+family size) and Mendelian segregation. In \textcite{Buffalo2019-io} allele
+frequency changes due to heritable fitness variation are captured in the term
+$\Delta_{_H} p_t$; here we further partition this into heritable frequency
+changes shared between replicates ($\Delta_{_S} p_t$) and those unique to a
+replicate ($\Delta_{_H} p_t$). By definition, 
+
+\begin{align}
+  \cov(\Delta p_{s,A}, \Delta p_{t,B}) &= \cov(\Delta_{_S} p_{s,A}, \Delta_{_S} p_{t,B}), \;\; A \ne B\\
+  \cov(\Delta p_{s,A}, \Delta p_{t,A}) &= \cov(\Delta_{_S} p_{s,A} + \Delta_{_U} p_{s,A}, \Delta_{_S} p_{t,A} + \Delta_{_U} p_{t,A}) 
+\end{align}
+
+Then, we define a replicate covariance analog of $G$, $G_R$,
+
+% \begin{align}
+   
+% \end{align}
+
+
 
 \subsection{The Empirical Neutral Null Windowed Covariance Distribution}
 \label{supp:empirical-null}
@@ -1216,28 +1199,6 @@ hypothesis of the Wald test does not give us an idea of the expected number of
 variants that may spuriously fit the pattern of seasonal fluctuating selection
 as it does not account for genetic drift or other forms of hitchhiking.
 
-% ======= We were concerned that this might be due to a flaw in our methods. To
-% address this concern, we first ensured that our temporal-covariance matrix
-% bias correction was working as expected. We find that it corrects the
-% relationship between depth and both variance and covariance (Supplementary
-% Figure \ref{suppfig:bergland-correction}) as expected. We then re-analyzed
-% the data of \parencite{Bergland2014-ij} using the same seasonal fluctuating
-% model as the original paper. This model is a Binomial logit-linked GLM fit
-% per-locus, where the Spring/Fall seasons are encoded as a dummy variable, and
-% are regressed on the frequency data. We use the same binomial weighting
-% procedure as \textcite{Bergland2014-ij}, where the weights are determined by
-% the effective number of chromosomes, $N_{eff} = (2 n_t d_t - 1) / (2 n_t +
-% d_t)$ ($n_t$ and $d_t$ are the number of diploid individuals and the read
-% depth at timepoint $t$, respectively). We fit this model on all loci marked
-% as used in the VCF provided with the \textcite{Bergland2014-ij} study
-% (doi:10.5061/dryad.v883p).  Overall, our p-values for the Wald test for each
-% locus closely match those of the original paper (Pearson correlation
-% coefficient 0.98, p-value < $2.2 \times 10^{-16}$; see Supplementary Figure
-% \ref{suppfig:bergland-pvalue-comparison} A), and the histograms of the
-% p-values are nearly identical (Supplementary Figure
-% \ref{suppfig:bergland-pvalue-comparison} B).  >>>>>>>
-% d95c3549a10dc0037f40a54cb8b41f9d412ed1ed
-
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/bergland-combined-hists.pdf}
@@ -1291,18 +1252,5 @@ non-seasonal temporal structure is also evident in our temporal covariances
 (Supplementary Figure \ref{suppfig:bergland-covs-figure}), where we see strong
 evidence of selection (non-zero temporal covariances), yet the pattern does not
 follow that of seasonal fluctuating selection.  
-
-%\gc{ADD MORE HERE} TODO
-
-
-
-%\gc{Note that this analysis does not rule out the idea that prior
- % analyses detected {\emph
-  %  some} loci showing a pattern of fluctuating selection. Indeed
-  %\textcite{Bergland2014-ij} provided a number of analyses that
-  %suggested that their loci might be enriched for {\bf XXX}. However,
-  %this reanalysis suggests that we currently lack genome-wide evidence
-%of many loci experiencing fluctuating selection in {\it in Drosophila
- % melanogaster}. }
 
 \end{document}

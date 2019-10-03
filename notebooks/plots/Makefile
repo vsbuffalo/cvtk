@@ -6,7 +6,7 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 	../../manuscript/figures/bergland-pvalue-permutation-hist.pdf ../../manuscript/figures/bergland_pvalues.pdf \
   ../../manuscript/figures/bergland-correction-plot.pdf ../../manuscript/figures/bergland-covs-figure.pdf \
    ../../manuscript/figures/bergland-combined-hists.pdf ../../manuscript/figures/barghi-cov-panels.pdf \
-   ../../manuscript/figures/castro_rep_cis.pdf
+   ../../manuscript/figures/castro_rep_cis.pdf ../../manuscript/figures/barghi-trimmed-mean.pdf
 
 ../../manuscript/figures/figure-1.pdf: figure-1.pdf
 		cp figure-1.pdf ../../manuscript/figures/figure-1.pdf
@@ -60,4 +60,7 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 		cp $< $@
 
 ../../manuscript/figures/castro_rep_cis.pdf: castro_rep_cis.pdf
+		cp $< $@
+
+../../manuscript/figures/barghi-trimmed-mean.pdf: barghi-trimmed-mean.pdf
 		cp $< $@

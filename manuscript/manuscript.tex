@@ -162,7 +162,7 @@ contrast, when genetic drift acts alone in a closed population, these
 covariances are zero in expectation. Mathematically, temporal covariances are
 useful because it is natural to decompose the total variance in allele
 frequency change across a set of time intervals into the variances and
-covariances in allele frequency change among time intervals.  Furthermore,
+covariances in allele frequency change among time intervals. Furthermore,
 biologically, these covariances reflect the extent to which allele frequency
 changes in one generation predict changes in another due to a shared fitness
 background and shared selection pressures.
@@ -227,6 +227,25 @@ time intervals are on average ten generations apart, and given the temporal
 decay in covariance we see, the covariances on shorter time-scales (e.g. if
 adjacent generations had been sequenced) may well be higher yet (see
 Supplementary Material Section \ref{supp:barghi-covs} for more details).
+
+\vb{One concern is that these covariances reflect a few large-effect loci
+  rather than selection on a polygenic trait. Since our covariances are
+  essentially averages over loci, the covariance estimate can be strongly
+  affected by a single outlier region. To test whether large outlier regions
+  drive the genome-wide signal we see in the \textcite{Barghi2019-qy} data, we
+  calculate the covariances in 100kb windows along the genome (we refer to
+  these as windowed covariances throughout) and exclude the upper and lower
+  $\alpha$ tails to calculate the trimmed average windowed covariance. As
+  $\alpha$ increases to 0.5, the trimmed covariance converges to the median
+  windowed covariance (by the definition of the median; see Supplementary
+  Figure \ref{suppfig:barghi-trimmed-mean}). In other words, this median
+  windowed covariance is a measure of the genome-wide covariance robust to
+  large-effect loci; we find that the median windowed covariance $\cov(\Delta
+  p_0, \Delta p_{10})$ (pooling all replicates) is also significantly different
+  from zero, 0.0016 (0.95\% CIS [0.0015, 0.0017]). 
+ 
+ }
+
 
 \begin{figure}[!htb]
   \centering
@@ -922,12 +941,15 @@ replicate ($\Delta_{_H} p_t$). By definition,
   \cov(\Delta p_{s,A}, \Delta p_{t,A}) &= \cov(\Delta_{_S} p_{s,A} + \Delta_{_U} p_{s,A}, \Delta_{_S} p_{t,A} + \Delta_{_U} p_{t,A}) 
 \end{align}
 
-Then, we define a replicate covariance analog of $G$, $G_R$,
+Then, we define a replicate covariance analog of $G$, 
 
-% \begin{align}
-   
-% \end{align}
+\begin{align}
+  G_R(t) = \frac{\E_{A \ne B}(\sum_{i\ne j}^t \cov(\Delta p_{i,A}, \Delta p_{j,B}))}{\E_R(\var(p_{t,R} - p_{0,R}))}
+\end{align}
 
+where $\E_{A \ne B}$ indicates that the expectation is taken over all ordered
+pairs of replicates (e.g. summing all off-diagonal elements replicate
+covariances), and $\E_R$ indicates taking expectation over all replicates.
 
 
 \subsection{The Empirical Neutral Null Windowed Covariance Distribution}
@@ -1011,6 +1033,24 @@ right) from the regression due to large differences in average coverage.}
 
   \label{suppfig:barghi-correction}
 \end{figure}
+
+\subsection{\textcite{Barghi2019-qy} Trimmed Window Covariances}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-trimmed-mean.pdf}
+
+  \caption{The genome-wide covariance ($\cov(\Delta p_0, \delta p_10)$ pooling
+    all replicates) averaged (red line) and the median windowed covariance
+    (blue) for the \textcite{Barghi2019-qy} dataset. The trimmed average window
+    covariance, excluding the $\alpha$ lower and upper tails, converges to the
+     median windowed covariance. This indicates that genome-wide covariance are
+     not being overly dominated by a large-effect loci in few windows.}
+
+  \label{suppfig:barghi-trimmed-mean}
+\end{figure}
+
+
 
 \clearpage
 \subsection{\textcite{Barghi2019-qy} Empirical Null and Windowed Covariance Distributions}

@@ -243,7 +243,6 @@ Supplementary Material Section \ref{supp:barghi-covs} for more details).
   large-effect loci; we find that the median windowed covariance $\cov(\Delta
   p_0, \Delta p_{10})$ (pooling all replicates) is also significantly different
   from zero, 0.0016 (0.95\% CIS [0.0015, 0.0017]). 
- 
  }
 
 
@@ -385,17 +384,22 @@ block-bootstrap confidence interval $[0.31, 0.40]$).
 Second, we reanalyzed the Longshanks selection experiment, which selected for
 longer tibiae length relative to body size in mice, leading to a response to
 selection of about 5 standard deviations over the course of twenty generations
-\parencite{Castro2019-uk,Marchini2014-de}. This study includes two independent selection lines,
-Longshanks 1 and 2 (LS1 and LS2), and an unselected control line (Ctrl).
-Consequently, this selection experiment offers a useful control to test our
-between-replicate covariances: we expect to see positive between-replicate
-covariance in the comparison between the two Longshanks selection lines, but
-not between the two pairwise comparisons between the control line and the two
-Longshanks lines. We find that this is the case (gray confidence intervals in
-Figure \ref{fig:figure-2} C), with the two Longshanks comparisons to the
-control line not being significantly different from zero, while the comparison
-between the two Longshanks line is statistically significantly different from
-zero (CIs [0.013, 0.037]).
+\parencite{Castro2019-uk,Marchini2014-de}. This study includes two independent
+selection lines, Longshanks 1 and 2 (LS1 and LS2), and an unselected control
+line (Ctrl).  Consequently, this selection experiment offers a useful control
+to test our between-replicate covariances: we expect to see positive
+between-replicate covariance in the comparison between the two Longshanks
+selection lines, but not between the two pairwise comparisons between the
+control line and the two Longshanks lines. We find that this is the case (gray
+confidence intervals in Figure \ref{fig:figure-2} C), with the two Longshanks
+comparisons to the control line not being significantly different from zero,
+while the comparison between the two Longshanks lines is statistically
+significantly different from zero (CIs [0.013, 0.037]).
+
+\vb{The presence of an unselected control line provides an alternative way to
+  partition the effects of linked selection and genetic drift. 
+
+}
 
 A major finding in the Longshanks study were two major-effect loci that showed
 parallel frequency shifts between the two selection lines: a region harboring
@@ -924,7 +928,7 @@ variation in parallel way. Similar to \textcite{Buffalo2019-io} equation (1).
 We can similarly partition the allele frequency change,
 
 \begin{align}
-  \label{eq:}
+  \label{eq:shared-partition}
   \Delta p_t &= \underbrace{\Delta_{_N} p_t  + \Delta_{_M} p_t}_\text{drift} + \underbrace{\Delta_{_S} p_t}_\text{shared} + \underbrace{\Delta_{_U} p_t}_\text{unique}
 \end{align}
 
@@ -949,7 +953,45 @@ Then, we define a replicate covariance analog of $G$,
 
 where $\E_{A \ne B}$ indicates that the expectation is taken over all ordered
 pairs of replicates (e.g. summing all off-diagonal elements replicate
-covariances), and $\E_R$ indicates taking expectation over all replicates.
+covariances), and $\E_R$ indicates taking expectation over all replicates. This
+measures the fraction of variance in allele frequency change (averaged across
+replicates) due to shared selection pressure.
+
+For selection studies with a control line (e.g. the \cite{Castro2019-uk} study
+we have reanalyzed), we have an alternate approach to quantify the effect of
+linked selection: we can compare the total variance in allele frequency change
+in control and selection lines. By the orthogonality of the components in
+equation XXX, 
+
+\begin{align}
+  \var(\Delta p_t - p_0) = \sum_t \var(\Delta {_N} p_t ) + \sum_t \var(\Delta {_M} p_t ) + 
+  \var\left(\sum_t \Delta {_S} p_t\right) + \var\left(\sum_t \Delta {_U} p_t\right)
+\end{align}
+
+the term $\sum_t \var(\Delta {_S} p_t)$
+
+\begin{align}
+  \var\left(\sum_t \Delta_{_S} p_t\right) = 
+ \sum_t \var( \Delta_{_U} p_t) + \sum_{i \ne j} \cov( \Delta_{_S} p_i, \Delta_{_S} p_j)
+\end{align}
+
+
+In the \textcite{Castro2019-uk} study, we 
+quantify the effect of linked selection as:
+
+\begin{align}
+  \frac{1}{2} \left( \var(\Delta p_{20, \mathrm{LS1}} - p_{0, \mathrm{LS1}}) + \var(\Delta p_{20, \mathrm{LS2}} - p_{0, \mathrm{LS2}}) \right) -  \var(\Delta p_{20, \mathrm{Ctrl}} - p_{0, \mathrm{Ctrl}}) = \\
+  \cov(p_{20, \mathrm{LS1}} - p_{0, \mathrm{LS1}}, p_{20, \mathrm{LS2}} - p_{0, \mathrm{LS2}})
+\end{align}
+
+% \begin{align}
+%   \var(p_t - p_0) &= \sum_i \var(\Delta p_i) + \sum_{i\ne j} \cov(\Delta p_i, \Delta p_j) \\
+%                   &= \sum_i \var(\Delta p_i) + \sum_{i\ne j} \cov(\Delta_{_U} p_i, \Delta_{_U} p_j) + \sum_{i\ne j} \cov(\Delta_{_S} p_i, \Delta_{_S} p_j)  \\
+% \end{align}
+
+% However, with only two timepoints, we cannot directly measure the unique
+% temporal covariance. However, we can directly measure the covariance between
+% replicates $A$ and $B$, $\sum_{i,j} \cov(\Delta p_{i,A}, \Delta p_{j,B})$.
 
 
 \subsection{The Empirical Neutral Null Windowed Covariance Distribution}

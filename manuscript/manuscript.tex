@@ -194,7 +194,8 @@ short timescales.
     \textcite{Barghi2019-qy} & \emph{D. simulans} & lab & 10 & $\sim$1000 & 60 & 7 \\ \hline
     \textcite{Castro2019-uk} & \emph{M. musculus} & \begin{tabular}{c}tibiae length\\control\end{tabular} & \begin{tabular}{c}2\\1\end{tabular} &\begin{tabular}{c}32\\28\end{tabular}  & 20 & 2 \\
  \hline
-\end{tabular}
+  \end{tabular}
+  \caption{\gc{A summary of the main selection studies we analyzed.}}
 \end{center}
 
 We first analyzed \textcite{Barghi2019-qy}, an evolve-and-resequence study with
@@ -211,8 +212,8 @@ biases created due to sampling noise, and normalize the entries for
 heterozygosity (see Supplementary Material Sections
 \ref{supp:ind-depth-var-corr} and \ref{supp:matrix-correction} for details on
 the bias correction). The covariances are expected to be zero when only drift
-is acting in a closed population, as only heritable variation for fitness can
-create covariance between allele frequency changes \parencite{Buffalo2019-io}.
+is acting, as only heritable variation for fitness can
+create covariance between allele frequency changes \gc{in a closed population} \parencite{Buffalo2019-io}.
 Averaging across the ten replicate temporal covariances matrices, we find
 temporal covariances that are statistically significant (95\% block bootstraps
 CIs do not contain zero), consistent with linked selection perturbing
@@ -230,24 +231,48 @@ decay in covariance we see, the covariances on shorter time-scales (e.g. if
 adjacent generations had been sequenced) may well be higher yet (see
 Supplementary Material Section \ref{supp:barghi-covs} for more details).
 
-\vb{One concern is that these covariances reflect a few large-effect loci
+
+\gc{One concern is that these covariances reflect the localized impact
+  of a few large-effect loci
   rather than selection on a polygenic trait. Since our covariances are
   essentially averages over loci, the covariance estimate can be strongly
   affected by a single outlier region. To test whether large outlier regions
   drive the genome-wide signal we see in the \textcite{Barghi2019-qy} data, we
   calculate the covariances in 100kb windows along the genome (we refer to
-  these as windowed covariances throughout) and exclude the upper and lower
+  these as windowed covariances throughout). We take the median
+  windowed covariance as a measure of the genome-wide covariance robust to
+  large-effect loci; we find that the median windowed covariance $\cov(\Delta
+  p_0, \Delta p_{10})$ (pooling all replicates) is also significantly different
+  from zero, 0.0016 (0.95\% CIS [0.0015, 0.0017]). This median
+  covariance is also limiting result of a trimmed mean that excludes the upper and lower
   $\alpha$ tails to calculate the trimmed average windowed covariance. As
   $\alpha$ increases to 0.5, the trimmed covariance converges to the median
   windowed covariance (by the definition of the median; see Supplementary
-  Figure \ref{suppfig:barghi-trimmed-mean}). In other words, this median
-  windowed covariance is a measure of the genome-wide covariance robust to
-  large-effect loci; we find that the median windowed covariance $\cov(\Delta
-  p_0, \Delta p_{10})$ (pooling all replicates) is also significantly different
-  from zero, 0.0016 (0.95\% CIS [0.0015, 0.0017]). 
-
-  XXX put a table median for all timepoints.
+  Figure \ref{suppfig:barghi-trimmed-mean}). Thus our genomic temporal
+  covariances are non-zero due to the impact of selection on many
+  genomic windows.
+  XXX put a table median for all timepoints. AND REWORK TEXT
  }
+
+  
+% \vb{One concern is that these covariances reflect a few large-effect loci
+%   rather than selection on a polygenic trait. Since our covariances are
+%   essentially averages over loci, the covariance estimate can be strongly
+%   affected by a single outlier region. To test whether large outlier regions
+%   drive the genome-wide signal we see in the \textcite{Barghi2019-qy} data, we
+%   calculate the covariances in 100kb windows along the genome (we refer to
+%   these as windowed covariances throughout) and exclude the upper and lower
+%   $\alpha$ tails to calculate the trimmed average windowed covariance. As
+%   $\alpha$ increases to 0.5, the trimmed covariance converges to the median
+%   windowed covariance (by the definition of the median; see Supplementary
+%   Figure \ref{suppfig:barghi-trimmed-mean}). In other words, this median
+%   windowed covariance is a measure of the genome-wide covariance robust to
+%   large-effect loci; we find that the median windowed covariance $\cov(\Delta
+%   p_0, \Delta p_{10})$ (pooling all replicates) is also significantly different
+%   from zero, 0.0016 (0.95\% CIS [0.0015, 0.0017]). 
+
+%   XXX put a table median for all timepoints.
+%  }
 
 
 \begin{figure}[!htb]

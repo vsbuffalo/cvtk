@@ -101,14 +101,15 @@
  reanalyze two \emph{Drosophila simulans} evolve-and-resequence studies, and
  one artificial selection experiment in mice, to quantify the effects of linked
  selection over short timescales using covariance among time-points and across
- replicates. We estimate that over 20\% of allele frequency change in these
- experiments is driven by selection in some experiments. Against this
- background of positive genome-wide temporal covariances we also identify
- signals of negative temporal covariance corresponding to reversals in the
- direction of selection for a reasonable proportion of loci over the time
- course of a selection experiment.  Overall, we find that in the three studies
- we analyzed, linked selection has a large impact on short-term allele
- frequency dynamics that is readily distinguishable from genetic drift.
+ replicates. We estimate that over \vb{TO FIX PUT RANGE XXX} 20\% of allele
+ frequency change in these experiments is driven by selection in some
+ experiments. Against this background of positive genome-wide temporal
+ covariances we also identify signals of negative temporal covariance
+ corresponding to reversals in the direction of selection for a reasonable
+ proportion of loci over the time course of a selection experiment.  Overall,
+ we find that in the three studies we analyzed, linked selection has a large
+ impact on short-term allele frequency dynamics that is readily distinguishable
+ from genetic drift.
 
 \end{abstract}
 
@@ -243,6 +244,8 @@ Supplementary Material Section \ref{supp:barghi-covs} for more details).
   large-effect loci; we find that the median windowed covariance $\cov(\Delta
   p_0, \Delta p_{10})$ (pooling all replicates) is also significantly different
   from zero, 0.0016 (0.95\% CIS [0.0015, 0.0017]). 
+
+  XXX put a table median for all timepoints.
  }
 
 
@@ -321,6 +324,9 @@ convergent correlation: the ratio of average between-replicate covariance
 across all pairs to the average standard deviation across all pairs of
 replicates, 
 
+\vb{We note that blah blha lbah, have a look at the pairwiwe covariances for
+Fig 2A}
+
 \begin{align}
   \label{eq:conv-corr}
   \mathrm{cor}(\Delta p_s, \Delta p_t) = \frac{\E_{A\ne B} \left( \cov(\Delta p_{s,A}, \Delta p_{t,B}) \right)}{\E_{A\ne B} \left( \sqrt{\var(\Delta p_{s,A}) \var(\Delta p_{t,B})} \right)}
@@ -379,7 +385,8 @@ positive between-replicate covariances. We find all three pairwise
 between-replicate covariances are positive and statistically significant (95\%
 CIs, [0.0063, 0.0086], [0.0064, 0.0086], [0.0061, 0.0083]). We estimate the
 convergent correlation coefficient across these replicates as 0.36 ($95\%$
-block-bootstrap confidence interval $[0.31, 0.40]$).
+block-bootstrap confidence interval $[0.31, 0.40]$). \vb{Put in a note about
+replicate G.}
 
 Second, we reanalyzed the Longshanks selection experiment, which selected for
 longer tibiae length relative to body size in mice, leading to a response to
@@ -397,7 +404,8 @@ while the comparison between the two Longshanks lines is statistically
 significantly different from zero (CIs [0.013, 0.037]).
 
 \vb{The presence of an unselected control line provides an alternative way to
-  partition the effects of linked selection and genetic drift. 
+  partition the effects of linked selection and genetic drift: we can compare
+  the total 
 
 }
 
@@ -412,8 +420,11 @@ loci, we took the conservative precaution of excluding the entire chromosomes
 these loci reside on (chromosomes 5 and 10), and re-calculating the temporal
 covariances. We find excluding these large effect loci has little impact on the
 confidence intervals (blue confidence intervals in Figure \ref{fig:figure-2}),
-indicating that these across-replicate covariances are indeed driven by a
-polygenic signal.
+indicating that these across-replicate covariances are indeed driven by a large
+number of loci. \vb{This is consistent with a signal of selection on a
+  polygenic trait driving genome-wide change, although we note that
+  large-effect loci can contribute to the indirect change at unlinked loci
+\parencite{Robertson1961-ho,Santiago1995-hx}. }
 
 \begin{figure}
   \centering
@@ -496,19 +507,20 @@ has enriched our understanding of linked selection.  One under-used approach to
 understand the genome-wide effects of selection on standing variation, e.g.
 selection on an infinitesimal polygenic trait, stems from an early quantitative
 genetic model of linked selection \parencite{Robertson1961-ho} and its later
-developments (\cite{Santiago1995-hx,Santiago1998-bs}; see also
-\cite{Barton2000-zg} for a comparison of these models with classic hitchhiking
-models). Implicit in these models is that autocovariance between allele
-frequency change is created when there is heritable fitness variation in the
-population, a signal that may be readily detected from temporal genomic data
-\parencite{Buffalo2019-io}.  Depending on how many loci affect fitness, such a
-strong effect of linked selection may not be differentiable from genetic drift
-using only single contemporary population samples or looking at at temporal
-allele frequency change at each locus in isolation.  In this way, averaging
-summaries of temporal data allows us to sidestep the key problem of detecting
-selection from standing variation: that the genomic footprint leaves too soft
-of a signature to differentiate from a background of genetic drift. In fact we
-find that the temporal covariance signal is detectable even in the most
+developments
+(\cite{Santiago1995-hx,Santiago1998-bs,Wray1990-zf,J_A_Woolliams_N_R_Wray_R_Thompson2008-qo};
+see also \cite{Barton2000-zg} for a comparison of these models with classic
+hitchhiking models). Implicit in these models is that autocovariance between
+allele frequency change is created when there is heritable fitness variation in
+the population, a signal that may be readily detected from temporal genomic
+data \parencite{Buffalo2019-io}.  Depending on how many loci affect fitness,
+such a strong effect of linked selection may not be differentiable from genetic
+drift using only single contemporary population samples or looking at at
+temporal allele frequency change at each locus in isolation.  In this way,
+averaging summaries of temporal data allows us to sidestep the key problem of
+detecting selection from standing variation: that the genomic footprint leaves
+too soft of a signature to differentiate from a background of genetic drift. In
+fact we find that the temporal covariance signal is detectable even in the most
 extremely difficult to detect soft sweep case: polygenic selection on highly
 polygenic traits \parencite{Buffalo2019-io}.
 
@@ -600,7 +612,11 @@ We would like to thank the authors of the original studies we've analyzed,
 including Neda Barghi, Christian Schl{\"o}tterer, John Kelly, Kimberly Hughes,
 Frank Chan, Campbell Rolian, Nick Barton, Alan Bergland, and Dmitri Petrov.  We
 would also like to thank Doc Edge for helpful statistical advice, and Matt
-Osmond for helpful discussions. 
+Osmond for helpful discussions. This research was supported by an NSF Graduate
+Research Fellowship grant awarded to VB (1650042), and NIH (R01-GM108779) and
+NSF (1353380) awarded to GC.
+
+
 
 \printbibliography
 
@@ -889,19 +905,19 @@ points, to infer the uncertainty of an statistic in the presence of unknown
 correlation structure between data. With genome-wide data, linkage
 disequilibria between sites creates complex and unknown dependencies between
 variants. The estimators used in this paper are predominantly ratios, e.g.
-temporal-replicate covariance standardized by half the heterozygosity,
-$G(t)$ which is the ratio of covariance to total variance, and the
-convergence correlation (equation \eqref{eq:conv-corr}). In these cases, we can
-exploit the linearity of the expectation to make the bootstrap procedure more
+temporal-replicate covariance standardized by half the heterozygosity, $G(t)$
+which is the ratio of covariance to total variance, and the convergence
+correlation (equation \eqref{eq:conv-corr}). In these cases, we can exploit the
+linearity of the expectation to make the bootstrap procedure more
 computationally efficient, by pre-calculating the statistics of the ratio's
 numerator and denominator, $N(\mathbf{x}_i)$ and $D(\mathbf{x}_i)$, on the data
 $\mathbf{x}_i$ for all blocks $i \in \{1, 2, \ldots, W\}$ in the genome. Then
 we draw $W$ bootstrap samples with replacement, and compute the estimate for
-bootstrap sample $b$ with an average weighted by the number of loci in all
-sampled blocks, 
+bootstrap sample $b$ with an average weighted by the fraction $w_i$ of total
+loci contained in each block, 
 
 \begin{align}
-  \tilde{\theta}_b = \sum_{i=1}^W w_i \frac{N(\mathbf{x}_i)}{D(\mathbf{x}_i)}
+  \tilde{\theta}_b = \frac{\sum_{i=1}^W w_i N(\mathbf{x}_i)}{\sum_{i=1}^W w_i D(\mathbf{x}_i)}
 \end{align}
 %
 Note that computing the ratio of averages rather than the average of a ratio is
@@ -918,7 +934,39 @@ estimate the $1-\alpha = 95\%$ pivot confidence intervals (p. 33
 where $\widehat{\theta}$ is the estimate, and $q_x$ is bootstrap quantile for
 probability $x$.
 
-\subsection{Proportion of Variance Explained by Linked Selection across Replicates}
+\subsection{Across-Replicate Covariances}
+
+Here, we extend our theoretic work in \textcite{Buffalo2019-io} to
+between-replicate allele frequency change covariances. We focus on the
+between-replicate covariance at a focal neutral site across two replicate
+populations, $A$ and $B$. As in \textcite{Buffalo2019-io}, the heritable allele
+frequency change (which is the only term that contributes to the covariance),
+can be written as a linear combination of effect sizes $\alpha_{t,l,A}$ and LD
+between the neutral site and selected site $l$, $D_{t,l,A}$.
+
+\begin{align}
+  \cov(\Delta p_{t,A}, \Delta p_{t,B}) = \cov\left(\sum_l \alpha_{t,A,l} D_{t,A,l}, \sum_l \alpha_{t,B,l} D_{t,B,l}\right)
+\end{align}
+
+Since the replicate populations derive from a common population at time $t=0$
+before their split, they share a fraction of their LD plus a replicate-specific
+deviation due to replicate-specific selection and drift. Thus, we can partition
+the $D$ terms as: $D_{t,A,l} = D_{0,l} + \varepsilon_{t,A}$ (and likewise for
+replicate $B$). Under drift alone, this deviation can be found from equation
+(4) of \textcite{Ragsdale2019-fs}.  Similarly, in the original population the
+additive effects at each locus were identical ($\alpha_{0,l}$), but in each
+replicate population have since been perturbed in a replicate-specific manner
+(the term $a_{t,A,l}$) as well as a change induced by convergent selection
+pressure after $t$ generations, $b_{t,l}$, $\alpha_{0,l} + b_{t,l} + a_{t,A,l}$
+(and likewise for replicate $B$).
+
+We then can write, 
+
+\begin{align}
+  \cov(\Delta p_{t,A}, \Delta p_{t,B}) = \cov\left(\sum_l \alpha_{t,A,l} (D_{0,l} + \varepsilon_{A,l}), \sum_l \alpha_{t,B,l} (D_{0,l} + \varepsilon_{B,l})\right)
+\end{align}
+
+
 
 We define a statistic similar to $G$ for estimating the proportion of allele
 frequency change common between two replicate populations due to linked
@@ -939,7 +987,22 @@ family size) and Mendelian segregation. In \textcite{Buffalo2019-io} allele
 frequency changes due to heritable fitness variation are captured in the term
 $\Delta_{_H} p_t$; here we further partition this into heritable frequency
 changes shared between replicates ($\Delta_{_S} p_t$) and those unique to a
-replicate ($\Delta_{_H} p_t$). By definition, 
+replicate ($\Delta_{_H} p_t$). This is important, as we can 
+
+
+We base this partition on our model in
+\textcite{Buffalo2019-io}, where we decompose the LD between the 
+focal neutral site and selected sites conditioning on whether 
+
+\begin{align}
+  \Delta_{_H} p_{t,A} &= \sum_l \alpha_{t,l,A} D_{t,l, A} \\
+                      &= \alpha_{t,l,A} D_{t,l,A} + (\alpha_{t,l,A'} + \alpha_{t,l,S}) D_{t,l,S} \\
+\end{align}
+
+
+
+
+By definition, 
 
 \begin{align}
   \cov(\Delta p_{s,A}, \Delta p_{t,B}) &= \cov(\Delta_{_S} p_{s,A}, \Delta_{_S} p_{t,B}), \;\; A \ne B\\
@@ -973,7 +1036,7 @@ the term $\sum_t \var(\Delta {_S} p_t)$
 
 \begin{align}
   \var\left(\sum_t \Delta_{_S} p_t\right) = 
- \sum_t \var( \Delta_{_U} p_t) + \sum_{i \ne j} \cov( \Delta_{_S} p_i, \Delta_{_S} p_j)
+\sum_t \var( \Delta_{_U} p_t) + \sum_{i \ne j} \cov( \Delta_{_S} p_i, \Delta_{_S} p_j)
 \end{align}
 
 

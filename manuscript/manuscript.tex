@@ -933,82 +933,15 @@ estimate the $1-\alpha = 95\%$ pivot confidence intervals (p. 33
 where $\widehat{\theta}$ is the estimate, and $q_x$ is bootstrap quantile for
 probability $x$.
 
-\subsection{Across-Replicate Covariances}
-
-Here, we extend our theoretic work in \textcite{Buffalo2019-io} to
-between-replicate allele frequency change covariances. We focus on the
-between-replicate covariance at a focal neutral site across two replicate
-populations, $A$ and $B$. As in \textcite{Buffalo2019-io}, the heritable allele
-frequency change (which is the only term that contributes to the covariance),
-can be written as a linear combination of effect sizes $\alpha_{t,l,A}$ and LD
-between the neutral site and selected site $l$, $D_{t,l,A}$.
-
-\begin{align}
-  \cov(\Delta p_{t,A}, \Delta p_{t,B}) = \cov\left(\sum_l \alpha_{t,A,l} D_{t,A,l}, \sum_l \alpha_{t,B,l} D_{t,B,l}\right)
-\end{align}
-
-Since the replicate populations derive from a common population at time $t=0$
-before their split, they share a fraction of their LD plus a replicate-specific
-deviation due to replicate-specific selection and drift. Thus, we can partition
-the $D$ terms as: $D_{t,A,l} = D_{0,l} + \varepsilon_{t,A}$ (and likewise for
-replicate $B$). Under drift alone, this deviation can be found from equation
-(4) of \textcite{Ragsdale2019-fs}.  Similarly, in the original population the
-additive effects at each locus were identical ($\alpha_{0,l}$), but in each
-replicate population have since been perturbed in a replicate-specific manner
-(the term $a_{t,A,l}$) as well as a change induced by convergent selection
-pressure after $t$ generations, $b_{t,l}$, $\alpha_{0,l} + b_{t,l} + a_{t,A,l}$
-(and likewise for replicate $B$).
-
-We then can write, 
-
-\begin{align}
-  \cov(\Delta p_{t,A}, \Delta p_{t,B}) = \cov\left(\sum_l \alpha_{t,A,l} (D_{0,l} + \varepsilon_{A,l}), \sum_l \alpha_{t,B,l} (D_{0,l} + \varepsilon_{B,l})\right)
-\end{align}
-
-
+\subsection{Replicate $G$ and Partitioning the Variance in Allele Frequency}
+\label{supp:replicate-g}
 
 We define a statistic similar to $G$ for estimating the proportion of allele
 frequency change common between two replicate populations due to linked
 selection. Covariance in allele frequency change between two replicate
 populations is due to convergent selection pressure selecting haplotypes shared
 between the two replicate populations, which acts to perturb linked neutral
-variation in parallel way. Similar to \textcite{Buffalo2019-io} equation (1).
-We can similarly partition the allele frequency change,
-
-\begin{align}
-  \label{eq:shared-partition}
-  \Delta p_t &= \underbrace{\Delta_{_N} p_t  + \Delta_{_M} p_t}_\text{drift} + \underbrace{\Delta_{_S} p_t}_\text{shared} + \underbrace{\Delta_{_U} p_t}_\text{unique}
-\end{align}
-
-where $\Delta_{_N} p_t$ and $\Delta_{_M} p_t$ are the allele frequency changes
-due to non-heritable variation in fitness (e.g. environmental differences in
-family size) and Mendelian segregation. In \textcite{Buffalo2019-io} allele
-frequency changes due to heritable fitness variation are captured in the term
-$\Delta_{_H} p_t$; here we further partition this into heritable frequency
-changes shared between replicates ($\Delta_{_S} p_t$) and those unique to a
-replicate ($\Delta_{_H} p_t$). This is important, as we can 
-
-
-We base this partition on our model in
-\textcite{Buffalo2019-io}, where we decompose the LD between the 
-focal neutral site and selected sites conditioning on whether 
-
-\begin{align}
-  \Delta_{_H} p_{t,A} &= \sum_l \alpha_{t,l,A} D_{t,l, A} \\
-                      &= \alpha_{t,l,A} D_{t,l,A} + (\alpha_{t,l,A'} + \alpha_{t,l,S}) D_{t,l,S} \\
-\end{align}
-
-
-
-
-By definition, 
-
-\begin{align}
-  \cov(\Delta p_{s,A}, \Delta p_{t,B}) &= \cov(\Delta_{_S} p_{s,A}, \Delta_{_S} p_{t,B}), \;\; A \ne B\\
-  \cov(\Delta p_{s,A}, \Delta p_{t,A}) &= \cov(\Delta_{_S} p_{s,A} + \Delta_{_U} p_{s,A}, \Delta_{_S} p_{t,A} + \Delta_{_U} p_{t,A}) 
-\end{align}
-
-Then, we define a replicate covariance analog of $G$, 
+variation in parallel way. 
 
 \begin{align}
   G_R(t) = \frac{\E_{A \ne B}(\sum_{i\ne j}^t \cov(\Delta p_{i,A}, \Delta p_{j,B}))}{\E_R(\var(p_{t,R} - p_{0,R}))}
@@ -1020,32 +953,146 @@ covariances), and $\E_R$ indicates taking expectation over all replicates. This
 measures the fraction of variance in allele frequency change (averaged across
 replicates) due to shared selection pressure.
 
-For selection studies with a control line (e.g. the \cite{Castro2019-uk} study
-we have reanalyzed), we have an alternate approach to quantify the effect of
-linked selection: we can compare the total variance in allele frequency change
-in control and selection lines. By the orthogonality of the components in
-equation XXX, 
+Extending our theoretic work in \textcite{Buffalo2019-io}, we can partition the
+allele frequency change in two replicates into drift, and shared selection and
+replicate-specific selection components of allele frequency change. For two
+replicates, $A$ and $B$, 
 
 \begin{align}
-  \var(\Delta p_t - p_0) = \sum_t \var(\Delta {_N} p_t ) + \sum_t \var(\Delta {_M} p_t ) + 
-  \var\left(\sum_t \Delta {_S} p_t\right) + \var\left(\sum_t \Delta {_U} p_t\right)
+  \Delta p_{t,A} &= \Delta_{_D} p_{t,A} + \Delta_{_{U}} p_{t,A} + \Delta_{_S} p_t \\
+  \Delta p_{t,B} &= \Delta_{_D} p_{t,B} + \Delta_{_{U}} p_{t,B} + \Delta_{_S} p_t
 \end{align}
 
-the term $\sum_t \var(\Delta {_S} p_t)$
+where $\Delta_{_D} p_{t,A}$ is allele frequency change due to drift (this is
+specific to a replicate, and equal to $\Delta_{_N} p_{t,A} + \Delta_{_M}
+p_{t,A}$ in the notation of \cite{Buffalo2019-io}), $\Delta_{_{U}} p_{t,A}$ is
+the allele frequency change from indirect selection specific to replicate $A$
+(and likewise with $\Delta_{_{U}} p_{t,A}$ for replicate $B$), and $\Delta_{_S}
+p_t$ is the allele frequency change from indirect selection shared across the
+replicates $A$ and $B$ (this term lacks a replicate subscript since by
+construction it is identical between replicates). By construction, each of
+these terms is uncorrelated, so the variance and be written as:
 
 \begin{align}
-  \var\left(\sum_t \Delta_{_S} p_t\right) = 
-\sum_t \var( \Delta_{_U} p_t) + \sum_{i \ne j} \cov( \Delta_{_S} p_i, \Delta_{_S} p_j)
+  \var(\Delta p_{t,A}) &= \var(\Delta_{_D} p_{t,A}) + \var(\Delta_{_{U}} p_{t,A}) + \var(\Delta_{_S} p_t) \\
 \end{align}
 
-
-In the \textcite{Castro2019-uk} study, we 
-quantify the effect of linked selection as:
+The shared effects of indirect selection can be quantified from the observed
+allele frequency changes, since the covariance in allele frequency change
+across replicates is the covariance of the shared term by construction, 
 
 \begin{align}
-  \frac{1}{2} \left( \var(\Delta p_{20, \mathrm{LS1}} - p_{0, \mathrm{LS1}}) + \var(\Delta p_{20, \mathrm{LS2}} - p_{0, \mathrm{LS2}}) \right) -  \var(\Delta p_{20, \mathrm{Ctrl}} - p_{0, \mathrm{Ctrl}}) = \\
-  \cov(p_{20, \mathrm{LS1}} - p_{0, \mathrm{LS1}}, p_{20, \mathrm{LS2}} - p_{0, \mathrm{LS2}})
+  \cov(\Delta p_{t,A}, \Delta p_{t,B}) = \cov(\Delta_{_S} p_{t}, \Delta_{_S} p_{t}) = \var(\Delta_{_S} p_{t})
 \end{align}
+
+In artificial selection studies with a control line, such as the
+\textcite{Castro2019-uk} study, this allows us to estimate the contribution of
+the effects of shared and unique indirect selection. 
+
+\begin{align}
+  \var(\Delta p_{0,\mathrm{Ctrl}}) = \var()
+\end{align}
+
+
+% Here, we extend our theoretic work in \textcite{Buffalo2019-io} to
+% between-replicate allele frequency change covariances. We focus on the
+% between-replicate covariance at a focal neutral site across two replicate
+% populations, $A$ and $B$. As in \textcite{Buffalo2019-io}, the heritable allele
+% frequency change (which is the only term that contributes to the covariance),
+% can be written as a linear combination of effect sizes $\alpha_{t,l,A}$ and LD
+% between the neutral site and selected site $l$, $D_{t,l,A}$.
+
+% \begin{align}
+%   \cov(\Delta p_{t,A}, \Delta p_{t,B}) = \cov\left(\sum_l \alpha_{t,A,l} D_{t,A,l}, \sum_l \alpha_{t,B,l} D_{t,B,l}\right)
+% \end{align}
+
+% Since the replicate populations derive from a common population at time $t=0$
+% before their split, they share a fraction of their LD plus a replicate-specific
+% deviation due to replicate-specific selection and drift. Thus, we can partition
+% the $D$ terms as: $D_{t,A,l} = D_{0,l} + \varepsilon_{t,A}$ (and likewise for
+% replicate $B$). Under drift alone, this deviation can be found from equation
+% (4) of \textcite{Ragsdale2019-fs}.  Similarly, in the original population the
+% additive effects at each locus were identical ($\alpha_{0,l}$), but in each
+% replicate population have since been perturbed in a replicate-specific manner
+% (the term $a_{t,A,l}$) as well as a change induced by convergent selection
+% pressure after $t$ generations, $b_{t,l}$, $\alpha_{0,l} + b_{t,l} + a_{t,A,l}$
+% (and likewise for replicate $B$).
+
+% We then can write, 
+
+% \begin{align}
+%   \cov(\Delta p_{t,A}, \Delta p_{t,B}) = \cov\left(\sum_l \alpha_{t,A,l} (D_{0,l} + \varepsilon_{A,l}), \sum_l \alpha_{t,B,l} (D_{0,l} + \varepsilon_{B,l})\right)
+% \end{align}
+
+
+
+% We define a statistic similar to $G$ for estimating the proportion of allele
+% frequency change common between two replicate populations due to linked
+% selection. Covariance in allele frequency change between two replicate
+% populations is due to convergent selection pressure selecting haplotypes shared
+% between the two replicate populations, which acts to perturb linked neutral
+% variation in parallel way. Similar to \textcite{Buffalo2019-io} equation (1).
+% We can similarly partition the allele frequency change,
+
+% \begin{align}
+%   \label{eq:shared-partition}
+%   \Delta p_t &= \underbrace{\Delta_{_N} p_t  + \Delta_{_M} p_t}_\text{drift} + \underbrace{\Delta_{_S} p_t}_\text{shared} + \underbrace{\Delta_{_U} p_t}_\text{unique}
+% \end{align}
+
+% where $\Delta_{_N} p_t$ and $\Delta_{_M} p_t$ are the allele frequency changes
+% due to non-heritable variation in fitness (e.g. environmental differences in
+% family size) and Mendelian segregation. In \textcite{Buffalo2019-io} allele
+% frequency changes due to heritable fitness variation are captured in the term
+% $\Delta_{_H} p_t$; here we further partition this into heritable frequency
+% changes shared between replicates ($\Delta_{_S} p_t$) and those unique to a
+% replicate ($\Delta_{_H} p_t$). This is important, as we can 
+
+
+% We base this partition on our model in
+% \textcite{Buffalo2019-io}, where we decompose the LD between the 
+% focal neutral site and selected sites conditioning on whether 
+
+% \begin{align}
+%   \Delta_{_H} p_{t,A} &= \sum_l \alpha_{t,l,A} D_{t,l, A} \\
+%                       &= \alpha_{t,l,A} D_{t,l,A} + (\alpha_{t,l,A'} + \alpha_{t,l,S}) D_{t,l,S} \\
+% \end{align}
+
+
+
+
+% By definition, 
+
+% \begin{align}
+%   \cov(\Delta p_{s,A}, \Delta p_{t,B}) &= \cov(\Delta_{_S} p_{s,A}, \Delta_{_S} p_{t,B}), \;\; A \ne B\\
+%   \cov(\Delta p_{s,A}, \Delta p_{t,A}) &= \cov(\Delta_{_S} p_{s,A} + \Delta_{_U} p_{s,A}, \Delta_{_S} p_{t,A} + \Delta_{_U} p_{t,A}) 
+% \end{align}
+
+% For selection studies with a control line (e.g. the \cite{Castro2019-uk} study
+% we have reanalyzed), we have an alternate approach to quantify the effect of
+% linked selection: we can compare the total variance in allele frequency change
+% in control and selection lines. By the orthogonality of the components in
+% equation XXX, 
+
+% \begin{align}
+%   \var(\Delta p_t - p_0) = \sum_t \var(\Delta {_N} p_t ) + \sum_t \var(\Delta {_M} p_t ) + 
+%   \var\left(\sum_t \Delta {_S} p_t\right) + \var\left(\sum_t \Delta {_U} p_t\right)
+% \end{align}
+
+% the term $\sum_t \var(\Delta {_S} p_t)$
+
+% \begin{align}
+%   \var\left(\sum_t \Delta_{_S} p_t\right) = 
+% \sum_t \var( \Delta_{_U} p_t) + \sum_{i \ne j} \cov( \Delta_{_S} p_i, \Delta_{_S} p_j)
+% \end{align}
+
+
+% In the \textcite{Castro2019-uk} study, we 
+% quantify the effect of linked selection as:
+
+% \begin{align}
+%   \frac{1}{2} \left( \var(\Delta p_{20, \mathrm{LS1}} - p_{0, \mathrm{LS1}}) + \var(\Delta p_{20, \mathrm{LS2}} - p_{0, \mathrm{LS2}}) \right) -  \var(\Delta p_{20, \mathrm{Ctrl}} - p_{0, \mathrm{Ctrl}}) = \\
+%   \cov(p_{20, \mathrm{LS1}} - p_{0, \mathrm{LS1}}, p_{20, \mathrm{LS2}} - p_{0, \mathrm{LS2}})
+% \end{align}
 
 % \begin{align}
 %   \var(p_t - p_0) &= \sum_i \var(\Delta p_i) + \sum_{i\ne j} \cov(\Delta p_i, \Delta p_j) \\

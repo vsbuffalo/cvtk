@@ -297,9 +297,10 @@ Supplementary Material Section \ref{supp:barghi-covs} for more details).
   \label{fig:figure-1}
 \end{figure}
 
-While the presence of positive temporal covariances is consistent with linked
-selection affecting allele frequencies over time, this measure not easily
-interpretable. Additionally, we can quantify the impact of linked selection on
+While the presence of positive temporal covariances is consistent with 
+\gc{selection} affecting allele frequencies over time, this measure not easily
+interpretable. \gc{We can calculate a more intuitive measure from this
+number to} quantify the impact of \gc{selection} on
 allele frequency change as the ratio of total covariance in allele frequency
 change to the total variance in allele frequency change. We denote the
 change in allele frequency as $\Delta p_t = p_{t+1}-p_t$, where $p_t$ is the
@@ -314,15 +315,17 @@ by linked selection \parencite{Buffalo2019-io}. We call this measure $G(t)$, def
   G(t) = \frac{\sum_{i\ne j}^t \cov(\Delta p_i, \Delta p_j)}{\var(p_t - p_0)}
 \end{align}
 %
-which estimates the effect of linked selection between the initial
+which estimates the effect of \gc{selection on allele frequency
+  change} between the initial
 generation $0$ and some later generation $t$, which can be varied to see how
 this quantity grows through time. As with the temporal covariances, the study
 design of \textcite{Barghi2019-qy} leads our measure $G(t)$ to be even more
 conservative, since the temporal covariances within each ten-generation block
 between sequenced timepoints are not directly observable, and are not included
 in the numerator of $G(t)$. Still, we find a remarkably strong signal.
-Greater than $20\%$ of total variation in allele frequency change over 60
-generations is the result of linked selection.
+Greater than $20\%$ of total\gc{, genome-wide allele frequency
+  change} over 60 %variation in
+generations is the result of selection.
 
 Additionally, we looked for a signal of temporal autocovariance in
 \textcite{Bergland2014-ij}, a study that collected \emph{Drosophila
@@ -351,7 +354,8 @@ across all pairs to the average standard deviation across all pairs of
 replicates, 
 
 \vb{We note that blah blha lbah, have a look at the pairwiwe covariances for
-Fig 2A}
+Fig 2A} \gc{THIS IS about double checking that that last time point is
+about right?}
 
 \begin{align}
   \label{eq:conv-corr}

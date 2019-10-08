@@ -358,23 +358,25 @@ the like-colored row of the convergence correlation matrix (upper left in
 Figure \ref{fig:figure-2} A). We find these convergent covariances are
 relatively weak, and decay very quickly from an initial value of about 0.1
 (95\% block bootstrap confidence intervals $[0.094, 0.11]$) to around 0.01
-(95\% CIs [0.0087, 0.015]) within 20 generations. This is consistent with
+(95\% CIs [0.0087, 0.015]) within 20 generations. This \gc{suggests
+  that while a reasonable fraction of the initial response is shared over the
+  replicates while the rapid decay} is consistent with
 the primary finding of the original \textcite{Barghi2019-qy} study: that
-alternative loci contribute to longer term adaptation in different
-replicates.  \vb{We note that convergent correlation for the last timepoint
-is abnormally high; this is not in fact driven by a single outlier pair of
-covariances but all our high for reasons unknown to us.}
+alternative loci contribute to longer term adaptation in \gc{the} different
+replicates. 
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=\textwidth]{figures/figure-2.pdf}
 
-  \caption{{\bf A}: The convergence correlation, averaged across replicate
+  \caption{{\bf A}: The convergence correlation, averaged across \gc{\textcite{Barghi2019-qy}} replicate
     pairs, through time. Each line represents the convergence correlation
     $\mathrm{cor}(\Delta p_{s}, \Delta p_{s})$ from a starting reference
     generation $s$ to a later time $t$, which varies along the x-axis; each
     line corresponds to a row of the temporal convergence correlation matrix
-    depicted to the right.  {\bf B}: The convergence covariance between
+    depicted to the right.  \gc{We note that convergent correlation
+      for the last timepoint is an outlier; we are unsure as to the cause of this, e.g. it does not appear to be driven by a single pair
+of replicates.} {\bf B}: The convergence covariance between
     individual pairs of replicates in the \textcite{Kelly2019-dc} data. {\bf
     C}:  The convergence covariance between individual pairs of replicates in
     \parencite{Castro2019-uk} data, for the two selection lines  (LS1 and LS2)
@@ -402,13 +404,14 @@ positive between-replicate covariances. We find all three pairwise
 between-replicate covariances are positive and statistically significant (95\%
 CIs, [0.0063, 0.0086], [0.0064, 0.0086], [0.0061, 0.0083]). We estimate the
 convergent correlation coefficient across these replicates as 0.36 ($95\%$
-block-bootstrap confidence interval $[0.31, 0.40]$). \vb{Similarly, we can
+block-bootstrap confidence interval $[0.31, 0.40]$). Similarly, we can
   calculate the proportion of the total variance in allele frequency change
   from convergent selection pressure analogous to $G$ where the numerator is is
   the convergent covariance and the denominator is the total variance (see
   XXX). We find that 37\% of the total variance is due to shared allele
 frequency changes caused by selection (95\% CI [29\%, 41\%]; these are similar
-to the convergence correlation, see XXX).}
+to the convergence correlation \gc{as the variances are relatively
+  constant across replicates, see {\bf XXX}).}
 
 
 Second, we reanalyzed the Longshanks selection experiment, which selected for
@@ -1119,7 +1122,14 @@ right) from the regression due to large differences in average coverage.}
 \end{figure}
 
 \subsection{\textcite{Barghi2019-qy} Trimmed Window Covariances}
-
+\gc{ Here we report median and trimmed mean of the windowed covariances. We note that
+  the median covariance is also limiting result of a trimmed
+  mean that symmetrically excludes the upper and lower $\alpha$ tails to calculate the
+ trimmed average windowed covariance. As $\alpha$ increases to 0.5, the
+  trimmed covariance converges to the median windowed covariance (by the
+ definition of the median; see Supplementary Figure
+  \ref{suppfig:barghi-trimmed-mean}). Thus our genomic temporal covariances are
+  non-zero due to the impact of selection on many genomic windows.  }
  \begin{table}
    \centering
    \footnotesize

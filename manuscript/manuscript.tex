@@ -435,14 +435,35 @@ contribute to the indirect change at unlinked loci
 \parencite{Robertson1961-ho,Santiago1995-hx}. 
 
 \vb{The presence of an unselected control line provides an alternative way to
-partition the effects of linked selection and genetic drift: we can compare the
-total variance in allele frequency change of the control line (which excludes
-the effect of artificial selection on allele frequencies) to the total variance
-in frequency change of the Longshanks selection lines. We estimate at least
-32\% (95\% CI $[21\%, 48\%]$) of the variance in allele frequency change is
-driven by the effects of selection, of which 14\% (95\% CI $[3\%, 33\%]$) is
-estimated to be unique to a selection line, and 17\% (95\% CI $[9\%, 23\%]$) is
-the effect of shared selection between the two Longshanks selection lines.}
+  partition the effects of linked selection and genetic drift: we can compare
+  the total variance in allele frequency change of the control line (which
+  excludes the effect of artificial selection on allele frequencies) to the
+  total variance in frequency change of the Longshanks selection lines. We can
+  partition the allele frequency change between the two timepoints (20
+  generations) for a Longshanks line as \vb{$\Delta p_{t,\mathrm{LS1}} =
+    \Delta_{_{D}} p_{t,\mathrm{LS1}} + \Delta_{_{U}} p_{t,\mathrm{LS1}} +
+    \Delta_{_S} p_{t,\mathrm{LS}}$} where these  terms in are the decomposition
+    are the allele frequency change due to drift in \vb{Longshanks replicate 1
+      ($\Delta_{_D} p_{t,\mathrm{LS1}}$), selection unique to the LS1 replicate
+      ($\Delta_{_U} p_{t,\mathrm{LS1}}$), and selection response shared between
+      the two Longshanks replicates ($\Delta_{_S} p_{t,\mathrm{LS}}$)
+      respectively (and similarly for the Longshanks two line, LS2)}. By
+      construction we will assume that each of these terms are uncorrelated
+      within replicates, and that only the shared term covaries between the
+      replicates. Assuming that we can approximate the contribution of genetic
+      drift in the LS lines the variance in allele frequency change observed in
+      the control, i.e. \vb{$\var(\Delta p_{t,\mathrm{Ctrl}}) =
+      \var(\Delta_{_{D}} p_{t,\mathrm{LS2}})=\var(\Delta_{_{D}}
+    p_{t,\mathrm{LS2}})$}, then we can estimate the increase in variance in
+    allele frequency change due to selection as $(\var(\Delta
+    p_{t,\mathrm{LS1}}) + \var(\Delta p_{t,\mathrm{LS2}}))/2 - \var(\Delta
+    p_{t,\mathrm{Ctrl}})$ and the shared effect of selection across selected
+    lines as $\cov(\Delta p_{t,\mathrm{LS1}}, \Delta p_{t,\mathrm{LS2}})$.  We
+    estimate at least 32\% (95\% CI $[21\%, 48\%]$) of the variance in allele
+    frequency change is driven by the effects of selection, of which 14\% (95\%
+  CI $[3\%, 33\%]$) is estimated to be unique to a selection line, and 17\%
+(95\% CI $[9\%, 23\%]$) is the effect of shared selection between the two
+Longshanks selection lines.}
 
 
 \begin{figure}
@@ -526,20 +547,19 @@ understand the genome-wide effects of selection on standing variation, e.g.
 selection on an infinitesimal polygenic trait, stems from an early quantitative
 genetic model of linked selection \parencite{Robertson1961-ho} and its later
 developments
-(\cite{Santiago1995-hx,Santiago1998-bs,Wray1990-zf,J_A_Woolliams_N_R_Wray_R_Thompson2008-qo};
-\gc{THE WRAY PAPER DATE IS WRONG}
-see also \cite{Barton2000-zg} for a comparison of these models with classic
-hitchhiking models). Implicit in these models is that autocovariance between
-allele frequency change is created when there is heritable fitness variation in
-the population, a signal that may be readily detected from temporal genomic
-data \parencite{Buffalo2019-io}.  Depending on how many loci affect fitness,
-such a strong effect of linked selection may not be differentiable from genetic
-drift using only single contemporary population samples or looking at at
-temporal allele frequency change at each locus in isolation.  In this way,
-averaging summaries of temporal data allows us to sidestep the key problem of
-detecting selection from standing variation: that the genomic footprint leaves
-too soft of a signature to differentiate from a background of genetic drift. In
-fact we find that the temporal covariance signal is detectable even in the most
+(\cite{Santiago1995-hx,Santiago1998-bs,Wray1990-zf,Woolliams1993-qo}; see also
+\cite{Barton2000-zg} for a comparison of these models with classic hitchhiking
+models). Implicit in these models is that autocovariance between allele
+frequency change is created when there is heritable fitness variation in the
+population, a signal that may be readily detected from temporal genomic data
+\parencite{Buffalo2019-io}.  Depending on how many loci affect fitness, such a
+strong effect of linked selection may not be differentiable from genetic drift
+using only single contemporary population samples or looking at at temporal
+allele frequency change at each locus in isolation.  In this way, averaging
+summaries of temporal data allows us to sidestep the key problem of detecting
+selection from standing variation: that the genomic footprint leaves too soft
+of a signature to differentiate from a background of genetic drift. In fact we
+find that the temporal covariance signal is detectable even in the most
 extremely difficult to detect soft sweep case: polygenic selection on highly
 polygenic traits \parencite{Buffalo2019-io}.
 
@@ -558,14 +578,13 @@ replicated designs, we characterized the extent to which convergent selection
 pressures lead to parallel changes in allele frequencies across replicate
 populations, and found that a reasonable proportion of the response is shared
 across short timescales. These likely represent substantial under-estimates of
-the contribution of linked selection because \vb{the studies we have reanalyzed
-do not sequence the population each generation, preventing us from including
-the effects of stronger correlations between adjacent generations.
-Furthermore, \gc{our} estimation methods are intentionally
-conservative,\gc{for example they exclude the contribution of selection that
-  does not persist across generations and selection that reverses sign
-  thus they show be seen as a storng lower bound of the effects of 
-selection.}
+the contribution of linked selection because the studies we have reanalyzed do
+not sequence the population each generation, preventing us from including the
+effects of stronger correlations between adjacent generations.  Furthermore,
+our estimation methods are intentionally conservative, for example they exclude
+the contribution of selection that does not persist across generations and
+selection that reverses sign thus they show be seen as a strong lower bound of
+the effects of selection.
 
 These estimates of the contribution of selection could be refined by using
 patterns of LD and recombination which would allow us to more fully
@@ -592,14 +611,14 @@ populations. In some of these experiments, selection pressures may have been
 stronger or more sustained that in natural populations
 \vb{\parencite{Hendry1999-zu,Hairston2005-ga}}. Conversely, these lab
 populations were maintained at very small population sizes, small effective
-population sizes 300, 450, and 45 for the \textcite{Kelly2019-dc}, and
-\textcite{Castro2019-uk} \gc{MISSING REF??} studies respectively, which will amplify the role of
-genetic drift. The advantage of lab experiments is that they are closed
-populations, in natural populations temporal covariance could also arise from
-the systematic migration of alleles from differentiated populations.
-\vb{Adapting} these methods to natural populations will require either
-populations that are reasonably closed to migration, or for the effect of
-migration to be accounted for possibly either by knowledge of allele
+population sizes 300, 450, and 45 for the \textcite{Barghi2019-qy},
+\textcite{Kelly2019-dc}, and \textcite{Castro2019-uk} studies respectively,
+which will amplify the role of genetic drift. The advantage of lab experiments
+is that they are closed populations, in natural populations temporal covariance
+could also arise from the systematic migration of alleles from differentiated
+populations.  \vb{Adapting} these methods to natural populations will require
+either populations that are reasonably closed to migration, or for the effect
+of migration to be accounted for possibly either by knowledge of allele
 frequencies in source populations or the identification of migrant individuals. 
 
 While it challenging to apply temporal methods to natural populations there is
@@ -1055,41 +1074,51 @@ we can estimate the drift term using the fact that,
 \begin{align}
   \Delta p_{t,\mathrm{LS1}} &= \Delta_{_D} p_{t,\mathrm{LS1}} + \Delta_{_{U}} p_{t,\mathrm{LS1}} + \Delta_{_\mathrm{LS}} p_t \\ 
   \Delta p_{t,\mathrm{LS2}} &= \Delta_{_D} p_{t,\mathrm{LS2}} + \Delta_{_{U}} p_{t,\mathrm{LS2}} + \Delta_{_\mathrm{LS}} p_t \\ 
-  \Delta p_{t,\mathrm{Ctrl}} &= \Delta_{_D} p_{t,\mathrm{Ctrl}} + \Delta_{_{U}} p_{t,\mathrm{Ctrl}}
+  \Delta p_{t,\mathrm{Ctrl}} &= \Delta_{_D} p_{t,\mathrm{Ctrl}}
 \end{align}
 
+Note that since the control replicate does not undergo artificial selection, we
+assume that its allele frequency changes are determined entirely by genetic
+drift. With free mating individuals (such as in a cage population), this may
+not be the case, and sequencing adjacent generations would allow one to more
+easily differentiate the effects of selection and drift.
+
+We assume that we can approximate the contribution of genetic drift in the
+Longshanks selection lines with the observed variance in the control line, or
+$\var(\Delta p_{t,\mathrm{Ctrl}}) = \var(\Delta_{_{D} p_{t,\mathrm{LS1}}}) =
+\var(\Delta_{_{D} p_{t,\mathrm{LS2}}})$. Then, the combined effects of
+selection can be estimated by averaging the variances of the two Longshanks
+selection lines, and subtracting the variance in allele frequency change in the
+control line, which we treat as driven by drift alone (since matings are
+random). Note that each variance is bias-corrected according to the methods
+described in Supplementary Materials \ref{supp:matrix-correction}, and the
+average sequencing depths between lines are nearly identical. Thus, we have
 
 \begin{align}
   (\var(\Delta p_{t,\mathrm{LS1}}) + \var(\Delta p_{t,\mathrm{LS2}}))/2 - \var(\Delta p_{t,\mathrm{Ctrl}}) = 
-  \overline{\var(\Delta_{_D} p_{t,\mathrm{LS}})} + \overline{\var(\Delta_{_U} p_{t,\mathrm{LS}})} + \var(\Delta_{_\mathrm{LS}} p_t)
+  \overline{\var(\Delta_{_U} p_{t,\mathrm{LS}})} + \var(\Delta_{_\mathrm{LS}} p_t)
 \end{align}
 
-where the bars indicate values averaged 
+where the bar indicate values averaged both Longshanks selection lines.
+Additionally, use the fact that
 
-We note that there very well may be selection acting in the control line...
+\begin{align}
+  \cov(\Delta p_{t,\mathrm{LS1}}, \Delta p_{t,\mathrm{LS2}}) = \var(\Delta_{_\mathrm{LS}} p_t)
+\end{align}
 
+we can also separate out the unique and shared components by subtracting off
+this covariance,
 
-We can partition the allele frequency change between the two timepoints (20
-generations) for a Longshanks line as \vb{$\Delta p_{t,\mathrm{LS1}} =
-\Delta_{_{D}} p_{t,\mathrm{LS1}} + \Delta_{_{U}} p_{t,\mathrm{LS1}} +
-\Delta_{_S} p_{t,\mathrm{LS}}$} where these  terms in are the decomposition are
-the allele frequency change due to drift in \vb{Longshanks replicate 1
-  ($\Delta_{_D} p_{t,\mathrm{LS1}}$), selection unique to the LS1 replicate
-  ($\Delta_{_U} p_{t,\mathrm{LS1}}$), and selection response shared between the
-two Longshanks replicates ($\Delta_{_S} p_{t,\mathrm{LS}}$) respectively (and
-similarly for the Longshanks two line, LS2)}. By construction we will assume
-that each of these terms are uncorrelated within replicates, and that only the
-shared term covaries between the replicates. Assuming that we can approximate
-the contribution of genetic drift in the LS lines the variance in allele
-frequency change observed in the control, i.e. \vb{$\var(\Delta
-p_{t,\mathrm{Ctrl}}) = \var(\Delta_{_{D}}
-p_{t,\mathrm{LS2}})=\var(\Delta_{_{D}} p_{t,\mathrm{LS2}})$}, then we can
-estimate the increase in variance in allele frequency change due to selection
-as $(\var(\Delta p_{t,\mathrm{LS1}}) + \var(\Delta p_{t,\mathrm{LS2}}))/2 -
-\var(\Delta p_{t,\mathrm{Ctrl}})$ and the shared effect of selection across
-selected lines as $\cov(\Delta p_{t,\mathrm{LS1}}, \Delta p_{t,\mathrm{LS2}})$. 
+\begin{align}
+  \overline{\var(\Delta_{_U} p_{t,\mathrm{LS}})}  = 
+(\var(\Delta p_{t,\mathrm{LS1}}) + \var(\Delta p_{t,\mathrm{LS2}}))/2 - \var(\Delta p_{t,\mathrm{Ctrl}}) - \cov(\Delta p_{t,\mathrm{LS1}}, \Delta p_{t,\mathrm{LS2}}).
+\end{align}
 
-
+Finally, we can divide each of these values by the total variance to get the
+proportion of total variance drift, and unique and shared effects of selection
+contribute towards the total. To derive confidence intervals for the estimates
+of unique and shared effects of selection, we use a block bootstrap procedure
+as described in Supplementary Materials Section \ref{supp:block-bootstrap}.
 
 \subsubsection{The Empirical Neutral Null Windowed Covariance Distribution}
 \label{supp:empirical-null}

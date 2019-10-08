@@ -637,47 +637,46 @@ Osmond, Erin Calfee, and Sivan Yair for helpful discussions. This research was
 supported by an NSF Graduate Research Fellowship grant awarded to VB (1650042),
 and NIH (R01-GM108779) and NSF (1353380) awarded to GC.
 
-\Section{Materials and Methods}
+% \Section{Materials and Methods}
 
-\subsection{Datasets Analyzed}
+% \subsection{Datasets Analyzed}
 
 
-\subsection{Partitioning Unique and Shared Selection Effects}
+% \subsection{Partitioning Unique and Shared Selection Effects}
 
-We can partition the allele frequency change between the two timepoints (20
-generations) for a Longshanks line as \vb{$\Delta p_{t,\mathrm{LS1}} =
-\Delta_{_{D}} p_{t,\mathrm{LS1}} + \Delta_{_{U}} p_{t,\mathrm{LS1}} +
-\Delta_{_S} p_{t,\mathrm{LS}}$} where these  terms in are the decomposition are
-the allele frequency change due to drift in \vb{Longshanks replicate 1
-  ($\Delta_{_D} p_{t,\mathrm{LS1}}$), selection unique to the LS1 replicate
-  ($\Delta_{_U} p_{t,\mathrm{LS1}}$), and selection response shared between the
-two Longshanks replicates ($\Delta_{_S} p_{t,\mathrm{LS}}$) respectively (and
-similarly for the Longshanks two line, LS2)}. By construction we will assume
-that each of these terms are uncorrelated within replicates, and that only the
-shared term covaries between the replicates. Assuming that we can approximate
-the contribution of genetic drift in the LS lines the variance in allele
-frequency change observed in the control, i.e. \vb{$\var(\Delta
-p_{t,\mathrm{Ctrl}}) = \var(\Delta_{_{D}}
-p_{t,\mathrm{LS2}})=\var(\Delta_{_{D}} p_{t,\mathrm{LS2}})$}, then we can
-estimate the increase in variance in allele frequency change due to selection
-as $(\var(\Delta p_{t,\mathrm{LS1}}) + \var(\Delta p_{t,\mathrm{LS2}}))/2 -
-\var(\Delta p_{t,\mathrm{Ctrl}})$ and the shared effect of selection across
-selected lines as $\cov(\Delta p_{t,\mathrm{LS1}}, \Delta p_{t,\mathrm{LS2}})$. 
+% We can partition the allele frequency change between the two timepoints (20
+% generations) for a Longshanks line as \vb{$\Delta p_{t,\mathrm{LS1}} =
+% \Delta_{_{D}} p_{t,\mathrm{LS1}} + \Delta_{_{U}} p_{t,\mathrm{LS1}} +
+% \Delta_{_S} p_{t,\mathrm{LS}}$} where these  terms in are the decomposition are
+% the allele frequency change due to drift in \vb{Longshanks replicate 1
+%   ($\Delta_{_D} p_{t,\mathrm{LS1}}$), selection unique to the LS1 replicate
+%   ($\Delta_{_U} p_{t,\mathrm{LS1}}$), and selection response shared between the
+% two Longshanks replicates ($\Delta_{_S} p_{t,\mathrm{LS}}$) respectively (and
+% similarly for the Longshanks two line, LS2)}. By construction we will assume
+% that each of these terms are uncorrelated within replicates, and that only the
+% shared term covaries between the replicates. Assuming that we can approximate
+% the contribution of genetic drift in the LS lines the variance in allele
+% frequency change observed in the control, i.e. \vb{$\var(\Delta
+% p_{t,\mathrm{Ctrl}}) = \var(\Delta_{_{D}}
+% p_{t,\mathrm{LS2}})=\var(\Delta_{_{D}} p_{t,\mathrm{LS2}})$}, then we can
+% estimate the increase in variance in allele frequency change due to selection
+% as $(\var(\Delta p_{t,\mathrm{LS1}}) + \var(\Delta p_{t,\mathrm{LS2}}))/2 -
+% \var(\Delta p_{t,\mathrm{Ctrl}})$ and the shared effect of selection across
+% selected lines as $\cov(\Delta p_{t,\mathrm{LS1}}, \Delta p_{t,\mathrm{LS2}})$. 
 
-\subsection{Variance and Covariance Estimates}
+% \subsection{Variance and Covariance Estimates}
 
-We calculate the variance-covariance matrix of allele frequency changes using a
-Python software package we have written, available at
-\url{http://github.com/vsbuffalo/cvtk}. Our method uses the sampling depth and
-number of diploid individuals sampled to correct the bias in the variance
-estimates and a bias that occurs in covariance estimates between adjacent
-timepoints (see Supplementary Material Sections \ref{supp:ind-depth-var-corr},
-\ref{supp:cov-corr}, and \ref{supp:matrix-correction} for mathematical details
-of these estimators). 
+% We calculate the variance-covariance matrix of allele frequency changes using a
+% Python software package we have written, available at
+% \url{http://github.com/vsbuffalo/cvtk}. Our method uses the sampling depth and
+% number of diploid individuals sampled to correct the bias in the variance
+% estimates and a bias that occurs in covariance estimates between adjacent
+% timepoints (see Supplementary Material Sections \ref{supp:ind-depth-var-corr},
+% \ref{supp:cov-corr}, and \ref{supp:matrix-correction} for mathematical details
+% of these estimators). 
 
-\subsection{Block Bootstrap}
+% \subsection{Block Bootstrap}
 
-Throughout the paper, we make use of a block-bootstrapping procedure to 
 
 \printbibliography
 
@@ -1068,6 +1067,29 @@ we can estimate the drift term using the fact that,
 where the bars indicate values averaged 
 
 We note that there very well may be selection acting in the control line...
+
+
+We can partition the allele frequency change between the two timepoints (20
+generations) for a Longshanks line as \vb{$\Delta p_{t,\mathrm{LS1}} =
+\Delta_{_{D}} p_{t,\mathrm{LS1}} + \Delta_{_{U}} p_{t,\mathrm{LS1}} +
+\Delta_{_S} p_{t,\mathrm{LS}}$} where these  terms in are the decomposition are
+the allele frequency change due to drift in \vb{Longshanks replicate 1
+  ($\Delta_{_D} p_{t,\mathrm{LS1}}$), selection unique to the LS1 replicate
+  ($\Delta_{_U} p_{t,\mathrm{LS1}}$), and selection response shared between the
+two Longshanks replicates ($\Delta_{_S} p_{t,\mathrm{LS}}$) respectively (and
+similarly for the Longshanks two line, LS2)}. By construction we will assume
+that each of these terms are uncorrelated within replicates, and that only the
+shared term covaries between the replicates. Assuming that we can approximate
+the contribution of genetic drift in the LS lines the variance in allele
+frequency change observed in the control, i.e. \vb{$\var(\Delta
+p_{t,\mathrm{Ctrl}}) = \var(\Delta_{_{D}}
+p_{t,\mathrm{LS2}})=\var(\Delta_{_{D}} p_{t,\mathrm{LS2}})$}, then we can
+estimate the increase in variance in allele frequency change due to selection
+as $(\var(\Delta p_{t,\mathrm{LS1}}) + \var(\Delta p_{t,\mathrm{LS2}}))/2 -
+\var(\Delta p_{t,\mathrm{Ctrl}})$ and the shared effect of selection across
+selected lines as $\cov(\Delta p_{t,\mathrm{LS1}}, \Delta p_{t,\mathrm{LS2}})$. 
+
+
 
 \subsubsection{The Empirical Neutral Null Windowed Covariance Distribution}
 \label{supp:empirical-null}

@@ -462,12 +462,12 @@ We can partition the allele frequency change between the two timepoints (20
   % selection unique to a replicate, and selection response shared between the
   % two Longshanks replicates, respectively.
   By construction we will assume that each of these terms
-  are uncorrelated, and we will assume that we can approximate the
+  are uncorrelated within replicates, and that only the shared term
+  covaries between the replicates. Assuming that we can approximate the
   contribution of genetic drift in the LS
   lines the variance in allele frequency change observed in
   the control ($\var(\Delta p_{t,\mathrm{Ctrl}})
-  = \var(\Delta_{_D1} p_{t})=\var(\Delta_{_D2} p_{t})$)
-  This allows us to estimate the increase in variance in allele
+  = \var(\Delta_{_D1} p_{t})=\var(\Delta_{_D2} p_{t})$), then we can estimate the increase in variance in allele
   frequency change due to selection as $(\var(\Delta p_{t,\mathrm{LS1}}) +
   \var(\Delta p_{t,\mathrm{LS2}}))/2 - \var(\Delta p_{t,\mathrm{Ctrl}})$ and
   the shared effect of selection across selected lines as $\cov(\Delta

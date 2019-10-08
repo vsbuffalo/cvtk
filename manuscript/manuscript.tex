@@ -352,32 +352,32 @@ the like-colored row of the convergence correlation matrix (upper left in
 Figure \ref{fig:figure-2} A). We find these convergent covariances are
 relatively weak, and decay very quickly from an initial value of about 0.1
 (95\% block bootstrap confidence intervals $[0.094, 0.11]$) to around 0.01
-(95\% CIs [0.0087, 0.015]) within 20 generations. This \gc{suggests
-  that while a reasonable fraction of the initial response is shared over the
-  replicates while the rapid decay} is consistent with
-the primary finding of the original \textcite{Barghi2019-qy} study: that
-alternative loci contribute to longer term adaptation in \gc{the} different
-replicates. 
+(95\% CIs [0.0087, 0.015]) within 20 generations. This \vb{suggests that while
+a reasonable fraction of the initial response is shared over the replicates,
+this is followed by a rapid decay, a result} consistent with the primary
+finding of the original \textcite{Barghi2019-qy} study: that alternative loci
+contribute to longer term adaptation \vb{across} the different replicates. 
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=\textwidth]{figures/figure-2.pdf}
 
-  \caption{{\bf A}: The convergence correlation, averaged across \gc{\textcite{Barghi2019-qy}} replicate
-    pairs, through time. Each line represents the convergence correlation
-    $\mathrm{cor}(\Delta p_{s}, \Delta p_{s})$ from a starting reference
-    generation $s$ to a later time $t$, which varies along the x-axis; each
-    line corresponds to a row of the temporal convergence correlation matrix
-    depicted to the right.  \gc{We note that convergent correlation
-      for the last timepoint is an outlier; we are unsure as to the cause of this, e.g. it does not appear to be driven by a single pair
-of replicates.} {\bf B}: The convergence covariance between
-    individual pairs of replicates in the \textcite{Kelly2019-dc} data. {\bf
-    C}:  The convergence covariance between individual pairs of replicates in
+  \caption{{\bf A}: The convergence correlation, averaged across
+    \textcite{Barghi2019-qy} replicate pairs, through time. Each line
+    represents the convergence correlation $\mathrm{cor}(\Delta p_{s}, \Delta
+    p_{s})$ from a starting reference generation $s$ to a later time $t$, which
+    varies along the x-axis; each line corresponds to a row of the temporal
+    convergence correlation matrix depicted to the right.  We note that
+    convergent correlation for the last timepoint is an outlier; we are unsure
+    as to the cause of this, e.g. it does not appear to be driven by a single
+    pair of replicates. {\bf B}: The convergence covariance between individual
+    pairs of replicates in the \textcite{Kelly2019-dc} data. {\bf C}:  The
+    convergence covariance between individual pairs of replicates in
     \parencite{Castro2019-uk} data, for the two selection lines  (LS1 and LS2)
     and the control (Ctrl); gray CIs are those using the complete dataset, blue
-    CIs exclude chromosomes 5 and 10 which harbor the two regions
-    \textcite{Castro2019-uk} found to have signals of parallel selection between
-    LS1 and LS2.}
+  CIs exclude chromosomes 5 and 10 which harbor the two regions
+\textcite{Castro2019-uk} found to have signals of parallel selection between
+LS1 and LS2.}
 
   \label{fig:figure-2}
 \end{figure}
@@ -405,7 +405,7 @@ total variance is due to shared allele frequency changes caused by selection
 (95\% CI [29\%, 41\%]; these are similar to the convergence correlation, see
 Supplementary Material \ref{supp:replicate-g}).
 
-\gc{Next,} we reanalyzed the Longshanks selection experiment, which selected for
+Next, we reanalyzed the Longshanks selection experiment, which selected for
 longer tibiae length relative to body size in mice, leading to a response to
 selection of about 5 standard deviations over the course of twenty generations
 \parencite{Marchini2014-de,Castro2019-uk}. This study includes two independent
@@ -420,7 +420,7 @@ comparisons to the control line not being significantly different from zero,
 while the comparison between the two Longshanks lines is statistically
 significantly different from zero (CIs [0.013, 0.037]).
 
-\gc{One} finding in the Longshanks study were two major-effect loci that showed
+One finding in the Longshanks study \vb{was that two} major-effect loci showed
 parallel frequency shifts between the two selection lines: a region harboring
 the gene Nkx3-2 known to be involved in limb development, and another region
 harboring six other candidate genes. We were curious to what extent our
@@ -432,9 +432,9 @@ these loci reside on (chromosomes 5 and 10), and re-calculating the temporal
 covariances. We find excluding these large effect loci has little impact on the
 confidence intervals (blue confidence intervals in Figure \ref{fig:figure-2}),
 indicating that these across-replicate covariances are indeed driven by a large
-number of loci. This is consistent with a signal of selection on a
-  polygenic trait driving genome-wide change, although we note that
-  large-effect loci can contribute to the indirect change at unlinked loci
+number of loci. This is consistent with a signal of selection on a polygenic
+trait driving genome-wide change, although we note that large-effect loci can
+contribute to the indirect change at unlinked loci
 \parencite{Robertson1961-ho,Santiago1995-hx}. 
 
 \gc{The presence of an unselected control line provides an alternative way to

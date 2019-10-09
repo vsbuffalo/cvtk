@@ -111,14 +111,14 @@
  reanalyze two \emph{Drosophila simulans} evolve-and-resequence studies, and
  one artificial selection experiment in mice, to quantify the effects of linked
  selection over short timescales using covariance among time-points and across
- replicates. We estimate that at least 17\% to 37\% of allele frequency
- change \vb{in these populations} is driven by selection in these experiments.
- Against this background of positive genome-wide temporal covariances we also
- identify signals of negative temporal covariance corresponding to reversals in
- the direction of selection for a reasonable proportion of loci over the time
- course of a selection experiment. Overall, we find that in the three studies
- we analyzed, linked selection has a large impact on short-term allele
- frequency dynamics that is readily distinguishable from genetic drift.
+ replicates. We estimate that at least 17\% to 37\% of allele frequency change
+ is driven by selection in these experiments.  Against this background of
+ positive genome-wide temporal covariances we also identify signals of negative
+ temporal covariance corresponding to reversals in the direction of selection
+ for a reasonable proportion of loci over the time course of a selection
+ experiment. Overall, we find that in the three studies we analyzed, linked
+ selection has a large impact on short-term allele frequency dynamics that is
+ readily distinguishable from genetic drift.
 
 \end{abstract}
 
@@ -164,8 +164,8 @@ temporal-genomic studies have begun in wild populations, some with the goal of
 finding variants that exhibit frequency changes consistent with fluctuating
 selection \parencite{Bergland2014-ij,Machado2018-cs}. In a previous paper, we
 proposed that one useful signal for understanding the genome-wide impact of
-polygenic linked selection detectable from genomic studies \vb{with multiple
-timepoints} is the temporal autocovariance in allele frequency changes
+polygenic linked selection detectable from genomic studies with multiple
+timepoints is the temporal autocovariance in allele frequency changes
 \parencite{Buffalo2019-io}.  These covariances are directly estimable from
 temporal genomic data and are created when the loci that underly heritable
 fitness variation perturb the frequencies of linked neutral alleles; in
@@ -174,9 +174,9 @@ covariances are zero in expectation.  Mathematically, temporal covariances are
 useful because it is natural to decompose the total variance in allele
 frequency change across a set of time intervals into the variances and
 covariances in allele frequency change among time intervals. Furthermore,
-biologically, these covariances reflect the extent to which \vb{neutral} allele
+biologically, these covariances reflect the extent to which neutral allele
 frequency changes in one generation predict changes in another due to a shared
-\vb{selection} pressure \vb{and linkage to selected loci}.
+selection pressures and associations to selected loci.
 
 Here, we provide the first empirical analyses to quantify the impact of linked
 selection acting over short timescales (tens of generations) across two evolve
@@ -187,7 +187,7 @@ significantly perturb genome-wide allele frequency changes across the genome in
 a manner that other approaches would not be able differentiate from genetic
 drift. We estimate the lower bound on the proportion of total variation in
 allele frequency change caused by selection, and the correlation between allele
-frequency changes between replicate populations caused by \vb{the} response to
+frequency changes between replicate populations caused by the response to
 convergent selection pressures. Overall, we demonstrate that linked selection
 has a powerful role in shaping genome-wide allele frequency changes over very
 short timescales.
@@ -396,16 +396,17 @@ and share linkage disequilibria common to the original natural founding
 population, we expected each of the three replicate populations to have
 positive between-replicate covariances. We find all three pairwise
 between-replicate covariances are positive and statistically significant
-(Figure \ref{fig:figure-2} B, 95\% CIs, [0.00635, 0.00860], [0.00636, 0.00859],
-[0.00608, 0.00834]). We estimate the convergent correlation coefficient across
-these replicates as 0.36 ($95\%$ block-bootstrap confidence interval $[0.31,
-0.40]$). Similarly, we can calculate the proportion of the total variance in
-allele frequency change from convergent selection pressure analogous to $G$
-where the numerator is is the convergent covariance and the denominator is the
-total variance (see Supplementary Material \ref{supp:replicate-g}). We find
-that 37\% of the total variance is due to shared allele frequency changes
-caused by selection (95\% CI [29\%, 41\%]; these are similar to the convergence
-correlation, see Supplementary Material \ref{supp:replicate-g}).
+(Figure \ref{fig:figure-2} B. We estimate the convergent correlation
+coefficient across these replicates as 0.36 ($95\%$ CI $[0.31, 0.40]$).
+Similarly, we can calculate the proportion of the total variance in allele
+frequency change from convergent selection pressure analogous to $G$ where the
+numerator is is the convergent covariance and the denominator is the total
+variance (see Supplementary Material \ref{supp:replicate-g}). We find that 37\%
+of the total variance is due to shared allele frequency changes caused by
+selection (95\% CI [29\%, 41\%]; these are similar to the convergence
+correlation, since the variance is relatively constant across the replicates.
+
+% 95\% CIs, [0.00635, 0.00860], [0.00636, 0.00859], [0.00608, 0.00834])
 
 Next, we reanalyzed the Longshanks selection experiment, which selected for
 longer tibiae length relative to body size in mice, leading to a response to
@@ -1401,7 +1402,7 @@ dislike (e.g. the covariance between the allele frequency change between Fall
 fluctuating selection operating for two timepoints, as the first covariance is
 negative, and the second is positive, and later covariances are not
 statistically differentiable from zero (which could occur if LD and additive
-genetic variance decay). However, the all other temporal covariances do not fit
+genetic variance decay). However, all other temporal covariances do not fit
 the pattern we would expect under genome-wide fluctuating selection.
 
 \begin{figure}[!ht]
@@ -1450,21 +1451,21 @@ It is unclear how strong the fluctuations would have to be to generate a
 genome-wide average signal of fluctuating selection from temporal covariances.
 For example, many loci could still show a signal of fluctuating selection, but
 the average signal could be overwhelmed by other signals of other selection. To
-investigate whether there was an genome-wide excess of loci showing evidence of
+investigate whether there was a genome-wide excess of loci showing evidence of
 fluctuating selection we reanalyzed the data of \parencite{Bergland2014-ij}
 using the same seasonal fluctuating model as the original paper. This model is
-a Binomial logit-linked GLM fit per-locus, where the Spring/Fall seasons are
-encoded as a dummy variable, and are regressed on the frequency data. We use
-the same binomial weighting procedure as \textcite{Bergland2014-ij}, where the
-weights are determined by the effective number of chromosomes, $N_{eff} = (2
-n_t d_t - 1) / (2 n_t + d_t)$ ($n_t$ and $d_t$ are the number of diploid
-individuals and the read depth at timepoint $t$, respectively). We fit this
-model on all loci marked as used in the VCF provided with the
-\textcite{Bergland2014-ij} study (doi:10.5061/dryad.v883p). Overall, our
-p-values for the Wald test for each locus closely match those of the original
-paper (Pearson correlation coefficient 0.98, p-value < $2.2 \times 10^{-16}$;
-see Supplementary Figure \ref{suppfig:bergland-pvalue-comparison} A), and the
-histograms of the p-values are nearly identical (Supplementary Figure
+a Binomial logit-linked GLM fit per-locus, where the frequencies are regressed
+on the Spring/Fall seasons are encoded as a dummy variable. We use the same
+binomial weighting procedure as \textcite{Bergland2014-ij}, where the weights
+are determined by the effective number of chromosomes, $N_{eff} = (2 n_t d_t -
+1) / (2 n_t + d_t)$ ($n_t$ and $d_t$ are the number of diploid individuals and
+the read depth at timepoint $t$, respectively). We fit this model on all loci
+marked as used in the VCF provided with the \textcite{Bergland2014-ij} study
+(doi:10.5061/dryad.v883p). Overall, our p-values for the Wald test for each
+locus closely match those of the original paper (Pearson correlation
+coefficient 0.98, p-value < $2.2 \times 10^{-16}$; see Supplementary Figure
+\ref{suppfig:bergland-pvalue-comparison} A), and the histograms of the p-values
+are nearly identical (Supplementary Figure
 \ref{suppfig:bergland-pvalue-comparison} B). \textcite{Bergland2014-ij} find
 loci with a significant association with season after a Benjamini and Hochberg
 FDR p-value adjustment \parencite{Benjamini1995-jy}, however, the null

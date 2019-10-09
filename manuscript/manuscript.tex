@@ -254,7 +254,7 @@ genome-wide covariance robust to large-effect loci. These robust estimates
 (Supplementary Table \ref{supp:table-trimmed-mean} and Supplementary Figure
 \ref{suppfig:barghi-trimmed-mean}) confirm the patterns we see using the mean
 covariance, confirming that genomic temporal covariances are non-zero due to
-the impact of selection \vb{acting across} many genomic windows. 
+the impact of selection acting across many genomic windows. 
 
 
 \begin{figure}[!htb]
@@ -358,7 +358,7 @@ relatively weak, and decay very quickly from an initial value of about 0.1
 a reasonable fraction of the initial response is shared over the replicates,
 this is followed by a rapid decay, a result consistent with the primary
 finding of the original \textcite{Barghi2019-qy} study: that alternative loci
-contribute to longer term adaptation \vb{across} the different replicates. 
+contribute to longer term adaptation across the different replicates. 
 
 \begin{figure}[!htb]
   \centering
@@ -417,13 +417,13 @@ line (Ctrl).  Consequently, this selection experiment offers a useful control
 to test our between-replicate covariances: we expect to see positive
 between-replicate covariance in the comparison between the two Longshanks
 selection lines, but not between the two pairwise comparisons between the
-control line and \vb{each of} the two Longshanks lines. We find that this is
+control line and each of the two Longshanks lines. We find that this is
 the case (gray confidence intervals in Figure \ref{fig:figure-2} C), with the
 two Longshanks comparisons to the control line not being significantly
 different from zero, while the comparison between the two Longshanks lines is
 statistically significantly different from zero (CIs [0.0129, 0.0400]).
 
-One finding in the Longshanks study \vb{was that two} major-effect loci showed
+One finding in the Longshanks study was that two major-effect loci showed
 parallel frequency shifts between the two selection lines: a region harboring
 the gene Nkx3-2 known to be involved in limb development, and another region
 containing six other candidate genes. We were curious to what extent our
@@ -446,30 +446,31 @@ total variance in allele frequency change of the control line (which excludes
 the effect of artificial selection on allele frequencies) to the total variance
 in frequency change of the Longshanks selection lines. We can partition the
 allele frequency change between the two timepoints (20 generations apart) for a
-Longshanks line as \vb{$\Delta p_{t,\mathrm{LS1}} = \Delta_{_{D}}
-  p_{t,\mathrm{LS1}} + \Delta_{_{U}} p_{t,\mathrm{LS1}} + \Delta_{_S}
-  p_{t,\mathrm{LS}}$} where these terms are the decomposition in the allele
-  frequency change due to drift in \vb{Longshanks replicate 1 ($\Delta_{_D}
-    p_{t,\mathrm{LS1}}$), selection unique to the LS1 replicate ($\Delta_{_U}
-    p_{t,\mathrm{LS1}}$), and selection response shared between the two
-    Longshanks replicates ($\Delta_{_S} p_{t,\mathrm{LS}}$) respectively (and
-  similarly for the Longshanks two line, LS2)}. By construction we will assume
-  that each of these terms are uncorrelated within replicates, and that only
-  the shared term covaries between the replicates.  Assuming that we can
-  approximate the contribution of genetic drift in the LS lines as the variance
-  in allele frequency change observed in the control, i.e.  \vb{$\var(\Delta
-    p_{t,\mathrm{Ctrl}}) = \var(\Delta_{_{D}}
-  p_{t,\mathrm{LS2}})=\var(\Delta_{_{D}} p_{t,\mathrm{LS2}})$}, then we can
-  estimate the increase in variance in allele frequency change due to selection
-  as $(\var(\Delta p_{t,\mathrm{LS1}}) + \var(\Delta p_{t,\mathrm{LS2}}))/2 -
-  \var(\Delta p_{t,\mathrm{Ctrl}})$ and the shared effect of selection across
-  selected lines as $\cov(\Delta p_{t,\mathrm{LS1}}, \Delta
-  p_{t,\mathrm{LS2}})$ (see Supplementary Material Section
-  \ref{supp:replicate-g} for more details).  We estimate at least 32\% (95\% CI
-  $[21\%, 48\%]$) of the variance in allele frequency change is driven by the
-  effects of selection, of which 14\% (95\% CI $[3\%, 33\%]$) is estimated to
-  be unique to a selection line, and 17\% (95\% CI $[9\%, 23\%]$) is the effect
-  of shared selection between the two Longshanks selection lines.
+Longshanks line as $\Delta p_{t,\mathrm{LS1}} = \Delta_{_{D}}
+p_{t,\mathrm{LS1}} + \Delta_{_{U}} p_{t,\mathrm{LS1}} + \Delta_{_S}
+p_{t,\mathrm{LS}}$ where these terms are the decomposition in the allele
+frequency change due to drift in Longshanks replicate 1 ($\Delta_{_D}
+p_{t,\mathrm{LS1}}$), selection unique to the LS1 replicate ($\Delta_{_U}
+p_{t,\mathrm{LS1}}$), and selection response shared between the two Longshanks
+replicates ($\Delta_{_S} p_{t,\mathrm{LS}}$) respectively (and similarly for
+the Longshanks two line, LS2). By construction we will assume that each of
+these terms are uncorrelated within replicates, and that only the shared term
+covaries between the replicates.  Assuming that we can approximate the
+contribution of genetic drift in the LS lines as the variance in allele
+frequency change observed in the control, i.e.  $\var(\Delta
+p_{t,\mathrm{Ctrl}}) = \var(\Delta_{_{D}}
+p_{t,\mathrm{LS2}})=\var(\Delta_{_{D}} p_{t,\mathrm{LS2}})$, then we can
+estimate the increase in variance in allele frequency change due to selection
+as $(\var(\Delta p_{t,\mathrm{LS1}}) + \var(\Delta p_{t,\mathrm{LS2}}))/2 -
+\var(\Delta p_{t,\mathrm{Ctrl}})$ and the shared effect of selection across
+selected lines as $\cov(\Delta p_{t,\mathrm{LS1}}, \Delta p_{t,\mathrm{LS2}})$
+(see Supplementary Material Section \ref{supp:replicate-g} for more details).
+We estimate at least 32\% (95\% CI $[21\%, 48\%]$) of the variance in allele
+frequency change is driven by the effects of selection, of which 14\% (95\% CI
+$[3\%, 33\%]$) is estimated to be unique to a selection line, and 17\% (95\% CI
+$[9\%, 23\%]$) is the effect of shared selection between the two Longshanks
+selection lines (and the value of the convergence correlation between the
+Longshanks lines, a related statistic, is 0.18, 95\% CI [0.0743, 0.254]).
 
 
 \begin{figure}
@@ -515,7 +516,7 @@ selective alleles.  Such reversals of selective dynamics could be occurring at
 other timepoints but the signal of a change in the direction of selection at
 particular loci may be washed out when we calculate our genome-wide average
 temporal covariances. To address this limitation, we calculated the
-distribution of the temporal covariances over \vb{100kb windowed covariances}
+distribution of the temporal covariances over 100kb windowed covariances
 (Figure \ref{fig:figure-3} shows these distributions pooling across all
 replicates; see Supplementary Figure
 \ref{suppfig:barghi-offset-replicate-panels} for individuals replicates). The
@@ -603,7 +604,7 @@ linkage disequilibrium and lower recombination should have greater temporal
 autocovariance than regions with lower LD and higher recombination. However,
 one limitation of these pooled sequence datasets is that none of the studies we
 reanalyzed estimated linkage disequilibria data for the evolved populations.
-\vb{While} there are LD data for a natural population of \emph{D. simulans}
+While there are LD data for a natural population of \emph{D. simulans}
 \parencite{Signor2018-wg,Howie2018-ay},  we did not find a relationship between
 temporal covariance and LD.  We believe this is driven by the idiosyncratic
 nature of LD in evolve-and-resequence populations, which often extends over
@@ -618,14 +619,14 @@ Our primary focus here has been on evolution in laboratory populations. It is
 unclear whether we should expect a similar impact of selection in natural
 populations. In some of these experiments, selection pressures may have been
 stronger or more sustained that in natural populations
-\vb{\parencite{Hendry1999-zu,Hairston2005-ga}}. Conversely, these lab
+\parencite{Hendry1999-zu,Hairston2005-ga}. Conversely, these lab
 populations were maintained at very small effective population sizes, estimated
 at 300, 450, and 45 for the \textcite{Barghi2019-qy}, \textcite{Kelly2019-dc},
 and \textcite{Castro2019-uk} studies respectively, which will amplify the role
 of genetic drift. The advantage of lab experiments is that they are closed
 populations, in natural populations temporal covariance could also arise from
 the systematic migration of alleles from differentiated populations.
-\vb{Adapting} these methods to natural populations will require either
+Adapting these methods to natural populations will require either
 populations that are reasonably closed to migration, or for the effect of
 migration to be accounted for possibly either by knowledge of allele
 frequencies in source populations or the identification of migrant individuals. 
@@ -636,17 +637,17 @@ a lot of promise for these approaches
 linked selection have found obligately sexual organisms have up to an 89\%
 reduction in genome-wide diversity over long time periods
 \parencite{McVicker2009-ax,Elyashiv2016-vt,Corbett-Detig2015-gt,Coop2016-gx,Comeron2014-nh}
-\gc{Thus linked selection makes a sizeable contribution to long-term allele
-frequency change in some species,} and there is reason to be hopeful that we
+Thus linked selection makes a sizeable contribution to long-term allele
+frequency change in some species, and there is reason to be hopeful that we
 could detect this from temporal data, which would help to resolve the
 timescales that linked selection act over. In our reanalysis of the
 \textcite{Barghi2019-qy} study, we find evidence of complex linked selection
 dynamics, with selection pressures flipping over time due to either
 environmental change, the breakup of epistatic combinations or advantageous
 haplotypes. Such patterns would be completely obscured in samples only from
-contemporary populations. \gc{Thus,} we can hope to have a much richer picture
-of the\gc{ impact of selection} as temporal sequencing becomes more common,
-\gc{allowing} us to observe the effects of ecological dynamics in genomic data
+contemporary populations. Thus, we can hope to have a much richer picture
+of the impact of selection as temporal sequencing becomes more common,
+allowing us to observe the effects of ecological dynamics in genomic data
 \parencite{Hairston2005-ga}.
 
 Furthermore, understanding the dynamics of linked selection over short

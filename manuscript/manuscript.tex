@@ -230,17 +230,17 @@ that are statistically significant (95\% block bootstraps CIs do not contain
 zero), consistent with linked selection perturbing genome-wide allele frequency
 changes over very short time periods. The covariances between all adjacent time
 intervals are positive and then decay towards zero as we look at more distant
-time intervals, as expected when directional selection affects linked variants'
-frequency trajectories until ultimately linkage disequilibrium and the additive
-genetic variance for fitness associated with neutral alleles decays
-\parencite{Buffalo2019-io}. The temporal covariances per replicate are noisier
-but this general pattern holds; see Supplementary Figure
-\ref{suppfig:barghi-cov-panels}. \textcite{Barghi2019-qy}'s design means that
-the covariances we see in adjacent time intervals are on average ten
-generations apart, and given the temporal decay in covariance we see, the
-covariances on shorter time-scales (e.g. if adjacent generations had been
-sequenced) may well be higher yet (see Supplementary Material Section
-\ref{supp:barghi-covs} for more details).
+time intervals (Figure \ref{fig:figure-1} A), as expected when directional
+selection affects linked variants' frequency trajectories until ultimately
+linkage disequilibrium and the additive genetic variance for fitness associated
+with neutral alleles decays \parencite{Buffalo2019-io}. The temporal
+covariances per replicate are noisier but this general pattern holds; see
+Supplementary Figure \ref{suppfig:barghi-cov-panels}.
+\textcite{Barghi2019-qy}'s design means that the covariances we see in adjacent
+time intervals are on average ten generations apart, and given the temporal
+decay in covariance we see, the covariances on shorter time-scales (e.g. if
+adjacent generations had been sequenced) may well be higher yet (see
+Supplementary Material Section \ref{supp:barghi-covs} for more details).
 
 One concern is that these covariances reflect the localized impact of a few
 large-effect loci rather than selection on a polygenic trait. Since our
@@ -282,12 +282,12 @@ the impact of selection acting across many genomic windows.
 While the presence of positive temporal covariances is consistent with
 selection affecting allele frequencies over time, this measure is not easily
 interpretable. We can calculate a more intuitive measure from the temporal
-  covariances to quantify the impact of selection on allele frequency change:
-the ratio of total covariance in allele frequency change to the total variance
-in allele frequency change. We denote the change in allele frequency as
-$\Delta p_t = p_{t+1}-p_t$, where $p_t$ is the allele frequency in generation
-$t$. Since the total variation in allele frequency change can be partitioned
-into variance and covariance components, $\var(p_t - p_0) = \sum_{i=0}^{t-1}
+covariances to quantify the impact of selection on allele frequency change: the
+ratio of total covariance in allele frequency change to the total variance in
+allele frequency change. We denote the change in allele frequency as $\Delta
+p_t = p_{t+1}-p_t$, where $p_t$ is the allele frequency in generation $t$.
+Since the total variation in allele frequency change can be partitioned into
+variance and covariance components, $\var(p_t - p_0) = \sum_{i=0}^{t-1}
 \var(\Delta p_i) + \sum_{i \ne j}^{t-1} \cov(\Delta p_i, \Delta p_j)$ (we bias
 correct these for sequencing depth), and the covariances are zero when drift
 acts alone, this is a lower bound on how much of the variance in allele
@@ -308,7 +308,7 @@ be strongly conservative, since the temporal covariances within each
 ten-generation block are not directly observable, and thus are not included in
 the numerator of $G(t)$. Still, we find a remarkably strong signal. Greater
 than $20\%$ of total, genome-wide allele frequency change over 60 generations
-is the result of selection (Figure \ref{fig:figure-1}B).
+is the result of selection (Figure \ref{fig:figure-1} B).
 
 Additionally, we looked for a signal of temporal autocovariance in
 \textcite{Bergland2014-ij}, a study that collected \emph{Drosophila
@@ -347,11 +347,11 @@ where $A$ and $B$ here are two replicate labels, and for the
 
 We've calculated the convergent correlation for all rows of the replicate
 covariance matrices. Like temporal covariances, we visualize these through time
-(Figure \ref{fig:figure-2}A), with each line representing the convergent
+(Figure \ref{fig:figure-2} A), with each line representing the convergent
 correlation from a particular reference generation $s$ as it varies with $t$
 (shown on the x-axis). In other words, each of the colored lines corresponds to
 the like-colored row of the convergence correlation matrix (upper left in
-Figure \ref{fig:figure-2}A). We find these convergent covariances are
+Figure \ref{fig:figure-2} A). We find these convergent covariances are
 relatively weak, and decay very quickly from an initial value of about 0.1
 (95\% block bootstrap confidence intervals $[0.094, 0.11]$) to around 0.01
 (95\% CIs [0.0087, 0.015]) within 20 generations. This suggests that while
@@ -1189,195 +1189,6 @@ recapitulate the same pattern (Supplementary Figure
 %Still, we sign-permute loci at the chromosome level and find that the tail
 %probabilities do still indicate a reverse in the direction of selection. }
 
-\clearpage
-
-\setcounter{section}{1}
-\section*{Supplementary Figures}
-
-
-\subsubsection{Bias Correction for \textcite{Barghi2019-qy}}
-
-We have investigated the effectiveness of our correction on real data by
-exploiting the relationship between sampling depth and the magnitude of the
-variance and covariance biases, and comparing the observed variances and
-covariances before and after correction. We plot the variance and covariance
-(between adjacent timepoints) before and after the bias correction against the
-average sample depth in 100kb genomic windows in Figure
-\ref{suppfig:barghi-correction}. Overall, we find the biased-correction
-procedure removes the relationship between variance and covariance and depth, indicating it is working adequately.
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[]{figures/barghi-correction-plot.pdf}
-
-  \caption{The variance and covariances from the \textcite{Barghi2019-qy}
-    study, calculated in 100kb genomic windows plotted against average depth in
-    a window before and after bias correction.  Each panel has a least-squares
-    estimate between the variance and covariance, and the average depth.
-    Overall, the bias correction corrects sampling bias in both the variance
-    and covariance such that the relationship with depth is constant. Colors
-    indicate the different chromosomes of \emph{D. simulans}; we have excluded
-  the X chromosome (yellow points) and chromosome 4 points (green points to far
-right) from the regression due to large differences in average coverage.}
-
-  \label{suppfig:barghi-correction}
-\end{figure}
-
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{figures/barghi-cov-panels.pdf}
-
-  \caption{The temporal covariances from the \textcite{Barghi2019-qy} study,
-  for each replicate individually. As in Figure \ref{fig:figure-1}, each line
-  follows the temporal covariances from some initial reference generation through
-  time, which represent the rows of temporal covariance matrix.}
-
-  \label{suppfig:barghi-cov-panels}
-\end{figure}
-
-
-
-\subsection{\textcite{Barghi2019-qy} Trimmed Window Covariances}
-
-Here we report median and trimmed mean of the windowed covariances. We note
-that the median covariance is also limiting result of a trimmed mean that
-symmetrically excludes the upper and lower $\alpha$ tails to calculate the
-trimmed average windowed covariance. As $\alpha$ increases to 0.5, the trimmed
-covariance converges to the median windowed covariance (by the definition of
-the median; see Supplementary Figure \ref{suppfig:barghi-trimmed-mean}). Thus
-our genomic temporal covariances are non-zero due to the impact of selection on
-many genomic windows.  
-
-\begin{table}
-  \centering
-  \footnotesize
-  \centering
-  \begin{tabular}{l c c c c c c}
-
-    s & t & median & median 95\% CI & trimmed mean & trimmed mean 95\% CI \\ \hline
-    0 & 10 & 1.629 & $[1.532, 1.738]$ & 1.874 & $[1.777, 1.969]$ \\
-    0 & 20 & 0.371 & $[0.276, 0.465]$ & 0.491 & $[0.403, 0.585]$ \\
-    0 & 30 & 0.479 & $[0.4, 0.589]$ & 0.516 & $[0.434, 0.602]$ \\
-    0 & 40 & 0.059 & $[-0.012, 0.15]$ & 0.027 & $[-0.05, 0.099]$ \\
-    0 & 50 & -0.204 & $[-0.271, -0.125]$ & -0.259 & $[-0.329, -0.187]$ \\
-    10 & 20 & 1.549 & $[1.427, 1.659]$ & 1.722 & $[1.617, 1.83]$ \\
-    10 & 30 & 0.438 & $[0.339, 0.539]$ & 0.506 & $[0.399, 0.609]$ \\
-    10 & 40 & 0.233 & $[0.149, 0.328]$ & 0.254 & $[0.159, 0.343]$ \\
-    10 & 50 & -0.355 & $[-0.454, -0.289]$ & -0.319 & $[-0.401, -0.237]$ \\
-    20 & 30 & 1.981 & $[1.856, 2.095]$ & 2.195 & $[2.084, 2.302]$ \\
-    20 & 40 & 0.792 & $[0.698, 0.894]$ & 0.903 & $[0.815, 0.999]$ \\
-    20 & 50 & 0.123 & $[0.042, 0.207]$ & 0.221 & $[0.141, 0.309]$ \\
-    30 & 40 & 1.296 & $[1.208, 1.425]$ & 1.385 & $[1.287, 1.483]$ \\
-    30 & 50 & 0.07 & $[-0.037, 0.183]$ & 0.116 & $[0.023, 0.21]$ \\
-    40 & 50 & 1.36 & $[1.271, 1.446]$ & 1.513 & $[1.427, 1.601]$ \\
-
-
-   \end{tabular}
-   \caption{Table of median of windowed covariance estimates ($\cov(\Delta p_s,
-     \Delta p_t) \times 100$) between generations $t$ and $s$ and the trimmed
-     mean windowed covariance which excludes the lower and upper 5\% windows
-     with the highest covariance.}
-  \label{supp:table-trimmed-mean}
-
-\end{table}
-
-
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[]{figures/barghi-trimmed-mean.pdf}
-
-  \caption{The genome-wide covariance ($\cov(\Delta p_0, \Delta p_10)$ pooling
-    all replicates) averaged (red line) and the median windowed covariance
-    (blue) for the \textcite{Barghi2019-qy} dataset. The trimmed average window
-    covariance, excluding the $\alpha$ lower and upper tails, converges to the
-     median windowed covariance. This indicates that genome-wide covariance are
-     not being overly dominated by a large-effect loci in few windows.}
-
-  \label{suppfig:barghi-trimmed-mean}
-\end{figure}
-
-
-
-\clearpage
-\subsubsection{\textcite{Barghi2019-qy} Empirical Null and Windowed Covariance Distributions}
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[]{figures/barghi-cross-validation-binsize.pdf}
-
-  \caption{We chose number of bins used in the histograms of Figure
-    \ref{fig:figure-3} via an analytic expression for the cross-validation
-    risk, based on the equation 6.16 of (\cite{Wasserman2006-jl}, p. 129).
-    Above, we plot the cross-validation risk for various numbers of bins, for
-    each of the four off-diagonals of the temporal covariance matrix that we
-    analyze. Overall, because the number of data points is large, oversmoothing
-    is less of a problem, leading the cross-validation risk to be relatively
-    flat across a large number of bins. Each gray point indicates the minimal
-    risk for a particular off-diagonal, and the dashed line indicates the best
-    average binwidth across off-diagonals.}
-  \label{suppfig:barghi-cross-validation-binsize}
-\end{figure}
-
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[]{figures/barghi-offset-replicate-panels.pdf}
-
-  \caption{The distribution of windowed temporal covariances alongside the
-    empirical neutral null for five randomly sampled replicates (columns), for
-    $k=2$ (first row) and $k=5$ (second row). The main figure of the paper
-    pools all replicate window and empirical neutral null covariances; we show
-    here the windowed temporal covariances tend to shift from being positive (a
-    heavier right tail) to become more negative (a heavier left tail) through
-    time within particular replicates.}
-  
-  \label{suppfig:barghi-offset-replicate-panels}
-\end{figure}
-
-
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[]{figures/barghi-offset-panels.pdf}
-
-  \caption{The distribution of temporal covariances calculated across 100kb
-    genomic windows from \textcite{Barghi2019-qy}'s study (orange) and the
-    block sign permuted empirical neutral null distribution of the windowed
-    covariances (blue). Each panel shows these windowed covariances and the
-    empirical null distribution for covariances $\cov(\Delta p_t, \Delta p_{t+k})$,
-  $k$ is the number of generations between allele frequency changes.}
-  \label{suppfig:barghi-empnull-tilecovs}
-\end{figure}
-
-
-\clearpage
-\subsubsection{\textcite{Barghi2019-qy} Tail Probabilities for Windowed Covariances Distributions}
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[]{figures/barghi-tailprobs-panels.pdf}
-
-  \caption{\textcite{Barghi2019-qy} tail probabilities compared to
-  sign-permuted empirical null distribution for various $\alpha$ levels.}
-
-  \label{suppfig:barghi-tailprobs-panels}
-\end{figure}
-
-\begin{figure}[!ht]
-  \centering
-
-  \includegraphics[]{figures/barghi-tailprobs-seqid-20.pdf}
-
-  \caption{The 20\% lower and upper tail probabilities for the observed
-    windowed covariances from the \textcite{Barghi2019-qy} study, based on
-    sign-permuting at the chromosome level. This permutation empirical null is
-    robust to long-range linkage disequilibrium acting over entire chromosomes
-  (see Supplementary Material section \ref{supp:empirical-null}).}
-  
-  \label{suppfig:barghi-tailprobs-seqid}
-\end{figure}
 
 \subsubsection{\textcite{Bergland2014-ij} Re-Analysis}
 \label{supp:bergland-reanalysis}
@@ -1528,4 +1339,195 @@ non-seasonal temporal structure is also evident in our temporal covariances
 evidence of selection (non-zero temporal covariances), yet the pattern does not
 follow that of seasonal fluctuating selection.  
 
+
+\setcounter{section}{1}
+\section*{Supplementary Figures}
+
+
+\subsubsection{Bias Correction for \textcite{Barghi2019-qy}}
+
+We have investigated the effectiveness of our correction on real data by
+exploiting the relationship between sampling depth and the magnitude of the
+variance and covariance biases, and comparing the observed variances and
+covariances before and after correction. We plot the variance and covariance
+(between adjacent timepoints) before and after the bias correction against the
+average sample depth in 100kb genomic windows in Figure
+\ref{suppfig:barghi-correction}. Overall, we find the biased-correction
+procedure removes the relationship between variance and covariance and depth, indicating it is working adequately.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-correction-plot.pdf}
+
+  \caption{The variance and covariances from the \textcite{Barghi2019-qy}
+    study, calculated in 100kb genomic windows plotted against average depth in
+    a window before and after bias correction.  Each panel has a least-squares
+    estimate between the variance and covariance, and the average depth.
+    Overall, the bias correction corrects sampling bias in both the variance
+    and covariance such that the relationship with depth is constant. Colors
+    indicate the different chromosomes of \emph{D. simulans}; we have excluded
+  the X chromosome (yellow points) and chromosome 4 points (green points to far
+right) from the regression due to large differences in average coverage.}
+
+  \label{suppfig:barghi-correction}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/barghi-cov-panels.pdf}
+
+  \caption{The temporal covariances from the \textcite{Barghi2019-qy} study,
+  for each replicate individually. As in Figure \ref{fig:figure-1}, each line
+  follows the temporal covariances from some initial reference generation through
+  time, which represent the rows of temporal covariance matrix.}
+
+  \label{suppfig:barghi-cov-panels}
+\end{figure}
+
+
+\clearpage
+
+\subsection{\textcite{Barghi2019-qy} Trimmed Window Covariances}
+
+Here we report median and trimmed mean of the windowed covariances. We note
+that the median covariance is also limiting result of a trimmed mean that
+symmetrically excludes the upper and lower $\alpha$ tails to calculate the
+trimmed average windowed covariance. As $\alpha$ increases to 0.5, the trimmed
+covariance converges to the median windowed covariance (by the definition of
+the median; see Supplementary Figure \ref{suppfig:barghi-trimmed-mean}). Thus
+our genomic temporal covariances are non-zero due to the impact of selection on
+many genomic windows.  
+
+\begin{table}
+  \centering
+  \footnotesize
+  \centering
+  \begin{tabular}{l c c c c c c}
+
+    s & t & median & median 95\% CI & trimmed mean & trimmed mean 95\% CI \\ \hline
+    0 & 10 & 1.629 & $[1.532, 1.738]$ & 1.874 & $[1.777, 1.969]$ \\
+    0 & 20 & 0.371 & $[0.276, 0.465]$ & 0.491 & $[0.403, 0.585]$ \\
+    0 & 30 & 0.479 & $[0.4, 0.589]$ & 0.516 & $[0.434, 0.602]$ \\
+    0 & 40 & 0.059 & $[-0.012, 0.15]$ & 0.027 & $[-0.05, 0.099]$ \\
+    0 & 50 & -0.204 & $[-0.271, -0.125]$ & -0.259 & $[-0.329, -0.187]$ \\
+    10 & 20 & 1.549 & $[1.427, 1.659]$ & 1.722 & $[1.617, 1.83]$ \\
+    10 & 30 & 0.438 & $[0.339, 0.539]$ & 0.506 & $[0.399, 0.609]$ \\
+    10 & 40 & 0.233 & $[0.149, 0.328]$ & 0.254 & $[0.159, 0.343]$ \\
+    10 & 50 & -0.355 & $[-0.454, -0.289]$ & -0.319 & $[-0.401, -0.237]$ \\
+    20 & 30 & 1.981 & $[1.856, 2.095]$ & 2.195 & $[2.084, 2.302]$ \\
+    20 & 40 & 0.792 & $[0.698, 0.894]$ & 0.903 & $[0.815, 0.999]$ \\
+    20 & 50 & 0.123 & $[0.042, 0.207]$ & 0.221 & $[0.141, 0.309]$ \\
+    30 & 40 & 1.296 & $[1.208, 1.425]$ & 1.385 & $[1.287, 1.483]$ \\
+    30 & 50 & 0.07 & $[-0.037, 0.183]$ & 0.116 & $[0.023, 0.21]$ \\
+    40 & 50 & 1.36 & $[1.271, 1.446]$ & 1.513 & $[1.427, 1.601]$ \\
+
+
+   \end{tabular}
+   \caption{Table of median of windowed covariance estimates ($\cov(\Delta p_s,
+     \Delta p_t) \times 100$) between generations $t$ and $s$ and the trimmed
+     mean windowed covariance which excludes the lower and upper 5\% windows
+     with the highest covariance.}
+  \label{supp:table-trimmed-mean}
+
+\end{table}
+
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-trimmed-mean.pdf}
+
+  \caption{The genome-wide covariance ($\cov(\Delta p_0, \Delta p_10)$ pooling
+    all replicates) averaged (red line) and the median windowed covariance
+    (blue) for the \textcite{Barghi2019-qy} dataset. The trimmed average window
+    covariance, excluding the $\alpha$ lower and upper tails, converges to the
+     median windowed covariance. This indicates that genome-wide covariance are
+     not being overly dominated by a large-effect loci in few windows.}
+
+  \label{suppfig:barghi-trimmed-mean}
+\end{figure}
+
+
+
+\clearpage
+
+\subsubsection{\textcite{Barghi2019-qy} Empirical Null and Windowed Covariance Distributions}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-cross-validation-binsize.pdf}
+
+  \caption{We chose number of bins used in the histograms of Figure
+    \ref{fig:figure-3} via an analytic expression for the cross-validation
+    risk, based on the equation 6.16 of (\cite{Wasserman2006-jl}, p. 129).
+    Above, we plot the cross-validation risk for various numbers of bins, for
+    each of the four off-diagonals of the temporal covariance matrix that we
+    analyze. Overall, because the number of data points is large, oversmoothing
+    is less of a problem, leading the cross-validation risk to be relatively
+    flat across a large number of bins. Each gray point indicates the minimal
+    risk for a particular off-diagonal, and the dashed line indicates the best
+    average binwidth across off-diagonals.}
+  \label{suppfig:barghi-cross-validation-binsize}
+\end{figure}
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-offset-replicate-panels.pdf}
+
+  \caption{The distribution of windowed temporal covariances alongside the
+    empirical neutral null for five randomly sampled replicates (columns), for
+    $k=2$ (first row) and $k=5$ (second row). The main figure of the paper
+    pools all replicate window and empirical neutral null covariances; we show
+    here the windowed temporal covariances tend to shift from being positive (a
+    heavier right tail) to become more negative (a heavier left tail) through
+    time within particular replicates.}
+  
+  \label{suppfig:barghi-offset-replicate-panels}
+\end{figure}
+
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-offset-panels.pdf}
+
+  \caption{The distribution of temporal covariances calculated across 100kb
+    genomic windows from \textcite{Barghi2019-qy}'s study (orange) and the
+    block sign permuted empirical neutral null distribution of the windowed
+    covariances (blue). Each panel shows these windowed covariances and the
+    empirical null distribution for covariances $\cov(\Delta p_t, \Delta p_{t+k})$,
+  $k$ is the number of generations between allele frequency changes.}
+  \label{suppfig:barghi-empnull-tilecovs}
+\end{figure}
+
+
+\clearpage
+\subsubsection{\textcite{Barghi2019-qy} Tail Probabilities for Windowed Covariances Distributions}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[]{figures/barghi-tailprobs-panels.pdf}
+
+  \caption{\textcite{Barghi2019-qy} tail probabilities compared to
+  sign-permuted empirical null distribution for various $\alpha$ levels.}
+
+  \label{suppfig:barghi-tailprobs-panels}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+
+  \includegraphics[]{figures/barghi-tailprobs-seqid-20.pdf}
+
+  \caption{The 20\% lower and upper tail probabilities for the observed
+    windowed covariances from the \textcite{Barghi2019-qy} study, based on
+    sign-permuting at the chromosome level. This permutation empirical null is
+    robust to long-range linkage disequilibrium acting over entire chromosomes
+  (see Supplementary Material section \ref{supp:empirical-null}).}
+  
+  \label{suppfig:barghi-tailprobs-seqid}
+\end{figure}
 \end{document}

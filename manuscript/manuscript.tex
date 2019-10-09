@@ -983,7 +983,7 @@ of linked selection to the variance in allele frequency change here, the
 presence of a positive observed covariance between allele frequency change can
 only be caused linked selection. 
 
-\subsubsection{Block Bootstrap Procedure}
+\subsection{Block Bootstrap Procedure}
 \label{supp:block-bootstrap}
 
 % TODO: put equations in?
@@ -1024,7 +1024,7 @@ estimate the $1-\alpha = 95\%$ pivot confidence intervals (p. 33
 where $\widehat{\theta}$ is the estimate, and $q_x$ is bootstrap quantile for
 probability $x$.
 
-\subsubsection{Replicate $G$ and Partitioning the Variance in Allele Frequency}
+\subsection{Replicate $G$ and Partitioning the Variance in Allele Frequency}
 \label{supp:replicate-g}
 
 We define a statistic similar to $G$ for estimating the proportion of allele
@@ -1131,7 +1131,7 @@ contribute towards the total. To derive confidence intervals for the estimates
 of unique and shared effects of selection, we use a block bootstrap procedure
 as described in Supplementary Materials Section \ref{supp:block-bootstrap}.
 
-\subsubsection{The Empirical Neutral Null Windowed Covariance Distribution}
+\subsection{The Empirical Neutral Null Windowed Covariance Distribution}
 \label{supp:empirical-null}
 
 To detect an excess of genomic regions with unusually high or low covariances,
@@ -1190,7 +1190,7 @@ recapitulate the same pattern (Supplementary Figure
 %probabilities do still indicate a reverse in the direction of selection. }
 
 
-\subsubsection{\textcite{Bergland2014-ij} Re-Analysis}
+\subsection{\textcite{Bergland2014-ij} Re-Analysis}
 \label{supp:bergland-reanalysis}
 
 
@@ -1344,7 +1344,7 @@ follow that of seasonal fluctuating selection.
 \section*{Supplementary Figures}
 
 
-\subsubsection{Bias Correction for \textcite{Barghi2019-qy}}
+\subsection{Bias Correction for \textcite{Barghi2019-qy}}
 
 We have investigated the effectiveness of our correction on real data by
 exploiting the relationship between sampling depth and the magnitude of the
@@ -1374,6 +1374,7 @@ right) from the regression due to large differences in average coverage.}
 
 \clearpage
 
+\subsubsection{\textcite{Barghi2019-qy} Temporal Covariances Per Replicate}
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/barghi-cov-panels.pdf}
@@ -1390,16 +1391,6 @@ right) from the regression due to large differences in average coverage.}
 \clearpage
 
 \subsection{\textcite{Barghi2019-qy} Trimmed Window Covariances}
-
-Here we report median and trimmed mean of the windowed covariances. We note
-that the median covariance is also limiting result of a trimmed mean that
-symmetrically excludes the upper and lower $\alpha$ tails to calculate the
-trimmed average windowed covariance. As $\alpha$ increases to 0.5, the trimmed
-covariance converges to the median windowed covariance (by the definition of
-the median; see Supplementary Figure \ref{suppfig:barghi-trimmed-mean}). Thus
-our genomic temporal covariances are non-zero due to the impact of selection on
-many genomic windows.  
-
 \begin{table}
   \centering
   \footnotesize
@@ -1435,6 +1426,17 @@ many genomic windows.
 
 
 
+Here we report median and trimmed mean of the windowed covariances
+(Supplementary Table \ref{supp:table-trimmed-mean}). We note that the median
+covariance is also limiting result of a trimmed mean that symmetrically
+excludes the upper and lower $\alpha$ tails to calculate the trimmed average
+windowed covariance. As $\alpha$ increases to 0.5, the trimmed covariance
+converges to the median windowed covariance (by the definition of the median;
+see Supplementary Figure \ref{suppfig:barghi-trimmed-mean}). Thus our genomic
+temporal covariances are non-zero due to the impact of selection on many
+genomic windows.  
+
+
 \begin{figure}[!ht]
   \centering
   \includegraphics[]{figures/barghi-trimmed-mean.pdf}
@@ -1453,7 +1455,7 @@ many genomic windows.
 
 \clearpage
 
-\subsubsection{\textcite{Barghi2019-qy} Empirical Null and Windowed Covariance Distributions}
+\subsection{\textcite{Barghi2019-qy} Empirical Null and Windowed Covariance Distributions}
 
 \begin{figure}[!ht]
   \centering
@@ -1471,6 +1473,7 @@ many genomic windows.
     average binwidth across off-diagonals.}
   \label{suppfig:barghi-cross-validation-binsize}
 \end{figure}
+
 
 
 \begin{figure}[!ht]
@@ -1505,7 +1508,7 @@ many genomic windows.
 
 
 \clearpage
-\subsubsection{\textcite{Barghi2019-qy} Tail Probabilities for Windowed Covariances Distributions}
+\subsection{\textcite{Barghi2019-qy} Tail Probabilities for Windowed Covariances Distributions}
 
 \begin{figure}[!ht]
   \centering

@@ -656,17 +656,7 @@ detectable genomic signature, to address long-standing questions concerning
 linked selection, evolutionary quantitative genetics, and the overall impact
 selection has on genetic variation. 
 
-\section{Acknowledgments} 
-
-We would like to thank the authors of the original studies we've analyzed,
-including Neda Barghi, Christian Schl{\"o}tterer, John Kelly, Kimberly Hughes,
-Frank Chan, Campbell Rolian, Nick Barton, Alan Bergland, and Dmitri Petrov. We
-would also like to thank Doc Edge for helpful statistical advice, and Matt
-Osmond, Erin Calfee, and Sivan Yair for helpful discussions. This research was
-supported by an NSF Graduate Research Fellowship grant awarded to VB (1650042),
-and NIH (R01-GM108779) and NSF (1353380) awarded to GC.
-
-\Section{Materials and Methods}
+\section{Materials and Methods}
 
 \subsection{Datasets Analyzed}
 
@@ -694,16 +684,18 @@ series of diagnostic plots that ensure that the procedure removes the
 relationship between sampling depth and uncorrected variance and covariances
 (Supplementary Figure \ref{suppfig:bergland-correction}, XXX).
 
-\subsection{Estimating $G(t)$ and the Convergence Correlation}
 
+\subsection{Estimating Uncertainty with a Block Bootstrap}
 
-
-\subsection{Block Bootstrap}
-
-
-
-
-
+To infer the uncertainty of covariance, convergence correlation, and $G(t)$
+estimates, we used a block bootstrap procedure. This bootstrap procedure
+resamples blocks of data points, rather than individual data points, to infer
+the uncertainty of an statistic in the presence of unknown correlation between
+loci. As most estimators in this paper are ratios (e.g. covariance standardize
+by sample heterozygosity, $G(t)$, and the convergence correlation) which we
+estimate with a ratio of averages, we exploit the linearity of expectation for
+efficient computation of bootstrap samples (see \ref{supp:block-bootstrap} for
+details).
 
 \subsection{Partitioning Unique and Shared Selection Effects}
 
@@ -727,7 +719,24 @@ as $(\var(\Delta p_{t,\mathrm{LS1}}) + \var(\Delta p_{t,\mathrm{LS2}}))/2 -
 \var(\Delta p_{t,\mathrm{Ctrl}})$ and the shared effect of selection across
 selected lines as $\cov(\Delta p_{t,\mathrm{LS1}}, \Delta p_{t,\mathrm{LS2}})$. 
 
+\subsection{Windowed Covariance and the Empirical Neutral Null}
+
+
+\section{Acknowledgments} 
+
+We would like to thank the authors of the original studies we've analyzed,
+including Neda Barghi, Christian Schl{\"o}tterer, John Kelly, Kimberly Hughes,
+Frank Chan, Campbell Rolian, Nick Barton, Alan Bergland, and Dmitri Petrov. We
+would also like to thank Doc Edge for helpful statistical advice, and Matt
+Osmond, Erin Calfee, and Sivan Yair for helpful discussions. This research was
+supported by an NSF Graduate Research Fellowship grant awarded to VB (1650042),
+and NIH (R01-GM108779) and NSF (1353380) awarded to GC.
+
+
+
 \printbibliography
+
+
 
 \setcounter{section}{1}
 \section*{Supplementary Material}
@@ -1008,13 +1017,7 @@ only be caused linked selection.
 
 % TODO: put equations in?
 
-To infer the uncertainty of covariance, convergence correlation, and $G(t)$
-estimates, we used a block bootstrap procedure. This is a version of the
-bootstrap that resamples blocks of data points, rather than individual data
-points, to infer the uncertainty of an statistic in the presence of unknown
-correlation structure between data. With genome-wide data, linkage
-disequilibria between sites creates complex and unknown dependencies between
-variants. The estimators used in this paper are predominantly ratios, e.g.
+The estimators used in this paper are predominantly ratios, e.g.
 temporal-replicate covariance standardized by half the heterozygosity, $G(t)$
 which is the ratio of covariance to total variance, and the convergence
 correlation (equation \eqref{eq:conv-corr}). In these cases, we can exploit the
@@ -1363,6 +1366,21 @@ follow that of seasonal fluctuating selection.
 \setcounter{section}{1}
 \section*{Supplementary Figures}
 
+\subsection{PCA of \textcite{Barghi2019-qy} replicates}
+
+\begin{figure}[!ht]
+  \centering
+
+  \includegraphics[]{figures/barghi-panel-pca.pdf}
+
+  \caption{A PCA on the centered and standardized population frequencies for
+  each replicate (each color) for all its sequenced timepoints (the connected
+  series of points). All replicates start from the same source population, and
+  thus are overlapping in the center; as each replicate evolves independently it
+  diverges from the other replicates in PCA space.}
+  
+  \label{suppfig:barghi-pca}
+\end{figure}
 
 \subsection{Bias Correction for \textcite{Barghi2019-qy}}
 
@@ -1553,4 +1571,6 @@ genomic windows.
   
   \label{suppfig:barghi-tailprobs-seqid}
 \end{figure}
+
+
 \end{document}

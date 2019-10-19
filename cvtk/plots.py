@@ -69,7 +69,7 @@ def row_block_mean(mat, width, axis):
     return np.stack(block_means)
 
 
-def rep_plot_pca(df, x=1, y=2, s=300, figsize=None, dpi=None, label=True, cmap=None):
+def rep_plot_pca(df, x=1, y=2, s=300, figsize=None, dpi=None, label=True, cmap=None, fontsize=12):
     l1, l2 = f"pc{int(x)}", f"pc{int(y)}"
     pc1, pc2 = df[l1], df[l2]
     gen, rep = df['gen'], df['rep']
@@ -82,28 +82,31 @@ def rep_plot_pca(df, x=1, y=2, s=300, figsize=None, dpi=None, label=True, cmap=N
     label_df = df[[l1, l2, 'rep', 'gen']]
     if label:
         for pc1, pc2, rep, gen in label_df.itertuples(index=False):
-            plt.text(pc1, pc2, s=f"{rep}", horizontalalignment='center', verticalalignment='center')
+            plt.text(pc1, pc2, s=f"{rep}", horizontalalignment='center', verticalalignment='center', fontsize=fontsize)
     plt.xlabel(l1.upper())
     plt.ylabel(l2.upper())
     plt.tight_layout()
     return plt
 
 
-def rep_plot_pca2(df, x=1, y=2, s=300, figsize=None, dpi=None, label=True, cmap=None):
+def rep_plot_pca2(df, x=1, y=2, s=300, figsize=None, dpi=None, label=True, cmap=None, 
+                  fontsize=12):
     l1, l2 = f"pc{int(x)}", f"pc{int(y)}"
     pc1, pc2 = df[l1], df[l2]
     gen, rep = df['gen'], df['rep']
     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
     ax.scatter(pc1, pc2, c=integerize(rep), s=s, zorder=2, cmap=cmap)
     # plot lines between consecutive generations
-    for rep in rep.unique():
-        this_rep = df[df['rep'] == rep]
-        ax.plot(this_rep[l1], this_rep[l2], '--', color='0.8', zorder=1)
+    for r in rep.unique():
+        this_rep = df[df['rep'] == r]
+        ax.plot(this_rep[l1], this_rep[l2], '--', color='0.8', zorder=-1)
     # each marker gets a label, of the current replicate
     label_df = df[[l1, l2, 'rep', 'gen']]
     if label:
         for pc1, pc2, rep, gen in label_df.itertuples(index=False):
-            ax.text(pc1, pc2, s=f"{gen}", horizontalalignment='center', verticalalignment='center')
+            ax.text(pc1, pc2, s=f"{gen}", horizontalalignment='center', 
+                    verticalalignment='center', fontsize=fontsize, 
+                    zorder=rep)
     ax.set_xlabel(l1.upper())
     ax.set_ylabel(l2.upper())
     #plt.tight_layout()

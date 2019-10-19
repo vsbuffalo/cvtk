@@ -13,6 +13,7 @@ from cvtk.cov import stack_replicate_covs_by_group, stack_temporal_covariances
 from cvtk.cov import temporal_replicate_cov, cov_by_group, calc_hets
 from cvtk.cov import total_variance, var_by_group
 from cvtk.cov import stack_temporal_covs_by_group, stack_replicate_covs_by_group
+from cvtk.cov import replicate_block_matrix_indices
 from cvtk.bootstrap import block_bootstrap_ratio_averages, cov_estimator
 from cvtk.bootstrap import block_bootstrap
 from cvtk.G import calc_G, G_estimator, convergence_corr_by_group
@@ -109,9 +110,16 @@ class TemporalFreqs(object):
                                       share_first=self.share_first,
                                       standardize=standardize, use_masked=use_masked)
 
-    def convergence_corr(self, bias_correction=True):
+    def convergence_corr(self, subset=None, bias_correction=True):
         gw_covs = self.calc_cov(standardize=False, bias_correction=bias_correction)
-        return convergence_corr(gw_covs, self.R, self.T)
+        if subset is not None:
+            rows, cols = replicate_block_matrix_indices(self.R, self.T)
+            rows_keep, cols_keep = np.isin(rows, subset), np.isin(cols, subset)
+            dim = self.T * len(subset)
+            gw_covs = gw_covs[np.logical_and(rows_keep, cols_keep)].reshape((dim, dim))
+
+        R = self.R if subset is None else len(subset)
+        return convergence_corr(gw_covs, R, self.T)
 
     def convergence_corr_by_group(self, groups, bias_correction=True):
         covs = self.calc_cov_by_group(groups, standardize=False, bias_correction=bias_correction)
@@ -321,11 +329,14 @@ class TiledTemporalFreqs(TemporalFreqs):
                                               bias_correction=bias_correction)
 
 
-    def bootstrap_convergence_corr(self, B, alpha=0.05, #keep_seqids=None,  # not implemented yet
+    def bootstrap_convergence_corr(self, B, subset=None, alpha=0.05, keep_seqids=None,  
                                    ci_method='pivot', progress_bar=False, 
                                    bias_correction=True, ratio_of_averages=True,
                                    return_straps=False):
         """
+        subset: the indices of the samples to calculate this on; if subset=None, this 
+                uses all.
+
         Bootstrap the convergence correlation. By default this is calculated as a ratio of
         averages, 
 
@@ -337,7 +348,7 @@ class TiledTemporalFreqs(TemporalFreqs):
         and then the convergence correlation is calculated on those.
         """
         # our statistic:
-        conv_corr = self.convergence_corr(bias_correction=bias_correction)
+        conv_corr = self.convergence_corr(subset=subset, bias_correction=bias_correction)
  
         if not ratio_of_averages:
             return block_bootstrap(self.freqs, B=B, block_indices=self.tile_indices,
@@ -348,9 +359,19 @@ class TiledTemporalFreqs(TemporalFreqs):
                                    statistic=conv_corr,
                                    standardize=False, bias_correction=bias_correction)
        
-        covs = self.calc_cov_by_tile(bias_correction=bias_correction, standardize=False) 
-        replicate_covs = stack_replicate_covs_by_group(covs, self.R, self.T, upper_only=False)
-        temporal_covs = stack_temporal_covs_by_group(covs, self.R, self.T)
+        covs = self.calc_cov_by_tile(bias_correction=bias_correction, 
+                                     keep_seqids=keep_seqids, standardize=False) 
+        if subset is not None:
+            rows, cols = replicate_block_matrix_indices(self.R, self.T)
+            rows_keep, cols_keep = np.isin(rows, subset), np.isin(cols, subset)
+            dim = self.T * len(subset)
+            covs = [cov[np.logical_and(rows_keep, cols_keep)].reshape((dim, dim)) for cov in covs]
+
+
+        R = self.R if subset is None else len(subset)
+        replicate_covs = stack_replicate_covs_by_group(covs, R, self.T, upper_only=False)
+        temporal_covs = stack_temporal_covs_by_group(covs, R, self.T)
+
         nums, denoms = (convergence_corr_numerator(replicate_covs),
                         convergence_corr_denominator(temporal_covs))
         return block_bootstrap_ratio_averages(nums, denoms,
@@ -360,7 +381,8 @@ class TiledTemporalFreqs(TemporalFreqs):
                      B=B, 
                      statistic=conv_corr,
                      alpha=alpha, 
-                     keep_seqids=keep_seqids, return_straps=return_straps,
+                     keep_seqids=keep_seqids, 
+                     return_straps=return_straps,
                      ci_method=ci_method, progress_bar=progress_bar)
 
 

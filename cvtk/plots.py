@@ -103,7 +103,7 @@ def rep_plot_pca2(df, x=1, y=2, s=300, figsize=None, dpi=None, label=True, cmap=
     label_df = df[[l1, l2, 'rep', 'gen']]
     if label:
         for pc1, pc2, rep, gen in label_df.itertuples(index=False):
-            ax.text(pc1, pc2, s=f"{rep}", horizontalalignment='center', verticalalignment='center')
+            ax.text(pc1, pc2, s=f"{gen}", horizontalalignment='center', verticalalignment='center')
     ax.set_xlabel(l1.upper())
     ax.set_ylabel(l2.upper())
     #plt.tight_layout()

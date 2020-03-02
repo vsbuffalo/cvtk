@@ -67,7 +67,7 @@ class TemporalFreqs(object):
                            f"supplied size: {len(diploids)}")
                     raise ValueError(msg)
             self.diploids = validate_diploids(diploids, nreplicates, ntimepoints)
-            #assert(self.diploids.shape == (nreplicates, ntimepoints, 1)) 
+            #assert(self.diploids.shape == (nreplicates, ntimepoints, 1))
 
         self.swapped_alleles = None
         if swap:
@@ -95,18 +95,18 @@ class TemporalFreqs(object):
     def calc_cov(self, keep_seqids=None, bias_correction=True, standardize=True, use_masked=False):
         """
         Calculate the genome-wide temporal-replicate variance-covariance matrix.
- 
+
         If keep_seqids=None, all seqids are used in the calculation of the covariance.
         Otherwise, if it's a list of seqids, only these are used.
         """
         freqs, depths = self.freqs, self.depths
         if keep_seqids is not None:
             assert(isinstance(keep_seqids, (tuple, list)))
-            idx = np.array([i for i, seqid in enumerate(self.gintervals.seqid) 
+            idx = np.array([i for i, seqid in enumerate(self.gintervals.seqid)
                             if seqid in keep_seqids])
             freqs, depths = freqs[..., idx], depths[..., idx]
         return temporal_replicate_cov(freqs, depths, self.diploids,
-                                      bias_correction=bias_correction, 
+                                      bias_correction=bias_correction,
                                       share_first=self.share_first,
                                       standardize=standardize, use_masked=use_masked)
 
@@ -126,7 +126,7 @@ class TemporalFreqs(object):
         return convergence_corr_by_group(covs, self.R, self.T)
 
 
-    def calc_cov_by_group(self, groups, keep_seqids=None, bias_correction=True, 
+    def calc_cov_by_group(self, groups, keep_seqids=None, bias_correction=True,
                            standardize=True, use_masked=False, return_ratio_parts=False,
                            progress_bar=False):
         """
@@ -135,19 +135,19 @@ class TemporalFreqs(object):
         freqs, depths = self.freqs, self.depths
         if keep_seqids is not None:
             assert(isinstance(keep_seqids, (tuple, list)))
-            idx = np.array([i for i, seqid in enumerate(self.gintervals.seqid) 
+            idx = np.array([i for i, seqid in enumerate(self.gintervals.seqid)
                             if seqid in keep_seqids])
             freqs, depths = freqs[..., idx], depths[..., idx]
-        res = cov_by_group(groups, freqs, 
-                            depths=depths, diploids=self.diploids, 
-                            standardize=standardize, 
-                            use_masked=use_masked, share_first=self.share_first, 
+        res = cov_by_group(groups, freqs,
+                            depths=depths, diploids=self.diploids,
+                            standardize=standardize,
+                            use_masked=use_masked, share_first=self.share_first,
                             return_ratio_parts=return_ratio_parts,
                             bias_correction=bias_correction, progress_bar=progress_bar)
         if return_ratio_parts:
             covs, het_denoms = res
             return covs, het_denoms
-        else: 
+        else:
             return res
 
     def calc_var(self, t=None, standardize=True, bias_correction=True):
@@ -155,18 +155,18 @@ class TemporalFreqs(object):
                               standardize=standardize, bias_correction=bias_correction)
 
     def calc_var_by_group(self, groups, t=None, standardize=True, bias_correction=True):
-        return var_by_group(groups, freqs=self.freqs, depths=self.depths, diploids=self.diploids, 
+        return var_by_group(groups, freqs=self.freqs, depths=self.depths, diploids=self.diploids,
                             t=t, standardize=standardize, bias_correction=bias_correction)
 
-    def calc_G(self, average_replicates=False, abs=False):
-        covs = self.calc_cov(standardize=False)
+    def calc_G(self, average_replicates=False, abs=False, use_masked=False):
+        covs = self.calc_cov(standardize=False, use_masked=use_masked)
         # calculate the total variances for different ts
         vars = []
         for t in np.arange(1, self.T+1):
             vars.append(np.stack(self.calc_var(t=t, standardize=False)))
         total_vars = np.stack(vars, axis=0)
         temp_covs = stack_temporal_covariances(covs, self.R, self.T)
-        G = G_estimator(temp_covs, total_vars, 
+        G = G_estimator(temp_covs, total_vars,
                         average_replicates=average_replicates, abs=abs)
         return G
 
@@ -190,12 +190,12 @@ class TiledTemporalFreqs(TemporalFreqs):
 
     def _generate_ids(self):
         """
-        Build two attributes: TiledTemporalFreqs.tile_ids and 
-        TiledTemporalFreqs.tile_seqids. Tiles are stored in the 
-        TiledTemporalFreqs.tile_indices atribute, which is a raggest list 
+        Build two attributes: TiledTemporalFreqs.tile_ids and
+        TiledTemporalFreqs.tile_seqids. Tiles are stored in the
+        TiledTemporalFreqs.tile_indices atribute, which is a raggest list
         with the list containing the tile lists, and each tile lists contains
         the indices for the variants. This generates the TiledTemporalFreqs.tile_ids
-        and TiledTemporalFreqs.tile_seqids arrays, which indicate which number tile 
+        and TiledTemporalFreqs.tile_seqids arrays, which indicate which number tile
         each SNP is (their length is equal to the total number of variants).
         """
         tile_ids = list()
@@ -257,10 +257,10 @@ class TiledTemporalFreqs(TemporalFreqs):
 
 
 
-    def correction_diagnostics(self, exclude_seqids=None, offdiag_k=1, 
+    def correction_diagnostics(self, exclude_seqids=None, offdiag_k=1,
                                depth_limits=None, **kwargs):
         """
-        Return a (DataFrame, models, ypreds) tuple full of diagnostic information that can be 
+        Return a (DataFrame, models, ypreds) tuple full of diagnostic information that can be
         used in diagnostic plots (see
         cvtk.plots.correction_diagnostic_plot()) to assess the binomial correction procedure.
         This binomial correction affects the diagonal elements, removing binomial sampling noise,
@@ -282,7 +282,7 @@ class TiledTemporalFreqs(TemporalFreqs):
         seqids = self.tile_df['seqid'].values
         for use_correction in [True, False]:
             covs = self.calc_cov_by_tile(bias_correction=use_correction, **kwargs)
-            res = calc_diagnostics(covs, mean_hets, seqids, tile_depths, 
+            res = calc_diagnostics(covs, mean_hets, seqids, tile_depths,
                                    exclude_seqids=exclude_seqids,
                                    depth_limits=depth_limits)
             models[use_correction], xpreds[use_correction], ypreds[use_correction], df = res
@@ -291,54 +291,54 @@ class TiledTemporalFreqs(TemporalFreqs):
         return pd.concat(dfs, axis=0), models, xpreds, ypreds
 
     def bootstrap_cov(self, B, alpha=0.05, keep_seqids=None, progress_bar=False,
-                      average_replicates=True, return_straps=False, ci_method='pivot', 
+                      average_replicates=True, return_straps=False, ci_method='pivot',
                       **kwargs):
         """
         Bootstrap whole covaraince matrix.
-        Params: 
+        Params:
            - B: number of bootstraps
            - alpha: α level
            - keep_seqids: which seqids to include in bootstrap; if None, all are used.
            - return_straps: whether to return the actual bootstrap vectors.
            - ci_method: 'pivot' or 'percentile'
            - **kwargs: passed to calc_cov() and calc_cov_by_tile()
- 
+
         """
         # our statistic:
         cov = self.calc_cov(keep_seqids=keep_seqids, **kwargs)
         if average_replicates:
             cov = np.nanmean(stack_temporal_covariances(cov, self.R, self.T), axis=2)
-        covs, het_denoms = self.calc_cov_by_tile(return_ratio_parts=True, 
+        covs, het_denoms = self.calc_cov_by_tile(return_ratio_parts=True,
                                                  keep_seqids=keep_seqids, **kwargs)
         covs, het_denoms = np.stack(covs), np.stack(het_denoms)
         return block_bootstrap_ratio_averages(covs, het_denoms,
-                                              block_indices=self.tile_indices, 
+                                              block_indices=self.tile_indices,
                                               block_seqids=self.tile_df['seqid'].values,
                                               estimator=cov_estimator,
                                               statistic=cov,
-                                              B=B, alpha=alpha, 
+                                              B=B, alpha=alpha,
                                               progress_bar=progress_bar,
-                                              keep_seqids=keep_seqids, return_straps=return_straps, 
+                                              keep_seqids=keep_seqids, return_straps=return_straps,
                                               ci_method=ci_method,
                                               # kwargs passed directly to cov_estimator
                                               average_replicates=average_replicates,
                                               R=self.R, T=self.T)
 
     def convergence_corr_by_tile(self, bias_correction=True):
-        return self.convergence_corr_by_group(self.tile_indices, 
+        return self.convergence_corr_by_group(self.tile_indices,
                                               bias_correction=bias_correction)
 
 
-    def bootstrap_convergence_corr(self, B, subset=None, alpha=0.05, keep_seqids=None,  
-                                   ci_method='pivot', progress_bar=False, 
+    def bootstrap_convergence_corr(self, B, subset=None, alpha=0.05, keep_seqids=None,
+                                   ci_method='pivot', progress_bar=False,
                                    bias_correction=True, ratio_of_averages=True,
                                    return_straps=False):
         """
-        subset: the indices of the samples to calculate this on; if subset=None, this 
+        subset: the indices of the samples to calculate this on; if subset=None, this
                 uses all.
 
         Bootstrap the convergence correlation. By default this is calculated as a ratio of
-        averages, 
+        averages,
 
         E_{A≠B} cov(Δp_{t,A}, Δp_{t,B})
         -----------------------
@@ -349,7 +349,7 @@ class TiledTemporalFreqs(TemporalFreqs):
         """
         # our statistic:
         conv_corr = self.convergence_corr(subset=subset, bias_correction=bias_correction)
- 
+
         if not ratio_of_averages:
             return block_bootstrap(self.freqs, B=B, block_indices=self.tile_indices,
                                    block_seqids=self.tile_df['seqid'].values,
@@ -358,9 +358,9 @@ class TiledTemporalFreqs(TemporalFreqs):
                                    estimator=convergence_corr_from_freqs,
                                    statistic=conv_corr,
                                    standardize=False, bias_correction=bias_correction)
-       
-        covs = self.calc_cov_by_tile(bias_correction=bias_correction, 
-                                     keep_seqids=keep_seqids, standardize=False) 
+
+        covs = self.calc_cov_by_tile(bias_correction=bias_correction,
+                                     keep_seqids=keep_seqids, standardize=False)
         if subset is not None:
             rows, cols = replicate_block_matrix_indices(self.R, self.T)
             rows_keep, cols_keep = np.isin(rows, subset), np.isin(cols, subset)
@@ -375,19 +375,19 @@ class TiledTemporalFreqs(TemporalFreqs):
         nums, denoms = (convergence_corr_numerator(replicate_covs),
                         convergence_corr_denominator(temporal_covs))
         return block_bootstrap_ratio_averages(nums, denoms,
-                     block_indices=self.tile_indices, 
+                     block_indices=self.tile_indices,
                      block_seqids=self.tile_df['seqid'].values,
                      estimator=np.divide,
-                     B=B, 
+                     B=B,
                      statistic=conv_corr,
-                     alpha=alpha, 
-                     keep_seqids=keep_seqids, 
+                     alpha=alpha,
+                     keep_seqids=keep_seqids,
                      return_straps=return_straps,
                      ci_method=ci_method, progress_bar=progress_bar)
 
 
-    def bootstrap_G(self, B, abs=False, alpha=0.05, keep_seqids=None, 
-                    average_replicates=False, ci_method='pivot', 
+    def bootstrap_G(self, B, abs=False, alpha=0.05, keep_seqids=None,
+                    average_replicates=False, ci_method='pivot',
                     progress_bar=False, **kwargs):
         """
         """
@@ -400,34 +400,34 @@ class TiledTemporalFreqs(TemporalFreqs):
         tile_covs = self.calc_cov_by_tile(standardize=False, keep_seqids=keep_seqids)
         covs = stack_temporal_covs_by_group(tile_covs, self.R, self.T)
         return block_bootstrap_ratio_averages(covs, total_vars,
-                     block_indices=self.tile_indices, 
+                     block_indices=self.tile_indices,
                      block_seqids=self.tile_df['seqid'].values,
                      estimator=G_estimator,
-                     B=B, 
+                     B=B,
                      statistic=G,
-                     alpha=alpha, 
-                     keep_seqids=keep_seqids, return_straps=False, 
+                     alpha=alpha,
+                     keep_seqids=keep_seqids, return_straps=False,
                      ci_method=ci_method, progress_bar=progress_bar,
                      # kwargs passed directly to G_estimate
                      average_replicates=average_replicates,
                      abs=abs)
 
-    def calc_empirical_null(self, B=100, exclude_seqs=None, 
-                       sign_permute_blocks='tile', 
+    def calc_empirical_null(self, B=100, exclude_seqs=None,
+                       sign_permute_blocks='tile',
                        by_tile=False,
                        bias_correction=False, progress_bar=False):
 
-        return calc_covs_empirical_null(self.freqs, 
-                                        tile_indices=self.tile_indices, 
-                                        tile_seqids=self.tile_df['seqid'], 
-                                        tile_ids=self.tile_ids, 
+        return calc_covs_empirical_null(self.freqs,
+                                        tile_indices=self.tile_indices,
+                                        tile_seqids=self.tile_df['seqid'],
+                                        tile_ids=self.tile_ids,
                                         gintervals=self.gintervals,
                                         B=B,
-                                        depths=self.depths, 
+                                        depths=self.depths,
                                         diploids=self.diploids,
-                                        by_tile=by_tile, 
-                                        exclude_seqids=exclude_seqs, 
-                                        sign_permute_blocks=sign_permute_blocks, 
+                                        by_tile=by_tile,
+                                        exclude_seqids=exclude_seqs,
+                                        sign_permute_blocks=sign_permute_blocks,
                                         bias_correction=bias_correction,
                                         progress_bar=progress_bar)
- 
+

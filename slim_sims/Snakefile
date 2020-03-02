@@ -1,0 +1,54 @@
+import numpy as np
+np.random.seed(1)
+
+DATADIR = "../data/sims/"
+
+## Parameters
+NREPS = range(50)
+
+# BGS paramters
+# region length is 50e6
+#US = np.linspace(0.25, 2, 8)
+#RBPS = [1e-6, 1e-7, 1e-8]
+#NMUS = [1e-8]
+#SELCOEFS = [1e-1, 1e-2, 0]
+#NS = [1000]
+
+# simplified sims
+US = [0.25, 0.5, 0.75, 1, 1.25, 1.5]
+RBPS = [1e-7, 1e-8]
+NMUS = [1e-8]
+SELCOEFS = [1e-1, 1e-2, 0]
+NS = [1000, 100]
+
+
+SIM_OUTPUTS = ["stats.tsv", "neutfreqs.tsv"]
+
+BGS_PATTERN = ("bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{nrep}_{sim_output}")
+
+bgs_results = expand(DATADIR + BGS_PATTERN,
+                     s=SELCOEFS, nmu=NMUS, U=US, rbp=RBPS, 
+                     N=NS, nrep=NREPS,
+                     sim_output=SIM_OUTPUTS)
+
+rule all:
+  input: 
+    bgs_results
+
+rule bgs:
+  input:
+    "bgs.slim"
+  output:
+    DATADIR + BGS_PATTERN.replace("{sim_output}", "stats.tsv"),
+    DATADIR + BGS_PATTERN.replace("{sim_output}", "neutfreqs.tsv")
+  shell:
+    # the output files are automatically generated from the SLiM script
+    "/home/vsb/src/SLiM_build/slim -d N={wildcards.N} "
+    "-d rbp={wildcards.rbp} -d nrep={wildcards.nrep} "
+    "-d s={wildcards.s} -d nmu={wildcards.nmu} -d U={wildcards.U} "
+    "-d run_generations=150 bgs.slim"
+
+rule clean:
+  shell:
+    "rm -f {bgs_results}"
+

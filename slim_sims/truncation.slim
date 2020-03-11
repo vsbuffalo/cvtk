@@ -1,0 +1,127 @@
+initialize() {
+  defineConstant("seed", getSeed());
+  defineConstant("data_dir", '../data/sims/');
+  defineConstant("region_length", 50e6);
+  initializeMutationRate(nmu + smu);
+  initializeMutationType("m1", 0.5, "s", "if (runif(1) < 0.5) -alpha; else alpha;");
+  initializeMutationType("m2", 0.5, "f", 0.0);
+  initializeGenomicElementType("g1", c(m1, m2), c(smu, nmu));
+  initializeGenomicElement(g1, 0, region_length-1);
+  initializeRecombinationRate(rbp);
+  m1.convertToSubstitution = T;
+  m1.mutationStackPolicy = "f";
+  m2.convertToSubstitution = T;
+  m2.mutationStackPolicy = "f";
+
+
+  // simulation results basename
+  bname = ("truncsel_" + N + "N_" + tail + "tail_" +
+           "rbp_" + alpha + "alpha_" +  
+           nmu + "nmu_" + smu + "smu_" + 
+           seed);
+  defineConstant("basename", bname);
+  defineConstant("stats_file", data_dir + '/' + basename + '_stats.tsv');
+  defineConstant("selfreqs_file", data_dir + '/' + basename + '_selfreqs.tsv');
+  // 
+  param_string = "#seed=" + seed + ";tail=" + tail + ";alpha=" + alpha + ";N=" + N + 
+     	         ";rbp=" + rbp + ";region_length=" + region_length + 
+                 ";nmu=" + nmu;
+                 ";smu=" + smu;
+  writeFile(stats_file, param_string, append=F);
+  writeFile(stats_file, "gen\tzbar\tzbar_nofix\tzvar\tgenic_var\tneut_het\tS", append=T);
+
+  if (record_sel_freqs) {
+    writeFile(selfreqs_file, param_string, append=F);
+  }
+  defineConstant("record_neutmuts", nmu > 0);
+  if (record_neutmuts) {
+    defineConstant("neutfreqs_file", data_dir + '/' + basename + '_neutfreqs.tsv');
+    writeFile(neutfreqs_file, param_string, append=F);
+  }
+
+}
+
+// --- fitness function definitions
+
+fitness(m1) {
+    // fitness is assigned based on phenotypic value through global
+    // fitness callback; this just multiplies each fitness by 1.
+    return 1.0;
+}
+
+fitness(NULL) {
+  return 1.0;
+}
+
+s4 fitness(NULL) {
+    return individual.tagF > qnorm(tail) ? 1. else 0.;
+}
+
+// --- blocks
+1 early() {
+    sim.addSubpop("p1", N);
+    // --- block schedule --- 
+    // whole sims: calc phenotypes to propogate breeding value in tagF
+    burnin = 10*N;
+    end = burnin + run_generations + start_time;
+    sim.rescheduleScriptBlock(s1, start=2, end=end);
+    // period over which to record selected site frequencies. 
+    sim.rescheduleScriptBlock(s2, start=burnin, end=end);
+    // end point
+    sim.rescheduleScriptBlock(s3, start=end);
+
+    // --- fitness blocks epochs ---
+    // when to turn on truncation selection
+    sim.rescheduleScriptBlock(s4, start=burnin + start_time, end=end);
+}
+
+s1 late() {
+    inds = sim.subpopulations.individuals;
+    phenotypes = inds.sumOfMutationsOfType(m1);
+    fixed_trait = sum(sim.substitutions.selectionCoeff);
+    pheno_mean = mean(phenotypes);
+    inds.tagF = (phenotypes - pheno_mean)/sd(phenotypes);
+
+    // post-burnin: start recording
+    zbar = pheno_mean + fixed_trait;
+    x = sim.mutationFrequencies(p1, sim.mutationsOfType(m1));
+    genic_var = 2*sum(alpha^2 * x * (1-x));
+    y = sim.mutationFrequencies(p1, sim.mutationsOfType(m2));
+    ssh = 2*sum(y * (1-y));
+    // TODO add fixed trait?
+    row = paste(c(sim.generation, zbar, pheno_mean, 
+                  var(phenotypes), genic_var, ssh, length(y)), sep="\t");
+    writeFile(stats_file, row, append=T);
+}
+
+s2 late() {
+  // This block is the epoch overw which frequencies are recorded
+  fmt_freqs='applyValue.id + ";" + applyValue.position + ";" + sim.mutationFrequencies(p1, applyValue);';
+  // record every 1/10th of N generations
+  // record = sim.generation % (N/10) == 0;
+  record = 1;
+  if (record & record_neutmuts) {
+    // ---- Output selected site frequencies.
+    //  our apply function:
+    line = paste(sapply(sim.mutationsOfType(m2), fmt_freqs), sep="\t");
+    writeFile(neutfreqs_file, sim.generation + "\t" + line, append=T);
+  }
+
+  // Output selected site frequencies.
+  if (record & record_sel_freqs) {
+     line = paste(sapply(sim.mutationsOfType(m1), fmt_freqs), sep="\t");
+      writeFile(selfreqs_file, sim.generation + "\t" + paste(line, sep="\t"), append=T);
+    }
+
+  // sim progress reporting
+  if (sim.generation % 500 == 0) {
+    cat("generation: " + sim.generation + "\n");
+  }
+  if (sim.generation == 10*N) {
+    cat("BURNIN COMPLETE\n");
+  }
+}
+
+s3 late() {
+  sim.simulationFinished();
+}

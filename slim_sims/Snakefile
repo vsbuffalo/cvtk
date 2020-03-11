@@ -2,53 +2,173 @@ import numpy as np
 np.random.seed(1)
 
 DATADIR = "../data/sims/"
+SLIM = "/home/vsb/src/SLiM_build/slim "
 
 ## Parameters
-NREPS = range(50)
+nreps = range(50)
 
+# ------- Shared Parameters -------
+Ns = [1000, 100]
+nmus = [1e-8]
+
+# ------- BGS Simlations -------
 # BGS paramters
-# region length is 50e6
-#US = np.linspace(0.25, 2, 8)
-#RBPS = [1e-6, 1e-7, 1e-8]
-#NMUS = [1e-8]
-#SELCOEFS = [1e-1, 1e-2, 0]
-#NS = [1000]
-
-# simplified sims
-US = [0.25, 0.5, 0.75, 1, 1.25, 1.5]
-RBPS = [1e-7, 1e-8]
-NMUS = [1e-8]
-SELCOEFS = [1e-1, 1e-2, 0]
-NS = [1000, 100]
+Us = [0.25, 0.5, 0.75, 1, 1.25, 1.5]
+bgs_rbps = [1e-7, 1e-8]
+selcoefs = [1e-1, 0.5e-1, 1e-2, 0]
 
 
-SIM_OUTPUTS = ["stats.tsv", "neutfreqs.tsv"]
+bgs_ouputs = ["stats.tsv", "neutfreqs.tsv"]
 
-BGS_PATTERN = ("bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{nrep}_{sim_output}")
+bgs_pattern = ("bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{nrep}_{sim_output}")
 
-bgs_results = expand(DATADIR + BGS_PATTERN,
-                     s=SELCOEFS, nmu=NMUS, U=US, rbp=RBPS, 
-                     N=NS, nrep=NREPS,
-                     sim_output=SIM_OUTPUTS)
+bgs_results = expand(DATADIR + bgs_pattern,
+                     s=selcoefs, nmu=nmus, U=Us, rbp=bgs_rbps,
+                     N=Ns, nrep=nreps,
+                     sim_output=bgs_ouputs)
 
-rule all:
-  input: 
+# this is a dummy rule so if we can run the BGS sims separately
+# (avoiding the "target may not contain wildcards" error 
+rule bgs_all:
+  input:
     bgs_results
 
 rule bgs:
   input:
     "bgs.slim"
   output:
-    DATADIR + BGS_PATTERN.replace("{sim_output}", "stats.tsv"),
-    DATADIR + BGS_PATTERN.replace("{sim_output}", "neutfreqs.tsv")
+    DATADIR + bgs_pattern.replace("{sim_output}", "stats.tsv"),
+    DATADIR + bgs_pattern.replace("{sim_output}", "neutfreqs.tsv")
   shell:
     # the output files are automatically generated from the SLiM script
-    "/home/vsb/src/SLiM_build/slim -d N={wildcards.N} "
+    SLIM + " -d N={wildcards.N} "
     "-d rbp={wildcards.rbp} -d nrep={wildcards.nrep} "
     "-d s={wildcards.s} -d nmu={wildcards.nmu} -d U={wildcards.U} "
-    "-d run_generations=150 bgs.slim"
+    "-d run_generations=150 {input}"
 
-rule clean:
+rule bgs_clean:
   shell:
     "rm -f {bgs_results}"
+
+
+# ------- GSS Burnin Simlations -------
+# GSS paramters
+gss_rbps = [1e-8]   # rbp 
+alphas = [0.01]     # effect size
+tmus = [1e-8]       # trait mutation rate
+nmus = [1e-8]       # neutral mutation rate
+
+
+gss_burnin_outputs = ["fullsims.txt"]
+
+gss_burnin_pattern = ("gss_burnin_{N}N_{rbp}rbp_{alpha}alpha_{nmu}nmu_"
+                      "{tmu}tmu_{nrep}_{sim_output}")
+
+gss_burnin_results = expand(DATADIR + gss_burnin_pattern,
+                     alpha=alphas, nmu=nmus, 
+                     tmu=tmus, rbp=gss_rbps,
+                     N=Ns, nrep=nreps,
+                     sim_output=gss_burnin_outputs)
+
+# dummy rule 
+rule gss_burnin_all:
+  input:
+    gss_burnin_results
+
+rule gss_burnin:
+  input:
+    "optimum_shift_burnin.slim"
+  output:
+    DATADIR + gss_burnin_pattern.replace("{sim_output}", "fullsims.txt"),
+  shell:
+    # the output files are automatically generated from the SLiM script
+    SLIM + "-d N={wildcards.N} -d rbp={wildcards.rbp} "
+    "-d tmu={wildcards.tmu} -d nmu={wildcards.nmu} "
+    "-d alpha={wildcards.alpha} -d nrep={wildcards.nrep} {input}"
+
+rule gss_burnin_clean:
+  shell:
+    "rm -f {gss_burnin_results}"
+
+
+# ------- Sampled Line Simualtions, Slow Optimum Shift -------
+# Optimum shift parameters
+# we borrow the following parameters from the burnin:
+# alpha, gss_rbps, tmus, nmus
+shift_moving = [0.01, 0.1]
+shift_sudden = [0.1, 0.5, 1]
+shifttype = ['converge', 'spread', 'diverge']
+shifttime = [50]
+sampleN = [50, 100, 200]
+
+optshift_outputs = ["stats.txt", "subpops1_neutfreqs.txt", "subpops2_neutfreqs.txt"]
+
+optshift_pattern = ("sample_pops_{N}N_{rbp}rbp_{alpha}alpha_{nmu}nmu_" + 
+                    "{tmu}tmu_{shift}shift_{shifttime}shifttime_{moving}moving_" + 
+                    "{shifttype}shifttype_{sampleN}sampleN_{nrep}_{sim_output}")
+ 
+
+optshift_results_moving = expand(DATADIR + optshift_pattern,
+                                alpha=alphas, nmu=nmus, 
+                                tmu=tmus, rbp=gss_rbps,
+                                N=Ns, nrep=nreps,
+                                moving=['T'], 
+                                sampleN=sampleN,
+                                shifttype=shifttype,
+                                shifttime=shifttime,
+                                shift=shift_moving,
+                                sim_output=optshift_outputs)
+
+optshift_results_sudden = expand(DATADIR + optshift_pattern,
+                                 alpha=alphas, nmu=nmus, 
+                                 tmu=tmus, rbp=gss_rbps,
+                                 N=Ns, nrep=nreps,
+                                 moving=['F'], 
+                                 sampleN=sampleN,
+                                 shifttype=shifttype,
+                                 shifttime=shifttime,
+                                 shift=shift_sudden,
+                                 sim_output=optshift_outputs)
+ 
+optshift_results = optshift_results_moving + optshift_results_sudden
+
+# dummy rule 
+rule optshift_all:
+  input:
+    optshift_results
+
+rule optshift:
+  input:
+    "sample_pops.slim", gss_burnin_results
+  output:
+    DATADIR + optshift_pattern.replace("{sim_output}", optshift_outputs[0]),
+    DATADIR + optshift_pattern.replace("{sim_output}", optshift_outputs[1]),
+    DATADIR + optshift_pattern.replace("{sim_output}", optshift_outputs[2]),
+  params:
+    # build up the corresponding burnin file from the parameters
+    burnin_pop = gss_burnin_pattern.replace("{sim_output}", "fullsims.txt")
+  shell:
+    # the output files are automatically generated from the SLiM script
+    SLIM + "-d {burnin_pop}"
+    "-d N={wildcards.N} -d rbp={wildcards.rbp} "
+    "-d tmu={wildcards.tmu} -d nmu={wildcards.nmu} "
+    "-d alpha={wildcards.alpha} -d nrep={wildcards.nrep} "
+    "-d shift={wildcards.shift} -d moving={wildcards.moving} "
+    "-d sampleN={wildcards.sampleN} -d shifttime={wildcards.shifttime} "
+    "-d shifttype={wildcards.shifttype} {input}"
+
+rule optshift_clean:
+  shell:
+    "rm -f {optshift_results}"
+
+
+
+
+
+# ------- All Simulations -------
+rule all:
+  input: 
+    bgs_results, gss_burnin_results, optshift_results
+
+
 

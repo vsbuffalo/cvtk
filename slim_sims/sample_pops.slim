@@ -62,7 +62,7 @@ initialize() {
   // write header
   writeFile(stats_file, param_string, append=F);
   header = "generation\tzbar_nofix_1\tzbar_nofix_2\tzbar_1\tzbar_2\tgenic_va_1\tgenic_va_2\tssh_1\tssh_2\tzvar_1\tzvar_2\tneut_S_1\tneut_S_2\tsel_S_1\tsel_S_2";
-  writeFile(stats_file, header, append=F);
+  writeFile(stats_file, header, append=T);
 
   // neutral freqs
   defineConstant("neutfreqs_file_1", data_dir + "/" + basename_1 + "_neutfreqs.tsv");
@@ -89,7 +89,7 @@ s3 fitness(NULL) {
 
 // --- blocks
 1 early() {
-    end = burnin + 100;
+    end = burnin + 100 + burnin;
     sim.rescheduleScriptBlock(s1, start=burnin, end=end);
     sim.rescheduleScriptBlock(s2, start=end, end=end);
     sim.rescheduleScriptBlock(s3, start=burnin+1, end=end);
@@ -114,7 +114,7 @@ s1 late() {
     // TODO: pop-specific fixations?
     // fixed_trait = sum(sim.substitutions.selectionCoeff);
     // subpopulations for subpop-specific fitness
-    if (sim.generation > shifttime) {
+    if (sim.generation >= burnin + shifttime) {
       // we handle the optimum shifts here, but adjusting individual's tagF
       // values.
       if (moving) {
@@ -135,6 +135,9 @@ s1 late() {
       } else {
         stop("shifttyp must be either 'double_diverge', 'converge', or 'diverge'.");
       }
+    } else {
+      inds_1.tagF = pheno_1;
+      inds_2.tagF = pheno_2;
     }
 
 

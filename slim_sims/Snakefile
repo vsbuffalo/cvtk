@@ -1,4 +1,5 @@
 import numpy as np
+import slper.slimfile as sf
 np.random.seed(1)
 
 DATADIR = "../data/sims/"

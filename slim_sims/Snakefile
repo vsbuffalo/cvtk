@@ -49,7 +49,7 @@ rule bgs:
 
 rule bgs_clean:
   shell:
-    "rm -f {bgs_results}"
+    "find ../data/sims -maxdepth 1 -name 'bgs_*'  | xargs rm -rf "
 
 
 # ------- GSS Burnin Simlations -------
@@ -89,7 +89,7 @@ rule gss_burnin:
 
 rule gss_burnin_clean:
   shell:
-    "rm -f {gss_burnin_results}"
+    "find ../data/sims -maxdepth 1 -name 'gss_burnin_*'  | xargs rm -rf "
 
 
 # ------- Sampled Line Simualtions, Slow Optimum Shift -------
@@ -162,7 +162,7 @@ rule optshift:
 
 rule optshift_clean:
   shell:
-    "find ../data/sims -name 'sample_pops*'  | xargs rm -rf "
+    "find ../data/sims -maxdepth 1 -name 'sample_pops_*'  | xargs rm -rf "
 
 
 

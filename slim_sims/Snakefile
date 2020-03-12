@@ -94,14 +94,14 @@ rule gss_burnin_clean:
 # ------- Sampled Line Simualtions, Slow Optimum Shift -------
 # Optimum shift parameters
 # we borrow the following parameters from the burnin:
-# alpha, gss_rbps, tmus, nmus
+# alpha, gss_rbps, tmus, nmus, Ns
 shift_moving = [0.01, 0.1]
 shift_sudden = [0.1, 0.5, 1]
 shifttype = ['converge', 'spread', 'diverge']
 shifttime = [50]
 sampleN = [50, 100, 200]
 
-optshift_outputs = ["stats.txt", "subpops1_neutfreqs.txt", "subpops2_neutfreqs.txt"]
+optshift_outputs = ["stats.tsv", "subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
 
 optshift_pattern = ("sample_pops_{N}N_{rbp}rbp_{alpha}alpha_{nmu}nmu_" + 
                     "{tmu}tmu_{shift}shift_{shifttime}shifttime_{moving}moving_" + 
@@ -132,6 +132,8 @@ optshift_results_sudden = expand(DATADIR + optshift_pattern,
  
 optshift_results = optshift_results_moving + optshift_results_sudden
 
+# print("** " + "\n** ".join(optshift_results)) 
+
 # dummy rule 
 rule optshift_all:
   input:
@@ -146,20 +148,20 @@ rule optshift:
     DATADIR + optshift_pattern.replace("{sim_output}", optshift_outputs[2]),
   params:
     # build up the corresponding burnin file from the parameters
-    burnin_pop = gss_burnin_pattern.replace("{sim_output}", "fullsims.txt")
+    burnin_pop = DATADIR + gss_burnin_pattern.replace("{sim_output}", "fullsims.txt")
   shell:
     # the output files are automatically generated from the SLiM script
-    SLIM + "-d {burnin_pop}"
+    SLIM + " -d \"burninpop='{params.burnin_pop}'\" "
     "-d N={wildcards.N} -d rbp={wildcards.rbp} "
     "-d tmu={wildcards.tmu} -d nmu={wildcards.nmu} "
     "-d alpha={wildcards.alpha} -d nrep={wildcards.nrep} "
     "-d shift={wildcards.shift} -d moving={wildcards.moving} "
     "-d sampleN={wildcards.sampleN} -d shifttime={wildcards.shifttime} "
-    "-d shifttype={wildcards.shifttype} {input}"
+    "-d \"shifttype='{wildcards.shifttype}'\" {input[0]}"
 
 rule optshift_clean:
   shell:
-    "rm -f {optshift_results}"
+    "find ../data/sims -name 'sample_pops*'  | xargs rm -rf "
 
 
 

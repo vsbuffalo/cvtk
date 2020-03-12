@@ -1,13 +1,13 @@
 
-function (float)genic_va(float x, float alpha) {
-    return 2*sum(alpha^2 * x * (1-x));
+function (float)genic_va(float x, float a) {
+    return 2*sum(a^2 * x * (1-x));
 }
 
 function (float)ssh(float x) {
   return 2*sum(x * (1-x));
 }
 
-function (void)write_freqs(string file, object<subpopulation> subpop subpop,
+function (void)write_freqs(string file, object<Subpopulation> subpop,
                      object<MutationType> mut_type, integer generation) {
   // this access sim from scope -- is this efficient?
   fmt_freqs='applyValue.id + ";" + applyValue.position + ";" + sim.mutationFrequencies(subpop, applyValue);';
@@ -38,6 +38,8 @@ initialize() {
   m2.convertToSubstitution = T;
   m2.mutationStackPolicy = "f";
 
+  defineConstant("burnin", 10*N);
+
   // initialize output file headers
   bname = ("sample_pops_" + N + "N_" + rbp + "rbp_" +
             alpha + "alpha_" + nmu + "nmu_" + tmu + "tmu_" + 
@@ -50,9 +52,9 @@ initialize() {
   param_string = "#seed=" + seed + ";alpha=" + alpha + ";N=" + N + 
                  ";rbp=" + rbp + ";region_length=" + region_length + 
                  ";nmu=" + nmu + ";tmu=" + tmu + ";Vs=" + Vs +
-                 ";shift=" + shift ";shifttime=" + shifttime +
+                 ";shift=" + shift + ";shifttime=" + shifttime +
                  ";moving=" + moving + ";shifttype=" + shifttype + 
-                 ";sampleN=" + sampleN + ";nrep=" + nrep);
+                 ";sampleN=" + sampleN + ";nrep=" + nrep;
 
   // ---- output files ---- 
   // stats file
@@ -87,7 +89,6 @@ s3 fitness(NULL) {
 
 // --- blocks
 1 early() {
-    burnin = 10*N;
     end = burnin + 100;
     sim.rescheduleScriptBlock(s1, start=burnin, end=end);
     sim.rescheduleScriptBlock(s2, start=end, end=end);
@@ -96,7 +97,7 @@ s3 fitness(NULL) {
 }
 
 1 late() {   
-	sim.readFromPopulationFile(burnin_pop);
+	sim.readFromPopulationFile(burninpop);
     sim.addSubpopSplit("p2", sampleN, p1);
     sim.addSubpopSplit("p3", sampleN, p1);
     p1.setSubpopulationSize(0);
@@ -135,7 +136,6 @@ s1 late() {
         stop("shifttyp must be either 'double_diverge', 'converge', or 'diverge'.");
       }
     }
-    print("generation: " + sim.generation);
 
 
     // ---- output recording ----
@@ -151,8 +151,8 @@ s1 late() {
     x_2 = sim.mutationFrequencies(p3, sim.mutationsOfType(m1));
     genic_va_1 = genic_va(x_1, alpha);
     genic_va_2 = genic_va(x_2, alpha);
-    y_1 = sim.mutationFrequencies(p1, sim.mutationsOfType(m2));
-    y_2 = sim.mutationFrequencies(p2, sim.mutationsOfType(m2));
+    y_1 = sim.mutationFrequencies(p2, sim.mutationsOfType(m2));
+    y_2 = sim.mutationFrequencies(p3, sim.mutationsOfType(m2));
     ssh_1 = ssh(y_1);
     ssh_2 = ssh(y_2);
 

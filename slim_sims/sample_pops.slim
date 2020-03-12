@@ -89,7 +89,7 @@ s3 fitness(NULL) {
 
 // --- blocks
 1 early() {
-    end = burnin + 100 + burnin;
+    end = burnin + 100 + shifttime;
     sim.rescheduleScriptBlock(s1, start=burnin, end=end);
     sim.rescheduleScriptBlock(s2, start=end, end=end);
     sim.rescheduleScriptBlock(s3, start=burnin+1, end=end);
@@ -119,6 +119,7 @@ s1 late() {
       // values.
       if (moving) {
         optimum = shift * (sim.generation - burnin - shifttime);
+        // print(optimum);
       } else {
         optimum = shift;
       }
@@ -141,6 +142,7 @@ s1 late() {
     }
 
 
+    // print(sim.generation);
     // ---- output recording ----
     pheno_mean_1 = mean(pheno_1);
     pheno_mean_2 = mean(pheno_2);

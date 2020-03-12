@@ -96,7 +96,7 @@ rule gss_burnin_clean:
 # Optimum shift parameters
 # we borrow the following parameters from the burnin:
 # alpha, gss_rbps, tmus, nmus, Ns
-shift_moving = [0.01, 0.1]
+shift_moving = [0.001, 0.01]
 shift_sudden = [0.1, 0.5, 1]
 shifttype = ['converge', 'spread', 'diverge']
 shifttime = [50]

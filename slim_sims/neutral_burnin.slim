@@ -3,16 +3,6 @@ initialize() {
   defineConstant("data_dir", '../data/sims/');
   defineConstant("region_length", 50e6);
 
-  // Stabilizing selection variance
-  defineConstant("Vs", 1);
-
-  // The SLiM uses a fitness offset, where fitness is offset + z_i where z_i =
-  // Σ α_i g_i.  In contrast, most GSS models don't do this. A fitness offset
-  // of 1 buffers the differences in breeding values, e.g. z_1 = 0.01 and z_2 =
-  // 0.03 relative fitness are 1 and 1/3 --- fairly large fitness differences,
-  // versus 1 and 0.98 if we have a fitness offset of one.
-  defineConstant("fitness_offset", 0.0);
-
   initializeMutationRate(nmu + tmu);
   initializeMutationType("m1", 0.5, "s", "if (runif(1) < 0.5) -alpha; else alpha;");
   initializeMutationType("m2", 0.5, "f", 0.0);
@@ -25,7 +15,7 @@ initialize() {
   m2.mutationStackPolicy = "f";
 
   // initialize output file headers
-  bname = ("gss_burnin_" + N + "N_" + rbp + "rbp_" + 
+  bname = ("neut_burnin_" + N + "N_" + rbp + "rbp_" + 
             alpha + "alpha_" + nmu + "nmu_" + 
             tmu + "tmu_" + nrep);
   defineConstant("basename", bname);
@@ -33,25 +23,21 @@ initialize() {
   // write header
   param_string = "#seed=" + seed + ";alpha=" + alpha + ";N=" + N + 
      	         ";rbp=" + rbp + ";region_length=" + region_length + 
-                 ";nmu=" + nmu + ";tmu=" + tmu + ";Vs=" + Vs;
+                 ";nmu=" + nmu + ";tmu=" + tmu;
   writeFile(stats_file, param_string, append=F);
   writeFile(stats_file, "gen\tzbar\tzbar_nofix\tzvar\tgenic_var\tneut_het\tS", append=T);
 }
 
 // --- fitness function definitions
+// even there there are sites with fitness effects, these during the burnin
+// have no effect on fitness (yet)
 
 fitness(m1) {
-    // fitness is assigned based on phenotypic value through global
-    // fitness callback; this just multiplies each fitness by 1.
-    return 1.0;
-}
-
-fitness(NULL) {
   return 1.0;
 }
 
-s4 fitness(NULL) {
-    return fitness_offset + dnorm(individual.tagF, mean=0.0, sd=sqrt(Vs));
+fitness(m2) {
+  return 1.0;
 }
 
 // --- blocks
@@ -64,10 +50,6 @@ s4 fitness(NULL) {
     sim.rescheduleScriptBlock(s1, start=2, end=end);
     // end point
     sim.rescheduleScriptBlock(s2, start=end);
-
-    // --- fitness blocks epochs ---
-    // burnin: reach optimum of 0
-    sim.rescheduleScriptBlock(s4, start=2, end=end);
 }
 
 s1 late() {

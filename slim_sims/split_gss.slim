@@ -41,7 +41,7 @@ initialize() {
   defineConstant("burnin", 10*N);
 
   // initialize output file headers
-  bname = ("sample_pops_" + N + "N_" + rbp + "rbp_" +
+  bname = ("split_gss_" + N + "N_" + rbp + "rbp_" +
             alpha + "alpha_" + nmu + "nmu_" + tmu + "tmu_" + 
             shift + "shift_" + shifttime + "shifttime_" +
             moving + "moving_" + shifttype + "shifttype_" + 
@@ -124,17 +124,17 @@ s1 late() {
         optimum = shift;
       }
 
-      if (shifttype == "spread") {
+      if (shifttype == "diverge") {
         inds_1.tagF = pheno_1 - optimum;
         inds_2.tagF = pheno_2 + optimum;
       } else if (shifttype == "converge") {
-        inds_1.tagF = pheno_1 + optimum;
-        inds_2.tagF = pheno_2 + optimum;
-      } else if (shifttype == "diverge") {
-        inds_1.tagF = pheno_1 + optimum;
+        inds_1.tagF = pheno_1 - optimum;
+        inds_2.tagF = pheno_2 - optimum;
+      } else if (shifttype == "single") {
+        inds_1.tagF = pheno_1 - optimum;
         inds_2.tagF = pheno_2;
       } else {
-        stop("shifttyp must be either 'double_diverge', 'converge', or 'diverge'.");
+        stop("shifttyp must be either 'diverge', 'converge', or 'single'.");
       }
     } else {
       inds_1.tagF = pheno_1;

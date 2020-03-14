@@ -110,8 +110,9 @@ class TemporalFreqs(object):
                                       share_first=self.share_first,
                                       standardize=standardize, use_masked=use_masked)
 
-    def convergence_corr(self, subset=None, bias_correction=True):
-        gw_covs = self.calc_cov(standardize=False, bias_correction=bias_correction)
+    def convergence_corr(self, subset=None, bias_correction=True, **kwargs):
+        gw_covs = self.calc_cov(standardize=False,
+                                bias_correction=bias_correction, **kwargs)
         if subset is not None:
             rows, cols = replicate_block_matrix_indices(self.R, self.T)
             rows_keep, cols_keep = np.isin(rows, subset), np.isin(cols, subset)

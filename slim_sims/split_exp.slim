@@ -34,8 +34,8 @@ initialize() {
 
   // initialize output file headers
   bname = ("split_exp_" + N + "N_" + rbp + "rbp_" +
-            alpha + "alpha_" + nmu + "nmu_" + tmu + "tmu_" + 
-            mag + "mag_" + shifttime + "shifttime_" +
+            Va + "Va_" + alpha + "alpha_" + nmu + "nmu_" + tmu + "tmu_" + 
+            L + "L_" + mag + "mag_" + shifttime + "shifttime_" +
             shifttype + "shifttype_" + sampleN + "sampleN_");
   defineConstant("basename", bname + nrep);
   defineConstant("basename_1", bname + nrep + "_subpop1");
@@ -138,8 +138,8 @@ s1 late() {
   // genic variance and sum of site heterozygosity
   x_1 = sim.mutationFrequencies(p2, sim.mutationsOfType(m1));
   x_2 = sim.mutationFrequencies(p3, sim.mutationsOfType(m1));
-  genic_va_1 = genic_va(x_1, alpha);
-  genic_va_2 = genic_va(x_2, alpha);
+  genic_va_1 = genic_va(x_1, asFloat(alpha));
+  genic_va_2 = genic_va(x_2, asFloat(alpha));
   y_1 = sim.mutationFrequencies(p2, sim.mutationsOfType(m2));
   y_2 = sim.mutationFrequencies(p3, sim.mutationsOfType(m2));
   ssh_1 = ssh(y_1);

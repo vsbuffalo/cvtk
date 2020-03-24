@@ -16,8 +16,8 @@ initialize() {
 
   // initialize output file headers
   bname = ("neut_burnin_" + N + "N_" + rbp + "rbp_" + 
-            alpha + "alpha_" + nmu + "nmu_" + 
-            tmu + "tmu_" + nrep);
+            Va + "Va_" + alpha + "alpha_" + nmu + "nmu_" + 
+            tmu + "tmu_" + L + "L_" + nrep);
   defineConstant("basename", bname);
   defineConstant("stats_file", data_dir + '/' + basename + '_stats.tsv');
   // write header

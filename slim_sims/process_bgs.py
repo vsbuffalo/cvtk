@@ -9,6 +9,7 @@ if nb_dir not in sys.path:
 import pickle
 import random
 from multiprocessing import Pool
+from collections import defaultdict
 import pandas as pd
 import numpy as np
 
@@ -17,7 +18,7 @@ from cvtk.cov import stack_temporal_covariances
 import cvtk.slimfile as sf
 
 def freqs_to_cov(frqs, burnin = 10000, gens=150, with_G=True,
-                  fixed_to_nan=False, verbose=False):
+                  fixed_to_nan=False, verbose=True):
     use_masked = fixed_to_nan
     idx = np.array([i for i, time in enumerate(frqs.samples) if
                     burnin <= time <= burnin + gens])
@@ -36,7 +37,7 @@ def freqs_to_cov(frqs, burnin = 10000, gens=150, with_G=True,
         return covs, G
     return covs
 
-def covs_from_file(file, verbose=False, *args, **kwargs):
+def covs_from_file(file, verbose=True, *args, **kwargs):
     freqs = freqs_to_cov(sf.parse_slim_ragged_freqs(file), *args, **kwargs)
     if verbose:
         print(f"loading file {file} done.")
@@ -49,26 +50,30 @@ def downsample_vector(x, subsample):
 conv = {"seed": int, "s": float, "rbp": float, "region_length": int, "nmu": float,
         "smu": float, "U":float, "N": int}
 
-res = sf.SimResults('../data/sims/bgs',
+res = sf.SimResults('../data/sims/bgs/',
+                    pattern = "bgs_1000N_1e-08rbp_.*s_1e-08nmu_.*U.*",
                     suffixes={"_neutfreqs.tsv": "neutral_freqs",
                               "_stats.tsv": "stats"},
                     converters=conv)
-
-df = res.results[res.results['N'] == 1000]
+df = res.results
 
 # calculate the covariances / G
 nsamples = 30
+print(f"entries to process: {nsamples * df.shape[0]}")
 BGS_COVS = "../data/sims_intermediate/bgs_covs.pkl"
-pool = Pool(processes = 30)
+pool = Pool(processes = 10)
 
 if not os.path.exists(BGS_COVS):
-    all_covs = {}
+    all_covs = defaultdict(list)
     n = df.shape[0]
+    keys = df.key.values.tolist()
     for i, reps in enumerate(df.neutral_freqs_file.values.tolist()):
+        key = keys[i]
+        print(key)
         print(f"starting processing for simulation parameter set {i}/{n}...\t", end="")
         rep_covs = pool.map(covs_from_file, downsample_vector(reps, nsamples))
         print("done.")
-        all_covs.append(rep_covs)
+        all_covs[key].extend(rep_covs)
     with open(BGS_COVS, 'wb') as f:
         pickle.dump(all_covs, f)
 else:

@@ -16,6 +16,7 @@ if nb_dir not in sys.path:
     sys.path.append(nb_dir)
 
 import pickle
+import itertools 
 import random
 from multiprocessing import Pool
 from collections import defaultdict
@@ -28,10 +29,17 @@ import cvtk.slimfile as sf
 from cvtk.process_sims import freqs_to_cov, covs_from_file
 from cvtk.process_sims import covs_from_twopop
 
+
+def round_sig(x, sig=4):
+  if x == 0.:
+    return 0
+  return round(x, sig-int(np.floor(np.log10(np.abs(x))))-1)
+
 # -------- Params ----------
 SIMDIR = "../sims/"
 OUTDIR = ""
 NREPS = 30  # how many of total to run
+region_length = 50e6
 
 # ------- Shared Parameters -------
 Ns = [1000]
@@ -43,7 +51,7 @@ nmus = [1e-8]
 # BGS paramters
 #Us = [0.25, 0.5, 0.75, 1, 1.25, 1.5]
 Us = [0.5, 1, 1.5]
-bgs_rbps = [1e-8]
+bgs_rbps = [1e-8, 1e-7]
 selcoefs = [1e-1, 0.5e-1, 1e-2, 0]
 fixed_to_nan = [False]
 bgs_nreps = range(NREPS)
@@ -81,7 +89,7 @@ rule bgswf_covs:
     
     
   
-# ------- Sampled Line Simualtions, Truncation Selection -------
+# ------- Sampled Line Simulation, Truncation Selection -------
 # tail probabilities
 #tail = [0.01]
 tail = [0.01, 0.1, 0.25, 0.5]
@@ -147,7 +155,156 @@ rule trunc_covs:
     with open(outfile, 'wb') as f:
         pickle.dump(out, f)
 
+ 
+# ------- Sampled Line Simulation, Exponential Fitness -------
+# NOTE: a lot of this is directly borrowed  / modified from the simulation
+# Snakefile
+
+# the following is from the original snakefile for sims
+def dict_product(dicts):
+    return (dict(zip(dicts, x)) for x in itertools.product(*dicts.values()))
+
+def Va_to_alphas(d):
+    "For a given target Va and number of loci, return alphas and trait mutation rate" 
+    # under neutrality, 
+    Va, L, N = [d[v] for v in ('Va', 'L', 'N')]
+    theta = L / (0.577 + np.log(2 * N))
+    tmu = theta / (4 * N * region_length) if Va > 0. else 0.
+    return dict(alpha = round_sig(np.sqrt(Va / theta)), tmu = round_sig(tmu))
+
+Ls = [1, 10, 100, 1000]
+Vas = [0, 0.001, 0.002, 0.005, 0.01]
+
+
+expfit_nreps = range(NREPS)
+mag = [1, 0.1]
+
+split_exp_pattern = ("split_exp/split_exp_{N}N_{rbp}rbp_" + 
+                   "{Va}Va_{alpha}alpha_{nmu}nmu_{tmu}tmu_" + 
+                   "{L}L_{mag}mag_{shifttime}shifttime_" + 
+                   "{shifttype}shifttype_{sampleN}sampleN_{nrep}_{sim_output}")
+ 
+# trunc_outputs are same as split_exp, so re-using
+expfit_params = list(dict_product(dict(Va = Vas, L = Ls, nmu=nmus, 
+                                       mag = mag, shifttime = shifttime,
+                                       sampleN = sampleN,
+                                       shifttype = shifttype,
+                                       sim_output = trunc_outputs,
+                                       rbp = gss_rbps, N=Ns, nrep= expfit_nreps)))
+
+# trunc_outputs are same as split_exp, so re-using
+split_exp_pattern_subpops = [split_exp_pattern.replace("{sim_output}", out) for 
+                             out in trunc_outputs]
+
+split_exp_covs_pattern = split_exp_pattern.replace("{sim_output}", "with_fixations_covs.pkl") 
+
+# build simulation files from the parameters 
+split_exp_covs = []
+for d in expfit_params:
+  d.update(Va_to_alphas(d))
+  file = split_exp_covs_pattern.format(**d)
+  split_exp_covs.append(OUTDIR + file)
+
+
+split_exp_outputs = ["subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
+
+rule split_exp_covs_all:
+  input:
+    split_exp_covs
+
+rule split_exp_covs:
+  input:
+    SIMDIR + split_exp_pattern_subpops[0],
+    SIMDIR + split_exp_pattern_subpops[1]
+  output:
+    OUTDIR + split_exp_covs_pattern
+  run:
+    param_dict = dict(N=wildcards.N, rbp=wildcards.rbp, alpha=wildcards.alpha,
+                      Va=wildcards.Va, 
+                      L=wildcards.L, 
+                      mag=wildcards.mag, 
+                      nmu=wildcards.nmu, 
+                      tmu=wildcards.tmu, 
+                      shifttime=wildcards.shifttime,
+                      shifttype=wildcards.shifttype,
+                      sampleN=wildcards.sampleN,
+                      nrep=wildcards.nrep)
+    neutfreqs1_file = SIMDIR + split_exp_pattern_subpops[0].format(**param_dict)
+    neutfreqs2_file = SIMDIR + split_exp_pattern_subpops[1].format(**param_dict)
+    outfile = OUTDIR + split_exp_covs_pattern.format(**param_dict)
+    out = covs_from_twopop((neutfreqs1_file, neutfreqs2_file), 
+                           end = 55,
+                           fixed_to_nan=False)
+    with open(outfile, 'wb') as f:
+        pickle.dump(out, f)
+
+
+# ------- Truncation Selection, Temporal Block Sampling -------
+
+blockn = [10]
+block_N = [1000]
+block_rbp = [1e-8]
+block_alpha  = [0.01]
+block_nmu = [1e-8]
+block_tmu = [1e-8]
+block_tail = [0.1]
+block_shifttime = [5]
+block_shifttype = ['converge']
+block_sampleN = [1000]
+
+trunc_block_pattern = ("block_sampling_split_trunc_{N}N_{rbp}rbp_{alpha}alpha_{nmu}nmu_" + 
+                       "{tmu}tmu_{tail}tail_{shifttime}shifttime_" + 
+                       "{shifttype}shifttype_{sampleN}sampleN_{blockn}blockn_{nrep}_{sim_output}")
+
+BLOCK_OUTDIR = "block_sampling/"
+
+BLOCK_OUT_SUFFIX = 'with_fixations_covs.pkl'
+
+trunc_covs_block_results = expand(BLOCK_OUTDIR + trunc_block_pattern,
+                                  alpha=block_alpha, 
+                                  nmu=block_nmu, 
+                                  tmu=block_tmu, 
+                                  rbp=block_rbp,
+                                  N=block_N, nrep=trunc_nreps,
+                                  shifttime=block_shifttime,
+                                  shifttype=block_shifttype,
+                                  sampleN=block_sampleN,
+                                  tail=block_tail,
+                                  blockn=blockn,
+                                  sim_output=[BLOCK_OUT_SUFFIX])
+ 
+
+rule trunc_covs_blocks_all:
+  input:
+    trunc_covs_block_results
+
+rule trunc_covs_blocks:
+  input:
+    SIMDIR + trunc_pattern_subpops[0],
+  output:
+    BLOCK_OUTDIR + trunc_block_pattern.replace("{sim_output}", BLOCK_OUT_SUFFIX)
+  run:
+    param_dict = dict(nrep=wildcards.nrep, 
+                      blockn=wildcards.blockn,
+                      alpha=wildcards.alpha, 
+                      nmu=wildcards.nmu, 
+                      tmu=wildcards.tmu, 
+                      rbp=wildcards.rbp,
+                      N=wildcards.N, 
+                      shifttime=wildcards.shifttime,
+                      shifttype=wildcards.shifttype,
+                      sampleN=wildcards.sampleN,
+                      tail=wildcards.tail)
+    neutfreqs_file = SIMDIR + trunc_pattern_subpops[0].format(**param_dict)
+    outfile = BLOCK_OUTDIR + trunc_block_pattern.replace("{sim_output}", BLOCK_OUT_SUFFIX).format(**param_dict)
+    sampled_gens = np.arange(10005, 10005 + 100, int(wildcards.blockn))
+    out = covs_from_file(neutfreqs_file, sampled_gens=sampled_gens, fixed_to_nan=False)
+    with open(outfile, 'wb') as f:
+        pickle.dump(out, f)
+  
 
 rule all:
   input:
-    trunc_covs_results + bgswf_covs_results
+    trunc_covs_results + bgswf_covs_results + trunc_covs_block_results + split_exp_covs
+
+

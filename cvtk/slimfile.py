@@ -174,13 +174,6 @@ def get_suffix(file, suffixes):
     assert(matches == 1)
     return suffixes[match]
 
-def these_sims_vary_over(params):
-    uniq = defaultdict(set)
-    for param in params:
-        for key, val in param.items():
-            uniq[key].add(val)
-    return uniq
-
 
 class SimResults(object):
     def __init__(self, dir, suffixes, pattern=None,

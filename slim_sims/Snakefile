@@ -65,7 +65,46 @@ rule bgs_clean:
     "find ../data/sims/bgs/ -maxdepth 1 -name 'bgs_*'  | xargs rm -rf "
 
 
+# ------- BGS Split Pop Simlations -------
+# BGS paramters
+split_bgs_Us = [1]
+split_bgs_rbps = [1e-8]
+split_bgs_selcoefs = [0.05]
+split_bgs_sampleN = [50, 100, 200, 1000]
 
+split_bgs_outputs = ["stats.tsv", "subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
+split_bgs_pattern = ("split_bgs/split_bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{sampleN}sampleN_"
+                     "{nrep}_{sim_output}")
+
+split_bgs_results = expand(DATADIR + split_bgs_pattern,
+                     s=split_bgs_selcoefs, nmu=nmus, U=split_bgs_Us, rbp=split_bgs_rbps,
+                     N=Ns, nrep=nreps,
+                     sampleN=split_bgs_sampleN,
+                     sim_output = split_bgs_outputs)
+
+# this is a dummy rule so if we can run the BGS sims separately
+# (avoiding the "target may not contain wildcards" error 
+rule split_bgs_all:
+  input:
+    split_bgs_results
+
+rule split_bgs:
+  input:
+    "split_bgs.slim"
+  output:
+    DATADIR + split_bgs_pattern.replace("{sim_output}", split_bgs_outputs[0]),
+    DATADIR + split_bgs_pattern.replace("{sim_output}", split_bgs_outputs[1]),
+    DATADIR + split_bgs_pattern.replace("{sim_output}", split_bgs_outputs[2])
+  shell:
+    """
+    mkdir -p {DATADIR}/split_bgs/
+
+    # the output files are automatically generated from the SLiM script
+    {SLIM} -d N={wildcards.N} \
+     -d rbp={wildcards.rbp} -d nrep={wildcards.nrep} \
+     -d s={wildcards.s} -d nmu={wildcards.nmu} -d U={wildcards.U} \
+     -d sampleN={wildcards.sampleN} -d run_generations=150 {input}
+    """
 
 # ------- GSS Burnin Simlations -------
 # GSS paramters

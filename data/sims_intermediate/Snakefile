@@ -173,11 +173,13 @@ def Va_to_alphas(d):
     return dict(alpha = round_sig(np.sqrt(Va / theta)), tmu = round_sig(tmu))
 
 Ls = [1, 10, 100, 1000]
-Vas = [0, 0.001, 0.002, 0.005, 0.01]
+#Vas = [0, 0.001, 0.002, 0.005, 0.01]
+Vas = [0, 0.001, 0.005, 0.01]
 
 
 expfit_nreps = range(NREPS)
-mag = [1, 0.1]
+#mag = [1, 0.1]
+mag = [1]
 
 split_exp_pattern = ("split_exp/split_exp_{N}N_{rbp}rbp_" + 
                    "{Va}Va_{alpha}alpha_{nmu}nmu_{tmu}tmu_" + 
@@ -256,7 +258,7 @@ trunc_block_pattern = ("block_sampling_split_trunc_{N}N_{rbp}rbp_{alpha}alpha_{n
                        "{tmu}tmu_{tail}tail_{shifttime}shifttime_" + 
                        "{shifttype}shifttype_{sampleN}sampleN_{blockn}blockn_{nrep}_{sim_output}")
 
-BLOCK_OUTDIR = "block_sampling/"
+BLOCK_OUTDIR = "trunc_blocks/"
 
 BLOCK_OUT_SUFFIX = 'with_fixations_covs.pkl'
 
@@ -303,8 +305,62 @@ rule trunc_covs_blocks:
         pickle.dump(out, f)
   
 
+
+# ------- Exponential Fitness Function, Temporal Block Sampling -------
+
+block_exp_pattern = ("block_sampling_split_exp_{N}N_{rbp}rbp_" + 
+                    "{Va}Va_{alpha}alpha_{nmu}nmu_{tmu}tmu_" + 
+                    "{L}L_{mag}mag_{shifttime}shifttime_" + 
+                    "{shifttype}shifttype_{sampleN}sampleN_{blockn}blockn_{nrep}_{sim_output}")
+
+block_expfit_params = list(dict_product(dict(Va = [0.001, 0.005, 0.01], L = [1000], nmu=[1e-8], 
+                                        mag = [1], shifttime = [5],
+                                        sampleN = [1000],
+                                        shifttype = ['converge'],
+                                        sim_output = trunc_outputs,
+                                        blockn=blockn,
+                                        rbp = [1e-8], N=[1000], nrep= expfit_nreps)))
+
+EXPFIT_BLOCK_OUTDIR = 'expfit_blocks/'
+
+# build simulation files from the parameters 
+block_exp_covs = []
+for d in block_expfit_params:
+  d.update(Va_to_alphas(d))
+  file = block_exp_pattern.replace("{sim_output}", BLOCK_OUT_SUFFIX).format(**d)
+  block_exp_covs.append(EXPFIT_BLOCK_OUTDIR + file)
+
+rule expfit_covs_blocks_all:
+  input:
+    block_exp_covs
+
+rule expfit_covs_blocks:
+  input:
+    SIMDIR + split_exp_pattern_subpops[0],
+  output:
+    EXPFIT_BLOCK_OUTDIR+ block_exp_pattern.replace("{sim_output}", BLOCK_OUT_SUFFIX)
+  run:
+     param_dict = dict(nrep=wildcards.nrep, 
+                      blockn=wildcards.blockn,
+                      alpha=wildcards.alpha, 
+                      Va=wildcards.Va,
+                      L=wildcards.L,
+                      mag=wildcards.mag,
+                      nmu=wildcards.nmu, 
+                      tmu=wildcards.tmu, 
+                      rbp=wildcards.rbp,
+                      N=wildcards.N, 
+                      shifttime=wildcards.shifttime,
+                      shifttype=wildcards.shifttype,
+                      sampleN=wildcards.sampleN)
+     neutfreqs_file = SIMDIR + split_exp_pattern_subpops[0].format(**param_dict)
+     outfile = EXPFIT_BLOCK_OUTDIR + block_exp_pattern.replace("{sim_output}", BLOCK_OUT_SUFFIX).format(**param_dict)
+     sampled_gens = np.arange(10000, 10000 + 100, int(wildcards.blockn))
+     out = covs_from_file(neutfreqs_file, sampled_gens=sampled_gens, fixed_to_nan=False)
+     with open(outfile, 'wb') as f:
+         pickle.dump(out, f)
+
+
 rule all:
   input:
-    trunc_covs_results + bgswf_covs_results + trunc_covs_block_results + split_exp_covs
-
-
+    trunc_covs_results + bgswf_covs_results + trunc_covs_block_results + split_exp_covs + block_exp_covs

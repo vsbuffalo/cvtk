@@ -8,6 +8,9 @@ from multiprocessing import Pool
 from collections import defaultdict
 import pandas as pd
 import numpy as np
+from matplotlib.patches import Polygon
+import statsmodels.api as sm
+
 
 from cvtk.cvtk import TemporalFreqs, TiledTemporalFreqs
 from cvtk.cov import stack_temporal_covariances
@@ -50,7 +53,7 @@ def covs_from_twopop(files, end=None, *args, **kwargs):
             *freqs_to_covmat(freqs, times, pops, *args, **kwargs))
 
 
-def freqs_to_cov(frqs, burnin = 10000, gens=100,
+def freqs_to_cov(frqs, burnin = 10000, gens=150,
                  sampled_gens=None,
                  fixed_to_nan=False, verbose=False):
     """
@@ -175,15 +178,35 @@ def col_palette(param, cmap, reverse=False, max=1):
     cols = cmap(x)
     return {k: cols[i, :] for i, k in enumerate(sorted(param))}
 
-def average_runs(results):
-    "Average all replicate covariances and Gs"
+def average_runs(results, has_corr=True):
+    """Average all replicate covariances and Gs
+
+    has_corr: backwards compatability for runs without convergence correlation
+
+    """
     #Gs, covs = {}, {}
     out = {}
     for params, runs in results.items():
         Gs = np.stack(map(itemgetter(1), runs))
         covs = np.stack(map(itemgetter(0), runs))
-        dims = list(map(itemgetter(2), runs))
-        assert(len(set(dims)) == 1)
-        out[params] = covs, Gs, dims[0]
+        if has_corr:
+            conv_corrs = np.stack(map(itemgetter(2), runs))
+            dims = list(map(itemgetter(3), runs))
+            assert(len(set([(r, t) for r, t, _ in dims])) == 1)
+            out[params] = covs, Gs, conv_corrs, dims[0]
+        else:
+            dims = list(map(itemgetter(2), runs))
+            assert(len(set([(r, t) for r, t in dims])) == 1)
+            out[params] = covs, Gs, dims[0]
     return out
 
+
+def CI_polygon(x, lower, upper, smooth=True, frac=1./10, **kwargs):
+    if smooth:
+        lowess = sm.nonparametric.lowess
+        lower = lowess(lower, x, frac=frac)[:, 1]
+        upper = lowess(upper, x, frac=frac)[:, 1]
+    #verts = [(np.min(x), 0), *zip(lower, upper), (np.max(x), 0)]
+    verts = list(zip(x, lower)) + list(zip(reversed(x), reversed(upper)))
+    poly = Polygon(verts, **kwargs)
+    return poly

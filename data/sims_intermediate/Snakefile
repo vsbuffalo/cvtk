@@ -45,8 +45,6 @@ region_length = 50e6
 Ns = [1000]
 nmus = [1e-8]
 
-
-
 # ------- BGS Simlations -------
 # BGS paramters
 #Us = [0.25, 0.5, 0.75, 1, 1.25, 1.5]
@@ -84,6 +82,57 @@ rule bgswf_covs:
     neutfreqs_file = SIMDIR + bgswf_sim_pattern.format(**param_dict)
     outfile = OUTDIR + bgswf_covs_pattern.format(**param_dict)
     out = covs_from_file(neutfreqs_file, fixed_to_nan=False)
+    with open(outfile, 'wb') as f:
+        pickle.dump(out, f)
+    
+ 
+
+# ------- Two Pop/Sampled Line BGS Simlations -------
+# BGS paramters
+split_bgs_Us = [1]
+split_bgs_rbps = [1e-8]
+split_bgs_selcoefs = [0.05]
+split_bgs_sampleN = [50, 100, 200, 1000]
+
+split_bgs_outputs = ["subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
+
+# we use the paremeters above to extract a subset of available simulation result
+split_bgswf_pattern = ("split_bgs/split_bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu" + 
+                           "_{U}U_{sampleN}sampleN_{nrep}_{sim_output}")
+
+split_bgswf_covs_results = expand(OUTDIR + split_bgswf_pattern,
+                                  s=split_bgs_selcoefs, nmu=nmus, 
+                                  U=split_bgs_Us, rbp=split_bgs_rbps,
+                                  N=Ns, 
+                                  sampleN=split_bgs_sampleN, 
+                                  nrep=bgs_nreps,
+                                  sim_output=['with_fixations_covs.pkl'])
+
+split_bgswf_covs_pattern = split_bgswf_pattern.replace("{sim_output}", "with_fixations_covs.pkl")
+
+split_bgswf_pattern_subpops = [split_bgswf_pattern.replace("{sim_output}", f) for f in split_bgs_outputs]
+
+rule split_bgswf_covs_all:
+  input:
+    split_bgswf_covs_results
+
+rule split_bgswf_covs:
+  input:
+    SIMDIR + split_bgswf_pattern_subpops[0], 
+    SIMDIR + split_bgswf_pattern_subpops[1]
+  output:
+    OUTDIR + split_bgswf_covs_pattern
+  run: 
+    param_dict = dict(N=wildcards.N, rbp=wildcards.rbp, s=wildcards.s,
+                      nmu=wildcards.nmu, U=wildcards.U,
+                      sampleN=wildcards.sampleN,
+                      nrep=wildcards.nrep)
+    neutfreqs1_file = SIMDIR + split_bgswf_pattern_subpops[0].format(**param_dict)
+    neutfreqs2_file = SIMDIR + split_bgswf_pattern_subpops[1].format(**param_dict)
+    outfile = OUTDIR + split_bgswf_covs_pattern.format(**param_dict)
+    out = covs_from_twopop((neutfreqs1_file, neutfreqs2_file), 
+                           end = 55,
+                           fixed_to_nan=False)
     with open(outfile, 'wb') as f:
         pickle.dump(out, f)
     
@@ -176,8 +225,8 @@ Ls = [1, 10, 100, 1000]
 #Vas = [0, 0.001, 0.002, 0.005, 0.01]
 Vas = [0, 0.001, 0.005, 0.01]
 
-
-expfit_nreps = range(NREPS)
+# more reps for this
+expfit_nreps = range(50)
 #mag = [1, 0.1]
 mag = [1]
 
@@ -363,4 +412,4 @@ rule expfit_covs_blocks:
 
 rule all:
   input:
-    trunc_covs_results + bgswf_covs_results + trunc_covs_block_results + split_exp_covs + block_exp_covs
+    trunc_covs_results + bgswf_covs_results + trunc_covs_block_results + split_exp_covs + block_exp_covs + split_bgswf_covs_results

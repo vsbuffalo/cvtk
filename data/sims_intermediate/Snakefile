@@ -227,6 +227,7 @@ Vas = [0, 0.001, 0.005, 0.01]
 
 # more reps for this
 expfit_nreps = range(50)
+expfit_sampleN = [50, 100, 200, 500, 1000]
 #mag = [1, 0.1]
 mag = [1]
 
@@ -238,7 +239,7 @@ split_exp_pattern = ("split_exp/split_exp_{N}N_{rbp}rbp_" +
 # trunc_outputs are same as split_exp, so re-using
 expfit_params = list(dict_product(dict(Va = Vas, L = Ls, nmu=nmus, 
                                        mag = mag, shifttime = shifttime,
-                                       sampleN = sampleN,
+                                       sampleN = expfit_sampleN,
                                        shifttype = shifttype,
                                        sim_output = trunc_outputs,
                                        rbp = gss_rbps, N=Ns, nrep= expfit_nreps)))
@@ -362,13 +363,14 @@ block_exp_pattern = ("block_sampling_split_exp_{N}N_{rbp}rbp_" +
                     "{L}L_{mag}mag_{shifttime}shifttime_" + 
                     "{shifttype}shifttype_{sampleN}sampleN_{blockn}blockn_{nrep}_{sim_output}")
 
-block_expfit_params = list(dict_product(dict(Va = [0.001, 0.005, 0.01], L = [1000], nmu=[1e-8], 
-                                        mag = [1], shifttime = [5],
+expfit_blockn = [1, 10]
+block_expfit_params = list(dict_product(dict(Va = [0.01], L = [1000], nmu=[1e-8], 
+                                        mag = [1], shifttime = [0],
                                         sampleN = [1000],
-                                        shifttype = ['converge'],
+                                        shifttype = ['single'],
                                         sim_output = trunc_outputs,
-                                        blockn=blockn,
-                                        rbp = [1e-8], N=[1000], nrep= expfit_nreps)))
+                                        blockn=expfit_blockn,
+                                        rbp = [1e-8], N=[1000], nrep=expfit_nreps)))
 
 EXPFIT_BLOCK_OUTDIR = 'expfit_blocks/'
 

@@ -189,7 +189,7 @@ def average_runs(results, has_corr=True):
     for params, runs in results.items():
         Gs = np.stack(map(itemgetter(1), runs))
         covs = np.stack(map(itemgetter(0), runs))
-        if has_corr:
+        if has_corr or len(runs[0]) == 4:
             conv_corrs = np.stack(map(itemgetter(2), runs))
             dims = list(map(itemgetter(3), runs))
             assert(len(set([(r, t) for r, t, _ in dims])) == 1)

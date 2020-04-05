@@ -246,6 +246,16 @@ expfit_params = list(dict_product(dict(Va = Vas, L = Ls, nmu=nmus,
                                        shifttype = shifttype,
                                        sim_output = expfit_outputs,
                                        rbp = gss_rbps, N=Ns, nrep= range(50))))
+
+# add in some special runs for block covariances
+block_runs = list(dict_product(dict(Va = [0.01], L=[1000], nmu=nmus,
+                               mag=[1], shifttime=[0],
+                               sampleN=[1000], shifttype=['single'],
+                               sim_output=expfit_outputs,
+                               rbp=[1e-8], N=[1000], nrep=range(50))))
+# add in these runs
+expfit_params.extend(block_runs)
+
 # add in the VA / tmu parameters as they're calculated
 expfit_results = []
 for d in expfit_params:

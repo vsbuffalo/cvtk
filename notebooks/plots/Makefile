@@ -7,7 +7,10 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
   ../../manuscript/figures/bergland-correction-plot.pdf ../../manuscript/figures/bergland-covs-figure.pdf \
    ../../manuscript/figures/bergland-combined-hists.pdf ../../manuscript/figures/barghi-cov-panels.pdf \
    ../../manuscript/figures/castro_rep_cis.pdf ../../manuscript/figures/barghi-trimmed-mean.pdf \
-	../../manuscript/figures/barghi-panel-pca.pdf
+	../../manuscript/figures/barghi-panel-pca.pdf  \
+	../../manuscript/figures/fig-architecture-G.pdf ../../manuscript/figures/fig-architecture-cov.pdf \
+	../../manuscript/figures/fig-bgs-covars.pdf  ../../manuscript/figures/fig-convergence-corrs.pdf \
+	../../manuscript/figures/fig-supp-blocks.pdf
 
 ../../manuscript/figures/figure-1.pdf: figure-1.pdf
 		cp figure-1.pdf ../../manuscript/figures/figure-1.pdf
@@ -69,3 +72,17 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 ../../manuscript/figures/barghi-panel-pca.pdf: barghi-panel-pca.pdf
 		cp $< $@
 
+../../manuscript/figures/fig-architecture-G.pdf: fig-architecture-G.pdf 
+		cp $< $@
+
+../../manuscript/figures/fig-architecture-cov.pdf: fig-architecture-cov.pdf
+		cp $< $@
+
+../../manuscript/figures/fig-bgs-covars.pdf: fig-bgs-covars.pdf
+		cp $< $@
+
+../../manuscript/figures/fig-convergence-corrs.pdf: fig-convergence-corrs.pdf
+		cp $< $@
+
+../../manuscript/figures/fig-supp-blocks.pdf: fig-supp-blocks.pdf
+		cp $< $@

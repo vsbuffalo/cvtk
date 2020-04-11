@@ -349,7 +349,9 @@ class TiledTemporalFreqs(TemporalFreqs):
         and then the convergence correlation is calculated on those.
         """
         # our statistic:
-        conv_corr = self.convergence_corr(subset=subset, bias_correction=bias_correction)
+        conv_corr = self.convergence_corr(subset=subset,
+                                          keep_seqids=keep_seqids,
+                                          bias_correction=bias_correction)
 
         if not ratio_of_averages:
             return block_bootstrap(self.freqs, B=B, block_indices=self.tile_indices,

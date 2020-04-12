@@ -10,8 +10,9 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 	../../manuscript/figures/barghi-panel-pca.pdf  \
 	../../manuscript/figures/fig-architecture-G.pdf ../../manuscript/figures/fig-architecture-cov.pdf \
 	../../manuscript/figures/fig-bgs-covars.pdf  ../../manuscript/figures/fig-convergence-corrs.pdf \
-	../../manuscript/figures/fig-supp-blocks.pdf ../../manuscript/figures/castro_corr_cis.pdf\
-	../../manuscript/figures/kh_rep_corrs_cis.pdf ../../manuscript/figures/figure-2-revision.pdf
+	../../manuscript/figures/fig-supp-blocks.pdf ../../manuscript/figures/castro_corr_cis.pdf \
+	../../manuscript/figures/kh_rep_corrs_cis.pdf ../../manuscript/figures/figure-2-revision.pdf \
+	 ../../manuscript/figures/figure-1-revision.pdf ../../manuscript/figures/figure-3-revision.pdf
 
 ../../manuscript/figures/figure-1.pdf: figure-1.pdf
 		cp figure-1.pdf ../../manuscript/figures/figure-1.pdf
@@ -95,4 +96,10 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 		cp $< $@
 
 ../../manuscript/figures/figure-2-revision.pdf: figure-2-revision.pdf
+		cp $< $@
+
+../../manuscript/figures/figure-1-revision.pdf: figure-1-revision.pdf
+		cp $< $@
+
+../../manuscript/figures/figure-3-revision.pdf: figure-3-revision.pdf
 		cp $< $@

@@ -1,4 +1,4 @@
-# this crasheson OS X: use mpl.use("TkAgg") manually
+#ftp://ftp.tuebingen.mpg.de/fml/ag-chan/Longshanks/ this crasheson OS X: use mpl.use("TkAgg") manually
 # backend      : tkAgg 
 
 ### Boxplots
@@ -140,8 +140,8 @@ ytick.direction      : out    ## direction: in, out, or inout
 axes.labelpad        : 5.0     ## space between label and axis
 xtick.labelsize      : 12  ## fontsize of the tick labels
 ytick.labelsize      : 12 ## fontsize of the tick labels
-xtick.major.pad      : 5.5    ## distance to major tick label in points
-ytick.major.pad      : 5.5    ## distance to major tick label in points
+xtick.major.pad      : 4    ## distance to major tick label in points
+ytick.major.pad      : 4    ## distance to major tick label in points
 axes.spines.top    : False
 axes.spines.right  : False
 legend.frameon        : False     ## if True, draw the legend on a background patch

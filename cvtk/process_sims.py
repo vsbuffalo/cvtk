@@ -14,9 +14,12 @@ import statsmodels.api as sm
 
 from cvtk.cvtk import TemporalFreqs, TiledTemporalFreqs
 from cvtk.cov import stack_temporal_covariances
+from cvtk.gintervals import GenomicIntervals
 import cvtk.slimfile as sf
 
-def freqs_to_covmat(frqs, times, pops=None, fixed_to_nan=False):
+def freqs_to_covmat(frqs, times,
+                    pops=None, fixed_to_nan=False,
+                    return_object=False, loci=None):
     """
     Take a frequency file, load it into cvtk, and convert to
     a tuple of covariances, Gs, and the object itself.
@@ -28,13 +31,23 @@ def freqs_to_covmat(frqs, times, pops=None, fixed_to_nan=False):
     freqmat = frqs.copy()
     if fixed_to_nan:
         freqmat[np.logical_or(freqmat == 0., freqmat == 1.)] = np.nan
+    if return_object:
+        # make a ginterval object for loci
+        gi = GenomicIntervals()
+        for locus in sorted(loci):
+            # assumes this is out of SlimFile processing funcs,
+            # positions is list.
+            gi.append('1', locus)  # only one chrom in sims
+        d = TemporalFreqs(freqmat, samples, gintervals=gi)
+        return d
     d = TemporalFreqs(freqmat, samples)
     covs = d.calc_cov(use_masked=use_masked)
     G = d.calc_G(use_masked=use_masked)
     conv_corr = d.convergence_corr()
     return covs, G, conv_corr, (d.R, d.T, d.L)
 
-def covs_from_twopop(files, end=None, *args, **kwargs):
+def covs_from_twopop(files, end=None, return_object=False,
+                     *args, **kwargs):
     file_1, file_2 = files
     freqs_1 = sf.parse_slim_ragged_freqs(file_1)
     freqs_2 = sf.parse_slim_ragged_freqs(file_2)
@@ -49,6 +62,11 @@ def covs_from_twopop(files, end=None, *args, **kwargs):
         times = times[np.arange(end)]
     freqs = np.concatenate((fqs_1, fqs_2), axis=0)
     pops = [0] * fqs_1.shape[0] + [1] * fqs_2.shape[0]
+    if return_object:
+        # we include the loci here
+        return freqs_to_covmat(freqs, times, pops,
+                               return_object=True,
+                               loci=freqs_1.positions)
     return ((freqs_1.params, freqs_2.params),
             *freqs_to_covmat(freqs, times, pops, *args, **kwargs))
 

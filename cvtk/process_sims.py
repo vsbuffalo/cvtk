@@ -72,7 +72,7 @@ def covs_from_twopop(files, end=None, return_object=False,
 
 
 def freqs_to_cov(frqs, burnin = 10000, gens=150,
-                 sampled_gens=None,
+                 sampled_gens=None, with_total_var=False,
                  fixed_to_nan=False, verbose=False):
     """
     More custamizable function for taking neutral frequencies and
@@ -98,10 +98,15 @@ def freqs_to_cov(frqs, burnin = 10000, gens=150,
     G = d.calc_G(use_masked=use_masked)
     if verbose:
         print(f"done calculating G...")
+    if with_total_var:
+        var = [d.calc_var(t=t) for t in range(d.T)]
+        return frqs.params, covs, G, (d.R, d.T), var
     return frqs.params, covs, G, (d.R, d.T)
 
-def covs_from_file(file, verbose=False, *args, **kwargs):
-    covs = freqs_to_cov(sf.parse_slim_ragged_freqs(file), *args, **kwargs)
+def covs_from_file(file, verbose=False, with_total_var=False, *args, **kwargs):
+    covs = freqs_to_cov(sf.parse_slim_ragged_freqs(file),
+                        with_total_var=with_total_var,
+                        *args, **kwargs)
     if verbose:
         print(f"loading file {file} done.")
     return covs
@@ -196,10 +201,12 @@ def col_palette(param, cmap, reverse=False, max=1):
     cols = cmap(x)
     return {k: cols[i, :] for i, k in enumerate(sorted(param))}
 
-def average_runs(results, has_corr=True):
+def average_runs(results, has_corr=True, has_var=True):
     """Average all replicate covariances and Gs
 
     has_corr: backwards compatability for runs without convergence correlation
+    has_var: more hacks, this time for block covariances where we need to track
+              total variance.
 
     """
     #Gs, covs = {}, {}
@@ -207,11 +214,16 @@ def average_runs(results, has_corr=True):
     for params, runs in results.items():
         Gs = np.stack(map(itemgetter(1), runs))
         covs = np.stack(map(itemgetter(0), runs))
-        if has_corr or len(runs[0]) == 4:
+        if has_corr:
             conv_corrs = np.stack(map(itemgetter(2), runs))
             dims = list(map(itemgetter(3), runs))
             assert(len(set([(r, t) for r, t, _ in dims])) == 1)
             out[params] = covs, Gs, conv_corrs, dims[0]
+        elif has_var:
+            vars = np.stack(map(itemgetter(3), runs))
+            dims = list(map(itemgetter(2), runs))
+            assert(len(set([(r, t) for r, t in dims])) == 1)
+            out[params] = covs, Gs, vars, dims[0]
         else:
             dims = list(map(itemgetter(2), runs))
             assert(len(set([(r, t) for r, t in dims])) == 1)

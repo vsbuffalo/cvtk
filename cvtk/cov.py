@@ -369,11 +369,6 @@ def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True,
     pt_p0 = (freqs[:, t, :] - freqs[:, 0, :])
     var_pt_p0 = np.nanvar(pt_p0, axis=1)
 
-    if not bias_correction:
-        if standardize:
-            return var_pt_p0 / np.nanmean(hets[:, 0, :], axis=1)
-        return var_pt_p0
-
     diploid_correction = 0.
     depth_correction = 0.
     var_correction = 0.
@@ -389,6 +384,13 @@ def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True,
                 diploid_correction = diploid_correction + b
     # the bias vector for all timepoints
     hets = calc_hets(freqs, depths=depths, diploids=diploids)[:, (0, t), :]
+
+    if not bias_correction:
+        if standardize:
+            # note: factor of two issue was found here in revisions and fixed
+            return var_pt_p0 / (0.5 * np.nanmean(hets[:, 0, :], axis=1))
+        return var_pt_p0
+
     ave_bias += np.nanmean(0.5 * hets * (diploid_correction + depth_correction), axis=2)
     var_correction += (- ave_bias[:, 0] - ave_bias[:, 1])
     out =  var_pt_p0 + var_correction
@@ -398,6 +400,7 @@ def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True,
         msg = "Some bias-corrected variances were negative!"
         warnings.warn(msg)
     if standardize:
-        out = out / np.nanmean(hets[:, 0, :], axis=1)
+        # note: factor of two issue was found here in revisions and fixed
+        out = out / (0.5 * np.nanmean(hets[:, 0, :], axis=1))
     return out
 

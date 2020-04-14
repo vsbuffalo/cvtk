@@ -407,7 +407,8 @@ rule expfit_covs_blocks:
      neutfreqs_file = SIMDIR + split_exp_pattern_subpops[0].format(**param_dict)
      outfile = EXPFIT_BLOCK_OUTDIR + block_exp_pattern.replace("{sim_output}", BLOCK_OUT_SUFFIX).format(**param_dict)
      sampled_gens = np.arange(10000, 10000 + 100, int(wildcards.blockn))
-     out = covs_from_file(neutfreqs_file, sampled_gens=sampled_gens, fixed_to_nan=False)
+     out = covs_from_file(neutfreqs_file, sampled_gens=sampled_gens, fixed_to_nan=False,
+                          with_total_var=True)
      with open(outfile, 'wb') as f:
          pickle.dump(out, f)
 

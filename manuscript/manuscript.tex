@@ -1475,21 +1475,22 @@ directions, or only one lines elected).
 
 Due to the high computational burden of forward simulations, we modeled a
 single 50 megabase region in a population of $N = 1000$ diploid individuals
-with a neutral variant mutation rate of $10^8$. This is roughly analogous to a
-XXX chromosome of \emph{Drosophila melanogaster}; however with this small
-population size and mutation rate, the population mutation rate $\theta$ for
-the entire region leads to far fewer neutral sites to calculate covariances and
-other statistics on than expected for a region this length in \emph{D.
-melanogaster}. Since our main goal is to understand how the dynamics of
-statistics used in the paper and how they are affected by background
-selection, fitness model, and trait architecture, we use population
-frequencies rather than sampling frequencies.
+with a neutral variant mutation rate of $10^{-8}$ and a recombination rate of
+$10^{-8}$ per basepair. This is roughly analogous to a XXX chromosome of
+\emph{Drosophila melanogaster}; however with this small population size and
+mutation rate, the population mutation rate $\theta$ for the entire region
+leads to far fewer neutral sites to calculate covariances and other statistics
+on than expected for a region this length in \emph{D.  melanogaster}. Since our
+main goal is to understand how the dynamics of statistics used in the paper and
+how they are affected by background selection, fitness model, and trait
+architecture, we use population frequencies rather than sampling frequencies.
 
 All forward simulations were conducted using SLiM \parencite{Haller2019-vu},
 and the simulation routines are available in the Github repository
 \url{https://github.com/vsbuffalo/cvtk/}.
 
 \subsubsection{The Effects of the Genetic Architecture}
+\label{supp:genetic-arch}
 
 We first investigated the effects of the selected trait's genetic architecture
 on temporal covariances and $G(t)$ by neutrally burning in a population for
@@ -1579,13 +1580,59 @@ is evident by the initial flat section of the $G(t)$ trajectory.}
 
 \subsubsection{Sampling in Temporal Blocks}
 
+In our analysis of the \textcite{Barghi2019-qy} data, we describe our statistic
+$G(t)$ as an lower bound for two reasons: (1) the population is sequenced every
+ten generations, meaning the temporal covariances between adjacent generations
+cannot contribute to the numerator of $G(t)$ but contribute to the denominator,
+and (2) the estimate of $G(t)$ ignores linked selection's contribution to the
+variance in allele frequency change (this is the difference between $G$ and
+$G'$, the latter of which includes these variance terms \cite{Buffalo2019-io}).
+To verify that $G(t)$ estimated every ten generations is indeed a lower bound,
+we used a simulation procedure similar to the exponential fitness function
+simulations (described in Supplementary Material Section
+\ref{supp:genetic-arch}), and calculated the temporal covariances and $G(t)$
+both each generation, and every ten generations. Unlike the simulations
+described in \ref{supp:genetic-arch}, we began selection at $10N$ generations,
+and used trait $V_A = 0.01$ and $L = 1000$ sites affecting the trait. 
+
+First, comparing $G(t)$ when sampling population frequencies every generation
+versus every ten generations, we confirm that the ten-generation block $G(t)$
+is a lower bound of the true every generation $G(t)$ (red and blue lines in
+Supplementary Figure \ref{suppfig:supp-blocks}A). Furthermore, since we control
+the population size in our simulations at $N = 1000$ diploids, we know the
+drift effective population size in the absence of selection. This allows us to
+estimate $G(t)'$, which is a measure of $G(t)$ that accounts for the linked
+selection's inflation of the variance in allele frequency change between two
+generations (equation 26, \cite{Buffalo2019-io}). Plugging in the drift
+effective population size $N_e = 1000$ into the expression for $G'(t)$ and
+using the $\var(p_t - p_0)$ calculated for different $t$'s, we see that the
+every generation $G(t)$ that does not account for linked selection's inflation
+of $\var(\Delta p_t)$ does underestimate the true impact of linked selection as
+expected (dashed gray line in Supplementary Figure \ref{suppfig:supp-blocks}A).
+
+To further understand the effects of calculating temporal covariances every ten
+generations rather than every generation, we also compared their magnitudes and
+decay rates using the simulations described above. We find that ten generation
+block temporal covariances are orders of magnitude larger but decay at similar
+rates (see Supplementary Figure \ref{suppfig:supp-blocks}B; note the two y-axis
+scales are different). The larger magnitude is expected, as each ten generation
+block temporal covariance is the sum of 
 
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/fig-supp-blocks.pdf}
 
-  \caption{}
+  \caption{A: The $G(t)$ averaged over 50 replicate simulations with $V_A =
+    0.01$ and $L = 1000$. The blue line shows $G(t)$ calculated over ten
+    generation blocks, similar to the calculation of temporal covariances of
+    the \textcite{Barghi2019-qy} study. The red line shows the average $G(t)$
+    estimates when the population is sampled every generation and all
+    covariances can contribute to the numerator of $G(t)$. The dashed gray line
+    indicates the $G(t)'$ estimate, which uses the known drift effective
+    population size of the simulations. B: The temporal covariances calculated
+    each generation (red line) and on ten generation blocks (blue line) using the
+    same simulation data.}
 
   \label{suppfig:supp-blocks}
 \end{figure}

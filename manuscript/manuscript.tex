@@ -1464,19 +1464,101 @@ follow that of seasonal fluctuating selection.
 \subsection{Simulation Results}
 
 We conducted extensive simulations to understand how temporal covariance,
-$G(t)$, and convergence correlations behave under (1) different fitness models,
-(2) different trait architectures (e.g. varying levels of $V_A$ for fitness and
-the number of sites affecting fitness), (3) background selection, (4) and 
+$G(t)$, and convergence correlations behave under (1) different quantitative
+genetic fitness models, (2) different trait architectures (e.g. varying levels
+of $V_A$ for fitness and the number of sites affecting fitness) and (3)
+background selection. Furthermore, we use two population simulations to
+investigate how convergence correlations depend on (1) the population sizes of
+each selection line sampled from the main population, and (2) the direction the
+trait is selected on in each line (i.e. in the same direction, differing
+directions, or only one lines elected).
+
+Due to the high computational burden of forward simulations, we modeled a
+single 50 megabase region in a population of $N = 1000$ diploid individuals
+with a neutral variant mutation rate of $10^8$. This is roughly analogous to a
+XXX chromosome of \emph{Drosophila melanogaster}; however with this small
+population size and mutation rate, the population mutation rate $\theta$ for
+the entire region leads to far fewer neutral sites to calculate covariances and
+other statistics on than expected for a region this length in \emph{D.
+melanogaster}. Since our main goal is to understand how the dynamics of
+statistics used in the paper and how they are affected by background
+selection, fitness model, and trait architecture, we use population
+frequencies rather than sampling frequencies.
+
+All forward simulations were conducted using SLiM \parencite{Haller2019-vu},
+and the simulation routines are available in the Github repository
+\url{https://github.com/vsbuffalo/cvtk/}.
 
 \subsubsection{The Effects of the Genetic Architecture}
+
+We first investigated the effects of the selected trait's genetic architecture
+on temporal covariances and $G(t)$ by neutrally burning in a population for
+$10N$ generations, and selecting on the trait with an exponential fitness
+function. By using an exponential fitness function (a form of selection
+multiplicative across sites), we ensure there is no build up of LD due to
+selection (XXX) and epistasis; this serves as the simplest directional
+selection model of a trait to understand the effects of genetic architecture on
+the statistics we have used in the paper.
+
+During this burnin, sites were either marked as neutral (with mutation rate
+$\mu_\mathrm{neutral} = 10^8$ per gamete per generation) or contributed to the
+trait's value (with mutation rate $\mu_\mathrm{trait}$), but were not selected
+on until generation $10N + 5$ (the five generations after burnin serve as a
+neutral control). The trait mutation rate, $\mu_\mathrm{trait}$ was set by
+targeting a particular architecture, the number of selected sites, $L$. Each
+site contributing to the trait's value was randomly chosen to have effect size
+$\pm \alpha$ with equal probability, where $\alpha$ was set to target a
+particular additive genetic variance for the trait, $V_A$, for the target
+number of selected sites $L$. 
+
+Overall, we confirm a finding in \parencite{Buffalo2019-io} that the initial
+expected temporal covariance conditioned on $V_A$, is invariant to the number
+of loci determining the trait's value, $L$ (Supplementary Figure
+\ref{suppfig:sim-expfit-covs}). We do find some evidence that the decay in
+temporal covariance is faster when the trait has a monogenic basis (see the
+third column of Supplementary Figure \ref{suppfig:sim-expfit-covs}); this is
+expected the selection coefficients are larger for these monogenic simulations,
+leading to faster allele frequency changes and a rapid change in additive
+genetic variance. 
+
+In our previous work, we did not investigate the affect of trait architecture
+on our measure $G(t)$.  Using the exponential fitness function simulations, we
+also calculated $G(t)$ for each of the replicate simulations. We find that
+across replicates, the $G(t)$ trajectories can vary considerably depending on
+the number of sites ($L$) determining the trait's value (Supplementary Figure
+\ref{suppfig:sim-expfit-Gs}). When a trait is monogenic ($L \approx 1$), $G(t)$
+trajectories vary considerably across replicate lines, as certain lines may not
+contain the few selected alleles (top row of Supplementary Figure
+\ref{suppfig:sim-expfit-Gs}). However, with a polygenic trait, ($L \ge 100$),
+the $G(t)$ trajectories across replicates are all quite close as each replicate
+contains an abundance of alleles that affect the trait's value (bottom rows of
+Supplementary Figure \ref{suppfig:sim-expfit-Gs}). Comparing the simulated
+$G(t)$ replicate trajectories of Supplementary Figure
+\ref{suppfig:sim-expfit-Gs} with the \textcite{Barghi2019-qy} $G(t)$
+trajectories in Figure \ref{fig:figure-1}B, we again confirm a finding of
+\textcite{Barghi2019-qy}: that there is considerable genetic redundancy among
+beneficial alleles. We should note that our simplified simulation routines are
+slightly different from the \textcite{Barghi2019-qy} study in that the burnin
+populations are all independent; however we expect the same qualitative result. 
+
+\vb{TODO: note about different burnin pops?}
+
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/fig-architecture-cov.pdf}
 
-  \caption{}
+  \caption{The temporal covariances $\cov(\Delta p_5, \Delta p_t)$ from the
+    onset of selection (generation 5) to a later time point $t$, which varies
+    along the x-axis, across a variety of different trait additive genetic
+    variances ($V_A$, columns) and number of sites contributing to the trait
+    ($L$, rows). Each point is the temporal covariance averaged over 50
+    replicate simulations; dark gray points are temporal covariances after the
+    onset of selection, and light gray points are before. The red line is a
+    loess smoothed curve through the covariances after the onset of selection.
+    Selection on the trait was imposed through an exponential fitness function.}
 
-  \label{suppfig:supp-blocks}
+  \label{suppfig:sim-expfit-covs}
 \end{figure}
 
 
@@ -1484,13 +1566,20 @@ the number of sites affecting fitness), (3) background selection, (4) and
   \centering
   \includegraphics[width=\textwidth]{figures/fig-architecture-G.pdf}
 
-  \caption{}
+  \caption{The $G(t)$ trajectories of 50 replicate simulations, across
+    different trait architectures ($L$ is the target number of sites affecting
+    the trait's value, and $V_A$ is the target trait additive genetic
+    variance).  The red line is the mean trajectory across all replicate
+  simulations. Like Supplementary Figure \ref{suppfig:sim-expfit-covs}, the
+onset of selection is five generations after the $10N$ generation burnin; this
+is evident by the initial flat section of the $G(t)$ trajectory.}
 
-  \label{suppfig:supp-blocks}
+  \label{suppfig:sim-expfit-Gs}
 \end{figure}
 
-
 \subsubsection{Sampling in Temporal Blocks}
+
+
 
 \begin{figure}[!ht]
   \centering

@@ -390,17 +390,21 @@ class TiledTemporalFreqs(TemporalFreqs):
 
 
     def bootstrap_G(self, B, abs=False, alpha=0.05, keep_seqids=None,
+                    use_masked=False,
                     average_replicates=False, ci_method='pivot',
                     progress_bar=False, **kwargs):
         """
         """
         # calc our statistic:
-        G = self.calc_G(average_replicates=average_replicates, abs=abs)
+        G = self.calc_G(average_replicates=average_replicates,
+                        use_masked=use_masked, abs=abs)
         vars = list()
         for t in np.arange(1, self.T+1):
             vars.append(np.stack(self.calc_var_by_tile(t=t, standardize=False)))
         total_vars = np.stack(vars, axis=1)
-        tile_covs = self.calc_cov_by_tile(standardize=False, keep_seqids=keep_seqids)
+        tile_covs = self.calc_cov_by_tile(standardize=False,
+                                          use_masked=use_masked,
+                                          keep_seqids=keep_seqids)
         covs = stack_temporal_covs_by_group(tile_covs, self.R, self.T)
         return block_bootstrap_ratio_averages(covs, total_vars,
                      block_indices=self.tile_indices,

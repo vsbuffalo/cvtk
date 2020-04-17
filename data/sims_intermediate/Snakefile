@@ -51,18 +51,18 @@ nmus = [1e-8]
 Us = [0.5, 1, 1.5]
 bgs_rbps = [1e-8, 1e-7]
 selcoefs = [1e-1, 0.5e-1, 1e-2, 0]
-fixed_to_nan = [False]
+fixations = ['with_fixations', 'without_fixations']
 bgs_nreps = range(NREPS)
 
 
 # we use the paremeters above to extract a subset of available simulation result
 bgswf_sim_pattern = "bgs/bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{nrep}_neutfreqs.tsv"
 
-bgswf_covs_pattern = ("bgs/bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{nrep}_with_fixations_covs.pkl")
-bgswf_covs_results = expand(OUTDIR + bgswf_covs_pattern,
+bgswf_covs_pattern = ("bgs/bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{nrep}_{fixations}_covs.pkl")
+bgswf_covs_results = expand(OUTDIR + "{fixations}/" + bgswf_covs_pattern,
                             s=selcoefs, nmu=nmus, U=Us, rbp=bgs_rbps,
                             N=Ns, 
-                            #fixed=fixed_to_nan, 
+                            fixations=fixations,
                             nrep=bgs_nreps)
 
 rule bgswf_covs_all:
@@ -73,17 +73,24 @@ rule bgswf_covs:
   input:
     SIMDIR + bgswf_sim_pattern
   output:
-    OUTDIR + bgswf_covs_pattern
+    OUTDIR + "with_fixations/" + bgswf_covs_pattern.replace('{fixations}', 'with_fixations'),
+    OUTDIR + "without_fixations/" + bgswf_covs_pattern.replace('{fixations}', 'without_fixations'),
   run: 
     param_dict = dict(N=wildcards.N, rbp=wildcards.rbp, s=wildcards.s,
                       nmu=wildcards.nmu, U=wildcards.U,
                       nrep=wildcards.nrep)
  
     neutfreqs_file = SIMDIR + bgswf_sim_pattern.format(**param_dict)
-    outfile = OUTDIR + bgswf_covs_pattern.format(**param_dict)
-    out = covs_from_file(neutfreqs_file, fixed_to_nan=False)
-    with open(outfile, 'wb') as f:
-        pickle.dump(out, f)
+    outfile_wf = OUTDIR + "with_fixations/" + bgswf_covs_pattern.replace('{fixations}', 
+                              'with_fixations').format(**param_dict)
+    outfile_wof = OUTDIR + "without_fixations/" + bgswf_covs_pattern.replace('{fixations}', 
+                              'without_fixations').format(**param_dict)
+    out_wf = covs_from_file(neutfreqs_file, fixed_to_nan=False)
+    with open(outfile_wf, 'wb') as f:
+        pickle.dump(out_wf, f)
+    out_wof = covs_from_file(neutfreqs_file, fixed_to_nan=True)
+    with open(outfile_wof, 'wb') as f:
+        pickle.dump(out_wof, f)
     
  
 
@@ -162,7 +169,7 @@ trunc_pattern = ("split_trunc/split_trunc_{N}N_{rbp}rbp_{alpha}alpha_{nmu}nmu_" 
 
 trunc_pattern_subpops = [trunc_pattern.replace("{sim_output}", out) for out in trunc_outputs]
 
-
+# with fixations
 trunc_covs_results = expand(OUTDIR + trunc_pattern,
                             alpha=alphas, nmu=nmus, 
                             tmu=tmus, rbp=gss_rbps,
@@ -173,12 +180,25 @@ trunc_covs_results = expand(OUTDIR + trunc_pattern,
                             tail=tail,
                             sim_output=['with_fixations_covs.pkl'])
 
+# without fixations (e.g. fixations are converted to NaNs)
+trunc_covs_results_wof = expand(OUTDIR + trunc_pattern,
+                                alpha=[0.01], nmu=nmus, 
+                                tmu=tmus, rbp=gss_rbps,
+                                N=Ns, nrep=trunc_nreps,
+                                shifttime=shifttime,
+                                shifttype=shifttype,
+                                sampleN=[1000],
+                                tail=[0.5, 0.1],
+                                sim_output=['without_fixations_covs.pkl'])
+    
+
 trunc_covs_pattern = trunc_pattern.replace("{sim_output}", "with_fixations_covs.pkl")
+trunc_covs_pattern_wof = trunc_pattern.replace("{sim_output}", "without_fixations_covs.pkl")
 
 
 rule trunc_covs_all:
   input:
-    trunc_covs_results
+    trunc_covs_results, trunc_covs_results_wof
 
 rule trunc_covs:
   input:
@@ -203,6 +223,31 @@ rule trunc_covs:
                            fixed_to_nan=False)
     with open(outfile, 'wb') as f:
         pickle.dump(out, f)
+
+rule trunc_covs_wo_fixations:
+  input:
+    SIMDIR + trunc_pattern_subpops[0],
+    SIMDIR + trunc_pattern_subpops[1]
+  output:
+    OUTDIR + trunc_pattern.replace('{sim_output}', 'without_fixations_covs.pkl')
+  run:
+    param_dict = dict(N=wildcards.N, rbp=wildcards.rbp, alpha=wildcards.alpha,
+                      nmu=wildcards.nmu, 
+                      tmu=wildcards.tmu, 
+                      tail=wildcards.tail,
+                      shifttime=wildcards.shifttime,
+                      shifttype=wildcards.shifttype,
+                      sampleN=wildcards.sampleN,
+                      nrep=wildcards.nrep)
+    neutfreqs1_file = SIMDIR + trunc_pattern_subpops[0].format(**param_dict)
+    neutfreqs2_file = SIMDIR + trunc_pattern_subpops[1].format(**param_dict)
+    outfile = OUTDIR + trunc_covs_pattern_wof.format(**param_dict)
+    out = covs_from_twopop((neutfreqs1_file, neutfreqs2_file), 
+                           end = 55,
+                           fixed_to_nan=True)
+    with open(outfile, 'wb') as f:
+        pickle.dump(out, f)
+
 
  
 # ------- Sampled Line Simulation, Exponential Fitness -------

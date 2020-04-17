@@ -201,7 +201,7 @@ def col_palette(param, cmap, reverse=False, max=1):
     cols = cmap(x)
     return {k: cols[i, :] for i, k in enumerate(sorted(param))}
 
-def average_runs(results, has_corr=True, has_var=True):
+def average_runs(results, has_corr=True, has_var=False):
     """Average all replicate covariances and Gs
 
     has_corr: backwards compatability for runs without convergence correlation

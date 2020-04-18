@@ -1651,9 +1651,10 @@ block temporal covariance is the sum of XXX.
 
 \subsubsection{Background Selection's Effect on Temporal Covariance}
 
+
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=\textwidth]{figures/fig-bgs-G.pdf}
+  \includegraphics[width=\textwidth]{figures/fig-bgs-G-without-fixations.pdf}
 
   \caption{}
 
@@ -1663,24 +1664,53 @@ block temporal covariance is the sum of XXX.
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=\textwidth]{figures/fig-bgs-covars.pdf}
+  \includegraphics[width=\textwidth]{figures/fig-bgs-covars-without-fixations.pdf}
 
   \caption{}
 
   \label{suppfig:supp-bgs-covs}
 \end{figure}
 
+
+
+
 \subsubsection{The Effect of Fixations}
+
+In analyzing both the empirical datasets included in our study and our
+simulation results, we noticed the temporal covariances and $G(t)$ statistics
+are sensitive to how fixations are handled. Through simulations and comparing
+the results of analyzing our empirical datasets both ways, we have found
+tradeoffs to both approaches, but overall not removing fixed sites is a more
+conservative, safer approach, and is what we use throughout our paper.
+
+Temporal covariances (and related statistics like convergence correlations,
+$G(t)$, etc.) are calculated on allele frequency changes, $\Delta p_t$; when an
+allele is fixed or lost, the allele frequency changes are zero thereafter
+$\Delta p_t = 0$. When temporal covariance is calculated by averaging over the
+loci in a region or across the genome, fixed sites zero out the terms in the
+sum of the right hand side of temporal covariance, $\cov(\Delta p_t, \Delta
+p_s) = \E(\Delta p_t \Delta p_s) - \E(\Delta p_t) \E(\Delta p_s)$ and can
+shrink the second terms towards zero. 
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig-bgs-G-with-fixations.pdf}
+
+  \caption{}
+
+  \label{suppfig:supp-bgs-g}
+\end{figure}
 
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=\textwidth]{figures/fig-bgs-}
+  \includegraphics[width=\textwidth]{figures/fig-bgs-covars-with-fixations.pdf}
 
   \caption{}
 
   \label{suppfig:supp-bgs-covs}
 \end{figure}
+
 
 
 \setcounter{section}{1}

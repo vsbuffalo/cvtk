@@ -146,6 +146,8 @@ rule split_bgswf_covs:
     
   
 # ------- Sampled Line Simulation, Truncation Selection -------
+# note: the fixation handling here is a bit hacky, as was modified after the 
+# expensive steps have been run (as they did not modify results; only organization)
 # tail probabilities
 #tail = [0.01]
 tail = [0.01, 0.1, 0.25, 0.5]
@@ -163,11 +165,11 @@ shifttype = ['converge', 'single', 'diverge']
 
 trunc_outputs = ["subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
 
-trunc_pattern = ("split_trunc/split_trunc_{N}N_{rbp}rbp_{alpha}alpha_{nmu}nmu_" + 
+trunc_pattern = ("split_trunc/{fixations}split_trunc_{N}N_{rbp}rbp_{alpha}alpha_{nmu}nmu_" + 
                  "{tmu}tmu_{tail}tail_{shifttime}shifttime_" + 
                  "{shifttype}shifttype_{sampleN}sampleN_{nrep}_{sim_output}")
 
-trunc_pattern_subpops = [trunc_pattern.replace("{sim_output}", out) for out in trunc_outputs]
+trunc_pattern_subpops = [trunc_pattern.replace("{sim_output}", out).replace('{fixations}','') for out in trunc_outputs]
 
 # with fixations
 trunc_covs_results = expand(OUTDIR + trunc_pattern,
@@ -178,6 +180,7 @@ trunc_covs_results = expand(OUTDIR + trunc_pattern,
                             shifttype=shifttype,
                             sampleN=sampleN,
                             tail=tail,
+                            fixations=['with_fixations/'],
                             sim_output=['with_fixations_covs.pkl'])
 
 # without fixations (e.g. fixations are converted to NaNs)
@@ -188,13 +191,19 @@ trunc_covs_results_wof = expand(OUTDIR + trunc_pattern,
                                 shifttime=shifttime,
                                 shifttype=shifttype,
                                 sampleN=[1000],
-                                tail=[0.5, 0.1],
+                                tail=tail,
+                                fixations=['without_fixations/'],
                                 sim_output=['without_fixations_covs.pkl'])
     
 
-trunc_covs_pattern = trunc_pattern.replace("{sim_output}", "with_fixations_covs.pkl")
-trunc_covs_pattern_wof = trunc_pattern.replace("{sim_output}", "without_fixations_covs.pkl")
+trunc_covs_pattern = trunc_pattern.replace("{sim_output}", 
+                        "with_fixations_covs.pkl").replace('{fixations}', 'with_fixations/')
+trunc_covs_pattern_wof = trunc_pattern.replace("{sim_output}", 
+                         "without_fixations_covs.pkl").replace('{fixations}', 'without_fixations/')
 
+rule trunc_covs_wof_all:
+  input:
+    trunc_covs_results_wof
 
 rule trunc_covs_all:
   input:
@@ -229,7 +238,7 @@ rule trunc_covs_wo_fixations:
     SIMDIR + trunc_pattern_subpops[0],
     SIMDIR + trunc_pattern_subpops[1]
   output:
-    OUTDIR + trunc_pattern.replace('{sim_output}', 'without_fixations_covs.pkl')
+    OUTDIR + trunc_covs_pattern_wof
   run:
     param_dict = dict(N=wildcards.N, rbp=wildcards.rbp, alpha=wildcards.alpha,
                       nmu=wildcards.nmu, 

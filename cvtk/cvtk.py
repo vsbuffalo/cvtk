@@ -92,7 +92,8 @@ class TemporalFreqs(object):
     def R(self):
         return self.freqs.shape[0]
 
-    def calc_cov(self, keep_seqids=None, bias_correction=True, standardize=True, use_masked=False):
+    def calc_cov(self, keep_seqids=None, bias_correction=True,
+                 standardize=True, use_masked=False, product_only=False):
         """
         Calculate the genome-wide temporal-replicate variance-covariance matrix.
 
@@ -108,6 +109,7 @@ class TemporalFreqs(object):
         return temporal_replicate_cov(freqs, depths, self.diploids,
                                       bias_correction=bias_correction,
                                       share_first=self.share_first,
+                                      product_only=product_only,
                                       standardize=standardize, use_masked=use_masked)
 
     def convergence_corr(self, subset=None, bias_correction=True, **kwargs):
@@ -159,8 +161,12 @@ class TemporalFreqs(object):
         return var_by_group(groups, freqs=self.freqs, depths=self.depths, diploids=self.diploids,
                             t=t, standardize=standardize, bias_correction=bias_correction)
 
-    def calc_G(self, average_replicates=False, abs=False, use_masked=False):
-        covs = self.calc_cov(standardize=False, use_masked=use_masked)
+    def calc_G(self, average_replicates=False, abs=False,
+               product_only=False,
+               use_masked=False):
+        covs = self.calc_cov(standardize=False,
+                             product_only=product_only,
+                             use_masked=use_masked)
         # calculate the total variances for different ts
         vars = []
         for t in np.arange(1, self.T+1):
@@ -422,6 +428,7 @@ class TiledTemporalFreqs(TemporalFreqs):
     def calc_empirical_null(self, B=100, exclude_seqs=None,
                        sign_permute_blocks='tile',
                        by_tile=False,
+                       use_masked=False,
                        bias_correction=False, progress_bar=False):
 
         return calc_covs_empirical_null(self.freqs,
@@ -431,6 +438,7 @@ class TiledTemporalFreqs(TemporalFreqs):
                                         gintervals=self.gintervals,
                                         B=B,
                                         depths=self.depths,
+                                        use_masked=use_masked,
                                         diploids=self.diploids,
                                         by_tile=by_tile,
                                         exclude_seqids=exclude_seqs,

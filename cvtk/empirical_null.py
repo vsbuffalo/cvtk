@@ -19,7 +19,7 @@ def slice_loci(seqids, loci_indices=None, exclude_seqids=None):
         idx = [i for i, seqid in enumerate(seqids) if seqid not in exclude_seqids]
     else:
         loci_indices = set(loci_indices)
-        idx = [i for i, seqid in enumerate(seqids) if seqid not in exclude_seqids and 
+        idx = [i for i, seqid in enumerate(seqids) if seqid not in exclude_seqids and
                 i in loci_indices]
     #loci_slice = np.array(idx)
     return sliceify(idx)
@@ -56,13 +56,14 @@ def reshape_empirical_null(empnull, R, T):
     return np.stack(empcovs)
 
 
-def calc_covs_empirical_null(freqs, tile_indices, tile_seqids, 
-                             tile_ids, gintervals, 
-                             B=100, 
+def calc_covs_empirical_null(freqs, tile_indices, tile_seqids,
+                             tile_ids, gintervals,
+                             B=100,
                              depths=None, diploids=None,
                              by_tile=False,
-                             exclude_seqids=None, 
-                             sign_permute_blocks='tile', bias_correction=False, 
+                             use_masked=False,
+                             exclude_seqids=None,
+                             sign_permute_blocks='tile', bias_correction=False,
                              progress_bar=True):
     """
     Params:
@@ -101,7 +102,7 @@ def calc_covs_empirical_null(freqs, tile_indices, tile_seqids,
         B_range = tnrange(int(B))
     else:
         B_range = range(int(B))
-    
+
     # main delta permutation procedure
     all_covs = list()
     for b in B_range:
@@ -119,17 +120,18 @@ def calc_covs_empirical_null(freqs, tile_indices, tile_seqids,
             raise ValueError("sign_permute_blocks must be either 'tile' or 'seqid'")
 
         if by_tile:
-            covs = cov_by_group(tile_indices, sliced_freqs, 
+            covs = cov_by_group(tile_indices, sliced_freqs,
                                  depths=sliced_depths,
                                  diploids=sliced_diploids,
-                                 bias_correction=bias_correction, 
-                                 deltas=permuted_deltas)
+                                 bias_correction=bias_correction,
+                                 deltas=permuted_deltas, use_masked=use_masked)
         else:
             covs = temporal_replicate_cov(sliced_freqs, depths=sliced_depths,
                                           diploids=sliced_diploids,
                                           bias_correction=bias_correction,
-                                          deltas=permuted_deltas)
-          
+                                          deltas=permuted_deltas,
+                                          use_masked=use_masked)
+
         all_covs.append(covs)
     if by_tile:
         return reshape_empirical_null(all_covs, R, T)

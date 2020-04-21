@@ -257,6 +257,7 @@ def stack_replicate_covs_by_group(covs, R, T, stack=True, **kwargs):
 def temporal_replicate_cov(freqs, depths=None, diploids=None,
                            bias_correction=True, standardize=True, deltas=None,
                            use_masked=False, share_first=False,
+                           product_only=False,
                            return_ratio_parts=False, warn=False):
     """
     Params:
@@ -304,9 +305,15 @@ def temporal_replicate_cov(freqs, depths=None, diploids=None,
     # calculate variance-covariance matrix
     if use_masked:
         deltas_masked = np.ma.masked_invalid(deltas)
-        cov = np.ma.cov(deltas_masked, bias=True).data
+        if product_only:
+            cov = np.ma.dot(deltas_masked, deltas_masked.T) / L
+        else:
+            cov = np.ma.cov(deltas_masked, bias=True).data
     else:
-        cov = np.cov(deltas, bias=True)
+        if product_only:
+            cov = deltas @ deltas.T / L
+        else:
+            cov = np.cov(deltas, bias=True)
 
     if not bias_correction:
         if return_ratio_parts:

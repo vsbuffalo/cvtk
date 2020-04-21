@@ -19,6 +19,7 @@ import cvtk.slimfile as sf
 
 def freqs_to_covmat(frqs, times,
                     pops=None, fixed_to_nan=False,
+                    product_only=False,
                     return_object=False, loci=None):
     """
     Take a frequency file, load it into cvtk, and convert to
@@ -41,8 +42,8 @@ def freqs_to_covmat(frqs, times,
         d = TemporalFreqs(freqmat, samples, gintervals=gi)
         return d
     d = TemporalFreqs(freqmat, samples)
-    covs = d.calc_cov(use_masked=use_masked)
-    G = d.calc_G(use_masked=use_masked)
+    covs = d.calc_cov(use_masked=use_masked, product_only=product_only)
+    G = d.calc_G(use_masked=use_masked, product_only=product_only)
     conv_corr = d.convergence_corr()
     return covs, G, conv_corr, (d.R, d.T, d.L)
 

@@ -1652,6 +1652,8 @@ block temporal covariance is the sum of XXX.
 \subsubsection{Background Selection's Effect on Temporal Covariance}
 
 
+
+
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/fig-bgs-G-without-fixations.pdf}
@@ -1680,8 +1682,9 @@ In analyzing both the empirical datasets included in our study and our
 simulation results, we noticed the temporal covariances and $G(t)$ statistics
 are sensitive to how fixations are handled. Through simulations and comparing
 the results of analyzing our empirical datasets both ways, we have found
-tradeoffs to both approaches, but overall not removing fixed sites is a more
-conservative, safer approach, and is what we use throughout our paper.
+trade-offs to both approaches, but overall find that not removing fixed sites
+is a more conservative, safer approach, and is what we use throughout our
+paper. 
 
 Temporal covariances (and related statistics like convergence correlations,
 $G(t)$, etc.) are calculated on allele frequency changes, $\Delta p_t$; when an
@@ -1690,7 +1693,17 @@ $\Delta p_t = 0$. When temporal covariance is calculated by averaging over the
 loci in a region or across the genome, fixed sites zero out the terms in the
 sum of the right hand side of temporal covariance, $\cov(\Delta p_t, \Delta
 p_s) = \E(\Delta p_t \Delta p_s) - \E(\Delta p_t) \E(\Delta p_s)$ and can
-shrink the second terms towards zero. 
+shrink the second terms towards zero. From simulations, we have found that
+including neutral sites into the temporal covariance calculation that are lost
+or fix will tend to shrink the covariance towards zero, and in some cases
+create a spurious negative temporal covariance. We observed this when
+conducting the background selection simulations of Supplementary Materials
+Section XXX, and have included an alternative version of this figure that
+includes $G(t)$ trajectories calculated by including fixed neutral sites
+(Supplementary Figure \ref{suppfig:supp-bgs-g-fix}).
+
+In cases where neutral
+sites are rapidly lost or fixed, this can result in negative covariances.
 
 \begin{figure}[!ht]
   \centering
@@ -1698,7 +1711,7 @@ shrink the second terms towards zero.
 
   \caption{}
 
-  \label{suppfig:supp-bgs-g}
+  \label{suppfig:supp-bgs-g-fix}
 \end{figure}
 
 

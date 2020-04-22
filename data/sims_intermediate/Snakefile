@@ -303,6 +303,8 @@ split_exp_pattern_subpops = [split_exp_pattern.replace("{sim_output}", out) for
                              out in trunc_outputs]
 
 split_exp_covs_pattern = split_exp_pattern.replace("{sim_output}", "with_fixations_covs.pkl") 
+split_exp_covs_pattern_wof = split_exp_pattern.replace("{sim_output}", "without_fixations_covs.pkl") 
+
 
 # build simulation files from the parameters 
 split_exp_covs = []
@@ -310,6 +312,21 @@ for d in expfit_params:
   d.update(Va_to_alphas(d))
   file = split_exp_covs_pattern.format(**d)
   split_exp_covs.append(OUTDIR + file)
+
+
+# without fixations (subset of params)
+expfit_params_wof = list(dict_product(dict(Va = Vas, L = Ls, nmu=nmus, 
+                                       mag = mag, shifttime = shifttime,
+                                       sampleN = [1000],
+                                       shifttype = shifttype,
+                                       sim_output = trunc_outputs,
+                                       rbp = gss_rbps, N=Ns, nrep= expfit_nreps)))
+
+# build simulation files from the parameters 
+for d in expfit_params_wof:
+  d.update(Va_to_alphas(d))
+  file_wof = split_exp_covs_pattern_wof.format(**d)
+  split_exp_covs.append(OUTDIR + file_wof)
 
 
 split_exp_outputs = ["subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
@@ -323,7 +340,8 @@ rule split_exp_covs:
     SIMDIR + split_exp_pattern_subpops[0],
     SIMDIR + split_exp_pattern_subpops[1]
   output:
-    OUTDIR + split_exp_covs_pattern
+    OUTDIR + split_exp_covs_pattern,
+    OUTDIR + split_exp_covs_pattern_wof
   run:
     param_dict = dict(N=wildcards.N, rbp=wildcards.rbp, alpha=wildcards.alpha,
                       Va=wildcards.Va, 
@@ -343,6 +361,13 @@ rule split_exp_covs:
                            fixed_to_nan=False)
     with open(outfile, 'wb') as f:
         pickle.dump(out, f)
+    outfile_wof = OUTDIR + split_exp_covs_pattern_wof.format(**param_dict)
+    out_wof = covs_from_twopop((neutfreqs1_file, neutfreqs2_file), 
+                                end = 55,
+                                fixed_to_nan=True)
+    with open(outfile_wof, 'wb') as f:
+        pickle.dump(out_wof, f)
+
 
 
 # ------- Truncation Selection, Temporal Block Sampling -------

@@ -44,6 +44,8 @@ region_length = 50e6
 # ------- Shared Parameters -------
 Ns = [1000]
 nmus = [1e-8]
+shifttype = ['converge', 'single', 'diverge']
+shifttime = [5]
 
 # ------- BGS Simlations -------
 # BGS paramters
@@ -143,8 +145,78 @@ rule split_bgswf_covs:
     with open(outfile, 'wb') as f:
         pickle.dump(out, f)
     
-    
-  
+ 
+# ------- Two Pop/Sampled Line GSS Simlations -------
+split_gss_rbps = [1e-8, 0.5e-8]
+split_gss_alphas = [0.01]
+split_gss_sampleN = [50, 100, 200, 1000]
+split_gss_tmus = [1e-8, 1e-9, 1e-10]   # trait mutation rate
+split_gss_shift_moving = [0.001, 0.01]
+split_gss_shift_sudden = [0.1, 0.5, 1]
+nreps = range(30)
+
+split_gss_outputs = ["subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
+
+# we use the paremeters above to extract a subset of available simulation result
+split_gss_pattern = ("split_gss/split_gss_{N}N_{rbp}rbp_{alpha}alpha_{nmu}nmu_" + 
+                     "{tmu}tmu_{shift}shift_{shifttime}shifttime_{moving}moving_" + 
+                     "{shifttype}shifttype_{sampleN}sampleN_{nrep}_{sim_output}")
+
+optshift_results_moving = expand(OUTDIR + split_gss_pattern,
+                                alpha=split_gss_alphas, nmu=nmus, 
+                                tmu=split_gss_tmus, rbp=split_gss_rbps,
+                                N=[1000], nrep=nreps,
+                                moving=['T'], 
+                                sampleN=split_gss_sampleN,
+                                shifttype=shifttype,
+                                shifttime=shifttime,
+                                shift=split_gss_shift_moving,
+                                sim_output=['with_fixations_covs.pkl'])
+
+optshift_results_sudden = expand(OUTDIR + split_gss_pattern,
+                                 alpha=split_gss_alphas, nmu=nmus, 
+                                 tmu=split_gss_tmus, rbp=split_gss_rbps,
+                                 N=Ns, nrep=nreps,
+                                 moving=['F'], 
+                                 sampleN=split_bgs_sampleN,
+                                 shifttype=shifttype,
+                                 shifttime=shifttime,
+                                 shift=split_gss_shift_sudden,
+                                 sim_output=['with_fixations_covs.pkl'])
+ 
+
+split_gss_pattern_subpops = [split_gss_pattern.replace("{sim_output}", f) for f in split_gss_outputs]
+
+split_gss_covs_pattern = split_gss_pattern.replace('{sim_output}', 'with_fixations_covs.pkl')
+
+rule split_gss_covs_all:
+  input:
+    optshift_results_moving, optshift_results_sudden
+
+rule split_gss_covs:
+  input:
+    SIMDIR + split_gss_pattern_subpops[0], 
+    SIMDIR + split_gss_pattern_subpops[1]
+  output:
+    OUTDIR + split_gss_covs_pattern
+  run: 
+    param_dict = dict(alpha=wildcards.alpha, nmu=wildcards.nmu,
+                      tmu=wildcards.tmu, rbp=wildcards.rbp,
+                      N=wildcards.N, nrep=wildcards.nrep,
+                      moving=wildcards.moving, 
+                      sampleN=wildcards.sampleN,
+                      shifttype=wildcards.shifttype,
+                      shifttime=wildcards.shifttime,
+                      shift=wildcards.shift)
+    neutfreqs1_file = SIMDIR + split_gss_pattern_subpops[0].format(**param_dict)
+    neutfreqs2_file = SIMDIR + split_gss_pattern_subpops[1].format(**param_dict)
+    outfile = OUTDIR + split_gss_covs_pattern.format(**param_dict)
+    out = covs_from_twopop((neutfreqs1_file, neutfreqs2_file), 
+                           end = 55,
+                           fixed_to_nan=False)
+    with open(outfile, 'wb') as f:
+        pickle.dump(out, f)
+ 
 # ------- Sampled Line Simulation, Truncation Selection -------
 # note: the fixation handling here is a bit hacky, as was modified after the 
 # expensive steps have been run (as they did not modify results; only organization)
@@ -160,7 +232,6 @@ shifttime = [5]
 sampleN = [50, 100, 200, 1000]
 #sampleN = [50]
 #shifttype = ['converge']
-shifttype = ['converge', 'single', 'diverge']
 
 
 trunc_outputs = ["subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
@@ -318,30 +389,30 @@ for d in expfit_params:
 expfit_params_wof = list(dict_product(dict(Va = Vas, L = Ls, nmu=nmus, 
                                        mag = mag, shifttime = shifttime,
                                        sampleN = [1000],
-                                       shifttype = shifttype,
+                                       shifttype = ['converge'],
                                        sim_output = trunc_outputs,
                                        rbp = gss_rbps, N=Ns, nrep= expfit_nreps)))
 
 # build simulation files from the parameters 
+split_exp_covs_wof = []
 for d in expfit_params_wof:
   d.update(Va_to_alphas(d))
   file_wof = split_exp_covs_pattern_wof.format(**d)
-  split_exp_covs.append(OUTDIR + file_wof)
+  split_exp_covs_wof.append(OUTDIR + file_wof)
 
 
 split_exp_outputs = ["subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
 
 rule split_exp_covs_all:
   input:
-    split_exp_covs
+    split_exp_covs_wof
 
 rule split_exp_covs:
   input:
     SIMDIR + split_exp_pattern_subpops[0],
     SIMDIR + split_exp_pattern_subpops[1]
   output:
-    OUTDIR + split_exp_covs_pattern,
-    OUTDIR + split_exp_covs_pattern_wof
+    OUTDIR + split_exp_covs_pattern
   run:
     param_dict = dict(N=wildcards.N, rbp=wildcards.rbp, alpha=wildcards.alpha,
                       Va=wildcards.Va, 
@@ -361,6 +432,26 @@ rule split_exp_covs:
                            fixed_to_nan=False)
     with open(outfile, 'wb') as f:
         pickle.dump(out, f)
+
+rule split_exp_covs_wof:
+  input:
+    SIMDIR + split_exp_pattern_subpops[0],
+    SIMDIR + split_exp_pattern_subpops[1]
+  output:
+    OUTDIR + split_exp_covs_pattern_wof
+  run:
+    param_dict = dict(N=wildcards.N, rbp=wildcards.rbp, alpha=wildcards.alpha,
+                      Va=wildcards.Va, 
+                      L=wildcards.L, 
+                      mag=wildcards.mag, 
+                      nmu=wildcards.nmu, 
+                      tmu=wildcards.tmu, 
+                      shifttime=wildcards.shifttime,
+                      shifttype=wildcards.shifttype,
+                      sampleN=wildcards.sampleN,
+                      nrep=wildcards.nrep)
+    neutfreqs1_file = SIMDIR + split_exp_pattern_subpops[0].format(**param_dict)
+    neutfreqs2_file = SIMDIR + split_exp_pattern_subpops[1].format(**param_dict)
     outfile_wof = OUTDIR + split_exp_covs_pattern_wof.format(**param_dict)
     out_wof = covs_from_twopop((neutfreqs1_file, neutfreqs2_file), 
                                 end = 55,

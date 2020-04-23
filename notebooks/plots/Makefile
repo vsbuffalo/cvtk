@@ -18,7 +18,8 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 	 ../../manuscript/figures/fig-bgs-covars-with-fixations.pdf ../../manuscript/figures/fig-bgs-covars-without-fixations.pdf \
 	 ../../manuscript/figures/fig-block-sampling-G.pdf ../../manuscript/figures/figure-1-G-covs-nofix.pdf \
 	 ../../manuscript/figures/fig-bgs-G-with-fixations.pdf ../../manuscript/figures/fig-bgs-convergence-correlation.pdf \
-	 ../../manuscript/figures/figure-3-hists-b-without-fixations.pdf
+	 ../../manuscript/figures/figure-3-hists-b-without-fixations.pdf ../../manuscript/figures/fig-G-trunc.pdf \
+	 ../../manuscript/figures/fig-cov-trunc.pdf
 
 
 
@@ -137,6 +138,12 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 		cp $< $@
 
 ../../manuscript/figures/figure-3-hists-b-without-fixations.pdf: figure-3-hists-b-without-fixations.pdf
+		cp $< $@
+
+../../manuscript/figures/fig-G-trunc.pdf: fig-G-trunc.pdf
+		cp $< $@
+
+../../manuscript/figures/fig-cov-trunc.pdf: fig-cov-trunc.pdf
 		cp $< $@
 
 

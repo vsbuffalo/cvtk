@@ -1680,7 +1680,35 @@ block temporal covariance is the sum of XXX.
 
 In analyzing both the empirical datasets included in our study and our
 simulation results, we noticed the temporal covariances and $G(t)$ statistics
-are sensitive to how fixations (i.e. when a site is polymorphic but is fixed or
+can differ depending on how allele frequencies of zero or one are handled.
+Generally, temporal covariances should be calculated on polymorphic sites; once
+a site has reached fixation or loss, its allele frequency change $\Delta p_t =
+0$ and including these sites in the temporal covariance calculation can lead to
+biases, which we discuss below. However, with \emph{sample} allele frequencies,
+rather than population frequencies, a site with observed frequency zero or one
+may still be segregating, but by chance not sampled at a timepoint. Here, we
+discuss the effect of including sites with frequency zero or one, and show our
+empirical results are not qualitatively different when analyzed excluding fixed
+sites.
+
+First, we found that under strong truncation selection (i.e. the number of
+selected individuals is small), our measure $G(t)$ can become negative. This
+possibility was discussed in \textcite{Buffalo2019-io} as a result of
+fluctuating selection; here, however, the buildup of negative covariances
+driving this 
+
+Since our simulations were focused on understanding how genetic architecture
+and mode of selection impact temporal covariance and $G(t)$ (with a limited
+number of neutral sites, due to computational limitations), population
+frequencies were used. 
+
+
+
+If frequencies are measured without sampling noise, including fixed or lost
+sites in the calculation of temporal covariance and $G(t)$ has the effect of
+shrinking the covariance estimates towards zero, 
+
+how fixations (i.e. when a site is polymorphic but is fixed or
 lost during the course of its trajectory) are handled. Through simulations and
 comparing the results of analyzing our empirical datasets both ways, we have
 found trade-offs to both approaches, but overall find that not removing fixed
@@ -1766,13 +1794,10 @@ XXX
   \centering
   \includegraphics[width=0.6\textwidth]{figures/figure-1-G-covs-nofix.pdf}
 
-  \caption{A version of Figure 1 A and B where sample frequencies of zero or
-    one are ignored, e.g. due to fixation, are ignored. Like the original
-    Figure 1 in the main text, the 95\% pivot confidence intervals are via a
-    bootstrapping procedure; note that we find excluding fixed sites leads to
-  more asymmetric confidence intervals. Overall, we find that despite handling
-fixed/lost sites differently, we still find significant negative temporal
-covariances at later timepoints.}
+  \caption{The effect of including fixed/lost sites in the calculation of the
+  temporal covariances and $G(t)$ trajectories of the \textcite{Barghi2019-qy}
+data. Dashed lines are those including fixed/lost sites (i.e. the original
+Figure 1), and solid lines are excluding fixed/lost sites.}
 
   \label{suppfig:supp-fig-1-nofix}
 \end{figure}

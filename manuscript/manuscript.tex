@@ -1466,27 +1466,29 @@ follow that of seasonal fluctuating selection.
 We conducted extensive simulations to understand how temporal covariance,
 $G(t)$, and convergence correlations behave under (1) different quantitative
 genetic fitness models, (2) different trait architectures (e.g. varying levels
-of $V_A$ for fitness and the number of sites affecting fitness) and (3)
-background selection. Furthermore, we use two population simulations to
-investigate how convergence correlations depend on (1) the population sizes of
-each selection line sampled from the main population, and (2) the direction the
-trait is selected on in each line (i.e. in the same direction, differing
-directions, or only one lines elected).
+of $V_A$ for fitness and the number of sites affecting fitness), (3) background
+selection, and (4) different sampling periods. Furthermore, we use two
+population simulations to investigate how convergence correlations depend on
+(1) the population sizes of each selection line sampled from the main
+population, and (2) the direction the trait is selected on in each line (i.e.
+in the same direction, differing directions, or only one lines elected).
 
-Due to the high computational burden of forward simulations, we modeled a
-single 50 megabase region in a population of $N = 1000$ diploid individuals
-with a neutral variant mutation rate of $10^{-8}$ and a recombination rate of
-$10^{-8}$ per basepair. This is roughly analogous to a XXX chromosome of
-\emph{Drosophila melanogaster}; however with this small population size and
-mutation rate, the population mutation rate $\theta$ for the entire region
-leads to far fewer neutral sites to calculate covariances and other statistics
-on than expected for a region this length in \emph{D.  melanogaster}. Since our
-main goal is to understand how the dynamics of statistics used in the paper and
-how they are affected by background selection, fitness model, and trait
-architecture, we use population frequencies rather than sampling frequencies.
+Due to the high computational burden of forward simulations over this wide
+breadth of parameters, we modeled a single 50 megabase region in a population
+of $N = 1000$ diploid individuals with a neutral variant mutation rate of
+$10^{-8}$ and a recombination rate of $10^{-8}$ per basepair. This is roughly
+analogous to a XXX chromosome of \emph{Drosophila melanogaster}; however with
+this small population size and mutation rate, the population mutation rate
+$\theta$ for the entire region leads to far fewer neutral sites to calculate
+covariances and other statistics on than expected for a region this length in
+\emph{D.  melanogaster}. Since our main goal is to understand how the dynamics
+of statistics used in the paper and how they are affected by background
+selection, fitness model, and trait architecture, we use population frequencies
+rather than sampling frequencies. 
 
-All forward simulations were conducted using SLiM \parencite{Haller2019-vu},
-and the simulation routines are available in the Github repository
+All forward simulations were conducted using SLiM \parencite{Haller2019-vu} and
+run and processed using Snakemake \parencite{Koster2012-iv}; all simulation
+routines are available in the Github repository
 \url{https://github.com/vsbuffalo/cvtk/}.
 
 \subsubsection{The Effects of the Genetic Architecture}
@@ -1497,53 +1499,9 @@ on temporal covariances and $G(t)$ by neutrally burning in a population for
 $10N$ generations, and selecting on the trait with an exponential fitness
 function. By using an exponential fitness function (a form of selection
 multiplicative across sites), we ensure there is no build up of LD due to
-selection (XXX) and epistasis; this serves as the simplest directional
-selection model of a trait to understand the effects of genetic architecture on
-the statistics we have used in the paper.
-
-During this burnin, sites were either marked as neutral (with mutation rate
-$\mu_\mathrm{neutral} = 10^8$ per gamete per generation) or contributed to the
-trait's value (with mutation rate $\mu_\mathrm{trait}$), but were not selected
-on until generation $10N + 5$ (the five generations after burnin serve as a
-neutral control). The trait mutation rate, $\mu_\mathrm{trait}$ was set by
-targeting a particular architecture, the number of selected sites, $L$. Each
-site contributing to the trait's value was randomly chosen to have effect size
-$\pm \alpha$ with equal probability, where $\alpha$ was set to target a
-particular additive genetic variance for the trait, $V_A$, for the target
-number of selected sites $L$. 
-
-Overall, we confirm a finding in \parencite{Buffalo2019-io} that the initial
-expected temporal covariance conditioned on $V_A$, is invariant to the number
-of loci determining the trait's value, $L$ (Supplementary Figure
-\ref{suppfig:sim-expfit-covs}). We do find some evidence that the decay in
-temporal covariance is faster when the trait has a monogenic basis (see the
-third column of Supplementary Figure \ref{suppfig:sim-expfit-covs}); this is
-expected the selection coefficients are larger for these monogenic simulations,
-leading to faster allele frequency changes and a rapid change in additive
-genetic variance. 
-
-In our previous work, we did not investigate the affect of trait architecture
-on our measure $G(t)$.  Using the exponential fitness function simulations, we
-also calculated $G(t)$ for each of the replicate simulations. We find that
-across replicates, the $G(t)$ trajectories can vary considerably depending on
-the number of sites ($L$) determining the trait's value (Supplementary Figure
-\ref{suppfig:sim-expfit-Gs}). When a trait is monogenic ($L \approx 1$), $G(t)$
-trajectories vary considerably across replicate lines, as certain lines may not
-contain the few selected alleles (top row of Supplementary Figure
-\ref{suppfig:sim-expfit-Gs}). However, with a polygenic trait, ($L \ge 100$),
-the $G(t)$ trajectories across replicates are all quite close as each replicate
-contains an abundance of alleles that affect the trait's value (bottom rows of
-Supplementary Figure \ref{suppfig:sim-expfit-Gs}). Comparing the simulated
-$G(t)$ replicate trajectories of Supplementary Figure
-\ref{suppfig:sim-expfit-Gs} with the \textcite{Barghi2019-qy} $G(t)$
-trajectories in Figure \ref{fig:figure-1}B, we again confirm a finding of
-\textcite{Barghi2019-qy}: that there is considerable genetic redundancy among
-beneficial alleles. We should note that our simplified simulation routines are
-slightly different from the \textcite{Barghi2019-qy} study in that the burnin
-populations are all independent; however we expect the same qualitative result. 
-
-\vb{TODO: note about different burnin pops?}
-
+selection and epistasis \parencite{Turelli1990-kd,Bulmer1980-zo}; this serves
+as the simplest directional selection model of a trait to understand the
+effects of genetic architecture on the statistics we have used in the paper.
 
 \begin{figure}[!ht]
   \centering
@@ -1563,6 +1521,29 @@ populations are all independent; however we expect the same qualitative result.
 \end{figure}
 
 
+
+During this burnin, sites were either marked as neutral (with mutation rate
+$\mu_\mathrm{neutral} = 10^8$ per gamete per generation) or contributed to the
+trait's value (with mutation rate $\mu_\mathrm{trait}$), but were not selected
+on until generation $10N + 5$ (the five generations after burnin serve as a
+neutral control). The trait mutation rate, $\mu_\mathrm{trait}$ was set by
+targeting a particular architecture, the number of selected sites, $L$. Each
+site contributing to the trait's value was randomly chosen to have effect size
+$\pm \alpha$ with equal probability, where $\alpha$ was set to target a
+particular additive genetic variance for the trait, $V_A$, for the target
+number of selected sites $L$. 
+
+
+Overall, we confirm a finding in \parencite{Buffalo2019-io} that the initial
+expected temporal covariance conditioned on $V_A$, is invariant to the number
+of loci determining the trait's value, $L$ (Supplementary Figure
+\ref{suppfig:sim-expfit-covs}). We do find some evidence that the decay in
+temporal covariance is faster when the trait has a monogenic basis (see the
+third column of Supplementary Figure \ref{suppfig:sim-expfit-covs}); this is
+expected the selection coefficients are larger for these monogenic simulations,
+leading to faster allele frequency changes and a rapid change in additive
+genetic variance. 
+
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/fig-architecture-G.pdf}
@@ -1578,15 +1559,114 @@ is evident by the initial flat section of the $G(t)$ trajectory.}
   \label{suppfig:sim-expfit-Gs}
 \end{figure}
 
+In our previous work, we did not investigate the affect of trait architecture
+on our measure $G(t)$. Using the exponential fitness function simulations, we
+also calculated $G(t)$ for each of the replicate simulations. We find that
+across replicates, the $G(t)$ trajectories can vary considerably depending on
+the number of sites ($L$) determining the trait's value (Supplementary Figure
+\ref{suppfig:sim-expfit-Gs}). When a trait is monogenic ($L \approx 1$), $G(t)$
+trajectories vary considerably across replicate lines, as certain lines may not
+contain the few selected alleles (top row of Supplementary Figure
+\ref{suppfig:sim-expfit-Gs}). However, with a polygenic trait, ($L \ge 100$),
+the $G(t)$ trajectories across replicates are all quite close as each replicate
+contains an abundance of alleles that affect the trait's value (bottom rows of
+Supplementary Figure \ref{suppfig:sim-expfit-Gs}). Comparing the simulated
+$G(t)$ replicate trajectories of Supplementary Figure
+\ref{suppfig:sim-expfit-Gs} with the \textcite{Barghi2019-qy} $G(t)$
+trajectories in Figure \ref{fig:figure-1}B, we again confirm a finding of
+\textcite{Barghi2019-qy}: that there is considerable genetic redundancy among
+beneficial alleles. We should note that our simplified simulation routines are
+slightly different from the \textcite{Barghi2019-qy} study in that the burnin
+populations are all independent; however we expect the same qualitative result. 
+
+%\vb{TODO: note about different burnin pops?}
+
+\subsubsection{Genetic Architecture and Convergence Correlations}
+
+Using the same exponential fitness function simulations described above, we
+also investigated how the convergence correlation is impacted by (1) genetic
+architecture, (2) the design of the selection experiment, e.g. how many
+individuals are selected for each line from the founding population, and (3)
+the direction of selection across the two populations ``lines". After burning
+in $N = 1000$ diploid populations for $10N$ generations, we simulated two
+equally-sized lines of sizes $n = \{50, 500, 1,000\}$ diploids, and imposed
+three selection schemes across different simulation runs. First, we imposed a
+convergent selection scheme, where the populations undergo exponential
+directional selection in the same direction. We expect that the convergent
+correlation under this convergent scheme should be positive, as the two lines
+should share some haplotypes carrying beneficial alleles, and these are
+selected in the same direction across the two lines. Second, we imposed
+divergent selection, where the two lines again undergo exponential directional
+selection, except in different directions. Here, we expect the convergence
+correlation to be negative, as haplotypes that increase the selected trait in
+one population are beneficial in the upward selected line, but deleterious in
+the downward selected line. Third, we have a control selection scheme, where
+one line is selected and the other is not; this is akin to the control line in
+the \textcite{Castro2019-uk} study (see Figure \ref{fig:figure-2}C). In this
+case, we expect to see no convergence correlation, as only one line is being
+selected. Finally, across these two-line simulation studies, we expect that
+smaller sampled line sizes should show weaker convergent correlations, as the
+probability that the same haplotypes are selected between the two lines
+decreases with smaller size.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig-convergence-corrs.pdf}
+
+  \caption{The convergence correlations across the two population line
+    exponential directional selection simulations; panel rows are for differing
+    line population sizes, and panel columns are the modes of selection across
+    the lines (convergent, divergent, and only a single selected line control).
+    Line color indicates the target genetic architecture, in number of loci
+    affecting the trait's value. 95\% confidence intervals are also shown. Note
+    that selection begins at generation five, which is the reference
+    generation; this is indicated by the split in the lines.}
+
+  \label{suppfig:convergence-corrs}
+\end{figure}
+
+
+
+Overall, our simulations confirm our hypotheses; see Supplementary Material
+Figure \ref{suppfig:convergence-corrs}. We also find that in simulations where
+we target a monogenic genetic architecture (i.e. the target number of
+trait-affecting loci is $L=1$), the convergence correlations are generally much
+weaker than those under a polygenic architecture. However, this effect is
+mediated by the line population size; the difference in convergence correlation
+between $L = 1$ and $L = 1000$ are more dissimilar when the line population
+sizes are larger (compare the first column, last two rows). Overall, we find
+that the convergence correlation is affected by both genetic architecture and
+the size of the selected population lines.
+
+
+
 \subsubsection{Sampling in Temporal Blocks}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig-supp-blocks.pdf}
+
+  \caption{A: The $G(t)$ averaged over 50 replicate simulations with $V_A =
+    0.01$ and $L = 1000$. The blue line shows $G(t)$ calculated over ten
+    generation blocks, similar to the calculation of temporal covariances of
+    the \textcite{Barghi2019-qy} study. The red line shows the average $G(t)$
+    estimates when the population is sampled every generation and all
+    covariances can contribute to the numerator of $G(t)$. The dashed gray line
+    indicates the $G(t)'$ estimate, which uses the known drift effective
+    population size of the simulations. B: The temporal covariances calculated
+    each generation (red line) and on ten generation blocks (blue line) using the
+    same simulation data.}
+
+  \label{suppfig:supp-blocks}
+\end{figure}
 
 In our analysis of the \textcite{Barghi2019-qy} data, we describe our statistic
 $G(t)$ as an lower bound for two reasons: (1) the population is sequenced every
 ten generations, meaning the temporal covariances between adjacent generations
 cannot contribute to the numerator of $G(t)$ but contribute to the denominator,
 and (2) the estimate of $G(t)$ ignores linked selection's contribution to the
-variance in allele frequency change (this is the difference between $G$ and
-$G'$, the latter of which includes these variance terms \cite{Buffalo2019-io}).
+variance in allele frequency change (this is the difference between $G(t)$ and
+$G'(t)$, the latter of which includes these variance terms \cite{Buffalo2019-io}).
 To verify that $G(t)$ estimated every ten generations is indeed a lower bound,
 we used a simulation procedure similar to the exponential fitness function
 simulations (described in Supplementary Material Section
@@ -1616,38 +1696,8 @@ decay rates using the simulations described above. We find that ten generation
 block temporal covariances are orders of magnitude larger but decay at similar
 rates (see Supplementary Figure \ref{suppfig:supp-blocks}B; note the two y-axis
 scales are different). The larger magnitude is expected, as each ten generation
-block temporal covariance is the sum of XXX.
-
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig-supp-blocks.pdf}
-
-  \caption{A: The $G(t)$ averaged over 50 replicate simulations with $V_A =
-    0.01$ and $L = 1000$. The blue line shows $G(t)$ calculated over ten
-    generation blocks, similar to the calculation of temporal covariances of
-    the \textcite{Barghi2019-qy} study. The red line shows the average $G(t)$
-    estimates when the population is sampled every generation and all
-    covariances can contribute to the numerator of $G(t)$. The dashed gray line
-    indicates the $G(t)'$ estimate, which uses the known drift effective
-    population size of the simulations. B: The temporal covariances calculated
-    each generation (red line) and on ten generation blocks (blue line) using the
-    same simulation data.}
-
-  \label{suppfig:supp-blocks}
-\end{figure}
-
-\subsubsection{Convergence Correlations}
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig-convergence-corrs.pdf}
-
-  \caption{}
-
-  \label{suppfig:supp-blocks}
-\end{figure}
-
+block temporal covariance is the sum of 45 temporal covariances between
+adjacent generations (e.g. $10 \choose 2$).
 
 \subsubsection{Background Selection's Effect on Temporal Covariance}
 
@@ -1697,15 +1747,13 @@ sites.
 
   \caption{$G(t)$ trajectories (left) and temporal covariances (right) from
     truncation selection simulations for different numbers of individuals
-    selected (line color). The dashed lines indicate the $G(t)$ trajectories
-    calculated \emph{including} fixed sites, while the solid lines exclude
-    fixed sites.
-
-    both
-  including fixed sites (solid lines) and not including fixed sites (dashed
-lines). The dashed lines are identical to those in Supplementary Materials
-Figure \ref{suppfig:supp-bgs-g}. As expected, including fixed sites shrinks the
-$G(t)$ towards zero, and in some cases, they can become negative.}
+    selected (line color). Dashed lines indicate $G(t)$ trajectories and
+    temporal covariances calculated \emph{including} fixed sites, while the
+    solid lines exclude fixed sites. All values are averaged over 30 replicate
+    simulations; the lines in the right figure are loess smoothed, while points
+    are averages. The solid lines of the temporal covariances have been
+    excluded in the left figure for clarity, but are similar except they do not
+    become negative.}
 
   \label{suppfig:supp-bgs-g-fix}
 \end{figure}

@@ -19,8 +19,8 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 	 ../../manuscript/figures/fig-block-sampling-G.pdf ../../manuscript/figures/figure-1-G-covs-nofix.pdf \
 	 ../../manuscript/figures/fig-bgs-G-with-fixations.pdf ../../manuscript/figures/fig-bgs-convergence-correlation.pdf \
 	 ../../manuscript/figures/figure-3-hists-b-without-fixations.pdf ../../manuscript/figures/fig-G-trunc.pdf \
-	 ../../manuscript/figures/fig-cov-trunc.pdf ../../manuscript/figures/fig-both-trunc.pdf
-
+	 ../../manuscript/figures/fig-cov-trunc.pdf ../../manuscript/figures/fig-both-trunc.pdf \
+	 ../../manuscript/figures/fig-convergence-corrs-gss.pdf ../../manuscript/figures/fig-bgs-convergence-correlation.pdf
 
 
 ../../manuscript/figures/figure-1.pdf: figure-1.pdf
@@ -149,4 +149,8 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 ../../manuscript/figures/fig-both-trunc.pdf: fig-both-trunc.pdf
 		cp $< $@
 
+../../manuscript/figures/fig-convergence-corrs-gss.pdf: fig-convergence-corrs-gss.pdf
+		cp $< $@
 
+../../manuscript/figures/fig-bgs-convergence-correlation.pdf: fig-bgs-convergence-correlation.pdf
+		cp $< $@

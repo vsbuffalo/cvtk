@@ -1625,8 +1625,6 @@ decreases with smaller size.
   \label{suppfig:convergence-corrs}
 \end{figure}
 
-
-
 Overall, our simulations confirm our hypotheses; see Supplementary Material
 Figure \ref{suppfig:convergence-corrs}. We also find that in simulations where
 we target a monogenic genetic architecture (i.e. the target number of
@@ -1638,7 +1636,47 @@ sizes are larger (compare the first column, last two rows). Overall, we find
 that the convergence correlation is affected by both genetic architecture and
 the size of the selected population lines.
 
+We also wanted to test whether our we see similar convergence correlations
+under a more complicated, but more realistic fitness model: Gaussian
+stabilizing selection. To this end we simulated both sudden optima shifts of
+$\mu_\text{sudden} = \{0.1\sigma, 0.5\sigma, 1\sigma\}$ and very graduate
+optima shifts of $\mu_\text{gradual} = \{\0.001\sigma, 0.01\sigma\}$ per
+generation using the same two population simulation scheme described above. We
+show these convergence correlations for the sudden optima shifts in
+Supplementary Figure \ref{suppfig:convergence-corrs-gss}. We found that for
+slow moving optima shifts, the convergence correlations are generally too weak
+to be distinguished from noise reliably, so these results are excluded (but see
+Supplementary Materials Section XXX).
 
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig-convergence-corrs-gss.pdf}
+
+  \caption{The convergence correlations across the two population line Gaussian
+    stabilizing selection sudden optima shift simulations; panel rows are for
+    differing line population sizes, and panel columns are the modes of
+    selection across the lines (convergent, divergent, and only a single
+    selected line control). All simulations have a target number of loci
+    affecting the trait of $L = 1000$; line color indicates the size of the
+    sudden optima shift in standard deviations of $V_S$ 95\% confidence
+  intervals are also shown. Note that selection begins at generation five,
+which is the reference generation; this is indicated by the split in the
+lines.}
+
+  \label{suppfig:convergence-corrs-gss}
+\end{figure}
+
+
+\subsubsection{Temporal Covariances and $G(t)$ under Gaussian Stabilizing Selection}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig-convergence-corrs-gss.pdf}
+
+  \caption{}
+
+  \label{suppfig:convergence-corrs-gss}
+\end{figure}
 
 \subsubsection{Sampling in Temporal Blocks}
 

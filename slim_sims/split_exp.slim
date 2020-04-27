@@ -71,7 +71,7 @@ fitness(m1) {
 
 s3 fitness(NULL) {
   if (isNAN(individual.tagF)) {
-    // if tag is -1, truncation selection has not been enabled
+    // if tag is NAN, selection has not been enabled
     return 1.;
   }
   return  exp(individual.tag * mag * individual.tagF);

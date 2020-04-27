@@ -300,6 +300,65 @@ rule expfit_clean:
     "find ../data/sims/split_exp/ -maxdepth 1 -name 'split_exp_*' | xargs rm -rf "
 
 
+# ------- Three pop Exponential Fitness Function / Architecture Sims -------
+# Our first split population sims, 
+# we borrow the following parameters from the burnin:
+# alpha, gss_rbps, tmus, nmus, Ns, mag, sampleN,
+# these parameters *need* to be borrowed, since these files rely on those files.
+
+three_pop_outputs = ["stats.tsv", "subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
+
+three_pop_pattern = ("three_pop/three_pop_{N}N_{rbp}rbp_" + 
+                   "{Va}Va_{alpha}alpha_{nmu}nmu_{tmu}tmu_" + 
+                   "{L}L_{mag}mag_{shifttime}shifttime_" + 
+                   "{shifttype}shifttype_{sampleN}sampleN_{nrep}_{sim_output}")
+ 
+# we run more reps for these
+three_pop_params = list(dict_product(dict(Va = Vas, L = Ls, nmu=nmus, 
+                                       mag = mag, shifttime = shifttime,
+                                       sampleN = sampleN,
+                                       shifttype = shifttype,
+                                       sim_output = three_pop_outputs,
+                                       rbp = gss_rbps, N=Ns, nrep=range(50))))
+
+# add in the VA / tmu parameters as they're calculated
+three_pop_results = []
+for d in three_pop_params:
+  d.update(Va_to_alphas(d))
+  file = three_pop_pattern.format(**d)
+  three_pop_results.append(DATADIR + file)
+
+# dummy rule 
+rule three_pop_all:
+  input:
+    three_pop_results
+
+rule three_pop:
+  input:
+    "three_pop.slim", neut_burnin_results
+  output:
+    DATADIR + three_pop_pattern.replace("{sim_output}", three_pop_outputs[0]),
+    DATADIR + three_pop_pattern.replace("{sim_output}", three_pop_outputs[1]),
+    DATADIR + three_pop_pattern.replace("{sim_output}", three_pop_outputs[2]),
+  params:
+    # build up the corresponding burnin file from the parameters
+    burnin_pop = DATADIR + neut_burnin_pattern.replace("{sim_output}", "fullsims.bin")
+  shell:
+    """
+    mkdir -p {DATADIR}/three_pop/
+
+    # the output files are automatically generated from the SLiM script
+    {SLIM} -d \"burninpop='{params.burnin_pop}'\" \
+    -d N={wildcards.N} -d rbp={wildcards.rbp} \
+    -d Va={wildcards.Va} -d L={wildcards.L} \
+    -d tmu={wildcards.tmu} -d nmu={wildcards.nmu} \
+    -d alpha={wildcards.alpha} -d nrep={wildcards.nrep} \
+    -d shifttime={wildcards.shifttime} -d mag={wildcards.mag} \
+    -d sampleN={wildcards.sampleN} \
+    -d \"shifttype='{wildcards.shifttype}'\" {input[0]}
+    """
+
+
 
 # ------- Sampled Line Simualtions, Optimum Shift -------
 # Optimum shift parameters

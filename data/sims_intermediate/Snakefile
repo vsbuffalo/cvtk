@@ -53,7 +53,8 @@ shifttime = [5]
 Us = [0.5, 1, 1.5]
 bgs_rbps = [1e-8, 1e-7]
 #selcoefs = [1e-1, 0.5e-1, 1e-2, 0]
-selcoefs = [0]
+selcoefs = [1e-1, 0.5e-1, 1e-2, 0]
+#selcoefs = [0]
 fixations = ['with_fixations', 'without_fixations']
 bgs_nreps = range(NREPS)
 
@@ -61,8 +62,8 @@ bgs_nreps = range(NREPS)
 # we use the paremeters above to extract a subset of available simulation result
 bgswf_sim_pattern = "bgs/bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{nrep}_neutfreqs.tsv"
 
-bgswf_covs_pattern = ("bgs/bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{nrep}_{fixations}_covs.pkl")
-bgswf_covs_results = expand(OUTDIR + "{fixations}/" + bgswf_covs_pattern,
+bgswf_covs_pattern = ("bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{nrep}_{fixations}_covs.pkl")
+bgswf_covs_results = expand(OUTDIR + "bgs/{fixations}/" + bgswf_covs_pattern,
                             s=selcoefs, nmu=nmus, U=Us, rbp=bgs_rbps,
                             N=Ns, 
                             fixations=fixations,
@@ -76,17 +77,17 @@ rule bgswf_covs:
   input:
     SIMDIR + bgswf_sim_pattern
   output:
-    OUTDIR + "with_fixations/" + bgswf_covs_pattern.replace('{fixations}', 'with_fixations'),
-    OUTDIR + "without_fixations/" + bgswf_covs_pattern.replace('{fixations}', 'without_fixations'),
+    OUTDIR + "bgs/with_fixations/" + bgswf_covs_pattern.replace('{fixations}', 'with_fixations'),
+    OUTDIR + "bgs/without_fixations/" + bgswf_covs_pattern.replace('{fixations}', 'without_fixations'),
   run: 
     param_dict = dict(N=wildcards.N, rbp=wildcards.rbp, s=wildcards.s,
                       nmu=wildcards.nmu, U=wildcards.U,
                       nrep=wildcards.nrep)
  
     neutfreqs_file = SIMDIR + bgswf_sim_pattern.format(**param_dict)
-    outfile_wf = OUTDIR + "with_fixations/" + bgswf_covs_pattern.replace('{fixations}', 
+    outfile_wf = OUTDIR + "bgs/with_fixations/" + bgswf_covs_pattern.replace('{fixations}', 
                               'with_fixations').format(**param_dict)
-    outfile_wof = OUTDIR + "without_fixations/" + bgswf_covs_pattern.replace('{fixations}', 
+    outfile_wof = OUTDIR + "bgs/without_fixations/" + bgswf_covs_pattern.replace('{fixations}', 
                               'without_fixations').format(**param_dict)
     out_wf = covs_from_file(neutfreqs_file, fixed_to_nan=False)
     with open(outfile_wf, 'wb') as f:

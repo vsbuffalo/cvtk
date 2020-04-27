@@ -1520,19 +1520,16 @@ effects of genetic architecture on the statistics we have used in the paper.
   \label{suppfig:sim-expfit-covs}
 \end{figure}
 
-
-
 During this burnin, sites were either marked as neutral (with mutation rate
-$\mu_\mathrm{neutral} = 10^8$ per gamete per generation) or contributed to the
-trait's value (with mutation rate $\mu_\mathrm{trait}$), but were not selected
-on until generation $10N + 5$ (the five generations after burnin serve as a
-neutral control). The trait mutation rate, $\mu_\mathrm{trait}$ was set by
+$\mu_\mathrm{neutral} = 10^{-8}$ per gamete per generation) or contributed to
+the trait's value (with mutation rate $\mu_\mathrm{trait}$), but were not
+selected until generation $10N + 5$ (the five generations after burnin serve
+as a neutral control). The trait mutation rate, $\mu_\mathrm{trait}$ was set by
 targeting a particular architecture, the number of selected sites, $L$. Each
 site contributing to the trait's value was randomly chosen to have effect size
 $\pm \alpha$ with equal probability, where $\alpha$ was set to target a
 particular additive genetic variance for the trait, $V_A$, for the target
 number of selected sites $L$. 
-
 
 Overall, we confirm a finding in \parencite{Buffalo2019-io} that the initial
 expected temporal covariance conditioned on $V_A$, is invariant to the number
@@ -1554,7 +1551,7 @@ genetic variance.
     variance).  The red line is the mean trajectory across all replicate
   simulations. Like Supplementary Figure \ref{suppfig:sim-expfit-covs}, the
 onset of selection is five generations after the $10N$ generation burnin; this
-is evident by the initial flat section of the $G(t)$ trajectory.}
+is evident by the initial flat period of the $G(t)$ trajectory.}
 
   \label{suppfig:sim-expfit-Gs}
 \end{figure}
@@ -1580,6 +1577,39 @@ slightly different from the \textcite{Barghi2019-qy} study in that the burnin
 populations are all independent; however we expect the same qualitative result. 
 
 %\vb{TODO: note about different burnin pops?}
+
+\subsubsection{Temporal Covariances and $G(t)$ under Gaussian Stabilizing Selection}
+
+Additionally, we wanted to ensure that our temporal covariances and $G(t)$
+trajectories were robust to more complicated, but realistic fitness models. To
+this end, we simulated Gaussian stabilizing selection on a trait during burnin,
+with two optima shift routines: (1) sudden optima shifts of $\mu_\text{sudden}
+= \{0.1\sigma, 0.5\sigma, 1\sigma\}$, and (2) very graduate optima shifts of
+$\mu_\text{gradual} = \{0.001\sigma, 0.01\sigma\}$ per generation using the
+same two population simulation scheme described above. We used a polygenic
+architecture for these simulations ($L = 1000$ trait affecting loci), and the
+optima shift began at five generations after a $10N$ generation.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/gss-covs.pdf}
+
+  \caption{}
+
+  \label{gss-covs}
+\end{figure}
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/gss-G.pdf}
+
+  \caption{}
+
+  \label{gss-G}
+\end{figure}
+
+
 
 \subsubsection{Genetic Architecture and Convergence Correlations}
 
@@ -1632,21 +1662,19 @@ trait-affecting loci is $L=1$), the convergence correlations are generally much
 weaker than those under a polygenic architecture. However, this effect is
 mediated by the line population size; the difference in convergence correlation
 between $L = 1$ and $L = 1000$ are more dissimilar when the line population
-sizes are larger (compare the first column, last two rows). Overall, we find
-that the convergence correlation is affected by both genetic architecture and
-the size of the selected population lines.
+sizes are larger (compare the first column, last two rows). Like the
+convergence correlations calculated on the \textcite{Barghi2019-qy} data, we
+find in simulations convergence correlations decay through time. Overall, we
+find that the convergence correlation is affected by both genetic architecture
+and the size of the selected population lines.
 
 We also wanted to test whether our we see similar convergence correlations
-under a more complicated, but more realistic fitness model: Gaussian
-stabilizing selection. To this end we simulated both sudden optima shifts of
-$\mu_\text{sudden} = \{0.1\sigma, 0.5\sigma, 1\sigma\}$ and very graduate
-optima shifts of $\mu_\text{gradual} = \{\0.001\sigma, 0.01\sigma\}$ per
-generation using the same two population simulation scheme described above. We
-show these convergence correlations for the sudden optima shifts in
-Supplementary Figure \ref{suppfig:convergence-corrs-gss}. We found that for
-slow moving optima shifts, the convergence correlations are generally too weak
-to be distinguished from noise reliably, so these results are excluded (but see
-Supplementary Materials Section XXX).
+under Gaussian stabilizing selection. XXX We show these convergence
+correlations for the sudden optima shifts in Supplementary Figure
+\ref{suppfig:convergence-corrs-gss}. We found that for slow moving optima
+shifts, the convergence correlations are generally too weak to be distinguished
+from noise reliably, so these results are excluded (but see Supplementary
+Materials Section XXX).
 
 \begin{figure}[!ht]
   \centering
@@ -1664,28 +1692,6 @@ which is the reference generation; this is indicated by the split in the
 lines.}
 
   \label{suppfig:convergence-corrs-gss}
-\end{figure}
-
-
-\subsubsection{Temporal Covariances and $G(t)$ under Gaussian Stabilizing Selection}
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{figures/gss-covs.pdf}
-
-  \caption{}
-
-  \label{gss-covs}
-\end{figure}
-
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{figures/gss-G.pdf}
-
-  \caption{}
-
-  \label{gss-G}
 \end{figure}
 
 \subsubsection{Sampling in Temporal Blocks}

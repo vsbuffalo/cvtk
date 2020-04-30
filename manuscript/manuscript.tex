@@ -604,7 +604,22 @@ genome having had a reversed fitness effect at later timepoints.
   \centering
   \includegraphics[width=\textwidth]{figures/figure-4-edited.pdf}
 
-  \caption{}
+  \caption{Forward-in-time simulations of demonstrate how temporal covariance,
+    $G(t)$ trajectories, and convergence correlations arise during optima
+    shifts of two different magnitudes, under Gaussian stabilizing selection.
+    (A) Trait means across 30 replicate before and after optima shifts (solid
+    lines), for two different magnitudes (indicated by color). The optimal
+    trait values are indicated by the purple and yellow dashed lines.  (B) Mean
+    temporal covariance $\cov(\Delta p_5, \Delta p_t)$ across 30 simulation
+    replicates, where $t$ varies along the x-axis (points), with a
+    loess-smoothed average (solid line). (C) $G(t)$ trajectories through time,
+    for 30 replicate simulations across two optima shifts. The solid line is a
+    loess-smoothed average. (D) The convergence correlations between two
+    populations split from a common population, that underwent either an optima
+    shift in the same direction (converge) and opposite directions (diverge)
+    at generation five. In subfigures (B), (C), and (D), directional selection
+    begins at generation five, when the optima shifts; this is indicated by the
+    vertical dashed red line.}
 
   \label{fig:figure-4}
 \end{figure}
@@ -1489,21 +1504,21 @@ Due to the high computational burden of forward simulations over this wide
 breadth of parameters, we modeled a single 50 megabase region in a population
 of $N = 1000$ diploid individuals with a neutral variant mutation rate of
 $10^{-8}$ and a recombination rate of $10^{-8}$ per basepair. This is roughly
-analogous to a XXX chromosome of \emph{Drosophila melanogaster}; however with
-this small population size and mutation rate, the population mutation rate
-$\theta$ for the entire region leads to far fewer neutral sites to calculate
-covariances and other statistics on than expected for a region this length in
-\emph{D.  melanogaster}. Since our main goal is to understand how the dynamics
-of statistics used in the paper and how they are affected by background
-selection, fitness model, and trait architecture, we use population frequencies
-rather than sampling frequencies. 
+analogous to a quarter of an autosome of \emph{Drosophila melanogaster};
+however with this small population size and mutation rate, the population
+mutation rate $\theta$ for the entire region leads to far fewer neutral sites
+to calculate covariances and other statistics on than expected for a region
+this length in \emph{D.  melanogaster}. Since our main goal is to understand
+the dynamics of statistics used in the paper and how they are affected by
+different quantitative genetic fitness models, background selection, and trait
+architecture, we use population frequencies rather than sampling frequencies. 
 
 All forward simulations were conducted using SLiM \parencite{Haller2019-vu} and
 run and processed using Snakemake \parencite{Koster2012-iv}; all simulation
 routines are available in the Github repository
 \url{https://github.com/vsbuffalo/cvtk/}.
 
-\subsubsection{The Effects of the Genetic Architecture}
+\subsubsection{The Effects of the Genetic Architecture under Exponential Directional Selection}
 \label{supp:genetic-arch}
 
 We first investigated the effects of the selected trait's genetic architecture
@@ -1526,7 +1541,7 @@ effects of genetic architecture on the statistics we have used in the paper.
     ($L$, rows). Each point is the temporal covariance averaged over 50
     replicate simulations; dark gray points are temporal covariances after the
     onset of selection, and light gray points are before. The red line is a
-    loess smoothed curve through the covariances after the onset of selection.
+    loess-smoothed curve through the covariances after the onset of selection.
     Selection on the trait was imposed through an exponential fitness function.}
 
   \label{suppfig:sim-expfit-covs}
@@ -1560,7 +1575,7 @@ genetic variance.
   \caption{The $G(t)$ trajectories of 50 replicate simulations, across
     different trait architectures ($L$ is the target number of sites affecting
     the trait's value, and $V_A$ is the target trait additive genetic
-    variance).  The red line is the mean trajectory across all replicate
+    variance). The red line is the mean trajectory across all replicate
   simulations. Like Supplementary Figure \ref{suppfig:sim-expfit-covs}, the
 onset of selection is five generations after the $10N$ generation burnin; this
 is evident by the initial flat period of the $G(t)$ trajectory.}
@@ -1570,9 +1585,9 @@ is evident by the initial flat period of the $G(t)$ trajectory.}
 
 In our previous work, we did not investigate the affect of trait architecture
 on our measure $G(t)$. Using the exponential fitness function simulations, we
-also calculated $G(t)$ for each of the replicate simulations. We find that
-across replicates, the $G(t)$ trajectories can vary considerably depending on
-the number of sites ($L$) determining the trait's value (Supplementary Figure
+also calculated $G(t)$ for each of the replicate simulations. We find that the
+$G(t)$ trajectories can vary considerably across replicates depending on the
+number of sites ($L$) determining the trait's value (Supplementary Figure
 \ref{suppfig:sim-expfit-Gs}). When a trait is monogenic ($L \approx 1$), $G(t)$
 trajectories vary considerably across replicate lines, as certain lines may not
 contain the few selected alleles (top row of Supplementary Figure
@@ -1592,19 +1607,6 @@ populations are all independent; however we expect the same qualitative result.
 
 \subsubsection{Temporal Covariances and $G(t)$ under Gaussian Stabilizing Selection}
 
-Additionally, we wanted to ensure that our temporal covariances and $G(t)$
-trajectories were robust to more complicated, but realistic fitness models. To
-this end, we simulated Gaussian stabilizing selection on a trait during burnin,
-with two optima shift routines: (1) sudden optima shifts of $\mu_\text{sudden}
-= \{0.1\sigma, 0.5\sigma, 1\sigma\}$, and (2) very graduate optima shifts of
-$\mu_\text{gradual} = \{0.001\sigma, 0.01\sigma\}$ per generation using the
-same two population simulation scheme described above. We used a polygenic
-architecture for these simulations ($L = 1000$ trait affecting loci), and the
-optima shift began at five generations after a $10N$ generation.
-
-Overall, we see the same qualitative results under Gaussian stabilizing
-selection with optima shifts as under exponential directional selection.
-
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/gss-zbar.pdf}
@@ -1615,32 +1617,54 @@ selection with optima shifts as under exponential directional selection.
   per generation, while the second row shows the selection response during a
   sudden optima shift.}
 
-  \label{gss-zbar}
+  \label{suppfig:gss-zbar}
 \end{figure}
 
+Additionally, we wanted to ensure that our temporal covariances and $G(t)$
+trajectories were robust to more complicated, but realistic fitness models. To
+this end, we also simulated Gaussian stabilizing selection (GSS) on a trait
+during burnin, with two optima shift routines: (1) sudden optima shifts of
+$\mu_\text{sudden} = \{0.1\sigma, 0.5\sigma, 1\sigma\}$, and (2) very graduate
+optima shifts of $\mu_\text{gradual} = \{0.001\sigma, 0.01\sigma\}$ per
+generation using the same two population simulation scheme described above. We
+used a polygenic architecture for these simulations ($L = 1000$ trait affecting
+loci), and the optima shift began at five generations after a $10N$ generation.
+Across our GSS simulations, we see the expected selection response
+(Supplementary Material Figure \ref{suppfig:gss-zbar}).
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/gss-covs.pdf}
 
-  \caption{}
+  \caption{Mean temporal covariance ($\cov \Delta p_5, p_t$, with $t$ varying
+    across the x-axis) across 30 replicate simulations (light gray points are
+    before the onset of selection; dark gray points are after selection
+    begins), under different Gaussian stabilizing selection with optima shift
+  regimes. The solid red line is a loess-smoothed average of these points.}
 
-  \label{gss-covs}
+  \label{suppfig:gss-covs}
 \end{figure}
 
+Overall, we see the same qualitative results under Gaussian stabilizing
+selection with optima shifts as under exponential directional selection.
+Stronger directional selection, here determined by larger sudden optima shifts
+or larger gradual shifts per generation, lead to stronger temporal covariances
+(Supplementary Materials Figure \ref{suppfig:covs}). Furthermore, we see a
+stronger effect of linked selection, as measured by $G(t)$, under stronger
+directional selection (Supplementary Material Figure \ref{suppfig:gss-G}).
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/gss-G.pdf}
 
-  \caption{}
+  \caption{$G(t)$ trajectories across 30 replicate Gaussian stabilizing
+   selection with optima shift regimes. The solid red line is a loess-smoothed
+   average across replicates.}
 
-  \label{gss-G}
+  \label{suppfig:gss-G}
 \end{figure}
 
-
-
-\subsubsection{Genetic Architecture and Convergence Correlations}
+\subsubsection{Convergence Correlations}
 
 Using the same exponential fitness function simulations described above, we
 also investigated how the convergence correlation is impacted by (1) genetic
@@ -1664,9 +1688,9 @@ one line is selected and the other is not; this is akin to the control line in
 the \textcite{Castro2019-uk} study (see Figure \ref{fig:figure-2}C). In this
 case, we expect to see no convergence correlation, as only one line is being
 selected. Finally, across these two-line simulation studies, we expect that
-smaller sampled line sizes should show weaker convergent correlations, as the
+smaller selection line sizes should show weaker convergent correlations, as the
 probability that the same haplotypes are selected between the two lines
-decreases with smaller size.
+decreases with size.
 
 \begin{figure}[!ht]
   \centering
@@ -1693,17 +1717,26 @@ mediated by the line population size; the difference in convergence correlation
 between $L = 1$ and $L = 1000$ are more dissimilar when the line population
 sizes are larger (compare the first column, last two rows). Like the
 convergence correlations calculated on the \textcite{Barghi2019-qy} data, we
-find in simulations convergence correlations decay through time. Overall, we
-find that the convergence correlation is affected by both genetic architecture
-and the size of the selected population lines.
+find in simulations convergence correlations decay through time. Additionally,
+populations selected in opposite directions lead to negative convergence
+correlations, as expected. Overall, we find that the convergence correlation is
+affected by both genetic architecture and the size of the selected population
+lines.
 
-We also wanted to test whether our we see similar convergence correlations
-under Gaussian stabilizing selection. XXX We show these convergence
+We also wanted to test whether we see similar convergence correlations under
+Gaussian stabilizing selection. In these simulations, rather than targeting a
+particular $V_A$, we fix the trait mutation rate at $10^{-8}$ (thus region-wide
+$\theta = 2000$). Like the exponential directional selection simulations, we
+impose directional selection in the same direction across the two populations
+(converge), different directions (diverge), and only in one population
+(single). We also vary the type (gradual versus sudden) and magnitude of optima
+shifts in the two populations. Overall, simulations show convergence
 correlations for the sudden optima shifts in Supplementary Figure
-\ref{suppfig:convergence-corrs-gss}. We found that for slow moving optima
-shifts, the convergence correlations are generally too weak to be distinguished
-from noise reliably, so these results are excluded (but see Supplementary
-Materials Section XXX).
+\ref{suppfig:convergence-corrs-gss}. Importantly, optima shifts in the opposite
+direction cause negative convergence correlations. We found that for slow
+moving optima shifts, the convergence correlations are generally too weak to be
+distinguished from zero reliably, (top row of Supplementary Material Figure
+\ref{suppfig:convergence-corrs-gss}).
 
 \begin{figure}[!ht]
   \centering
@@ -1744,34 +1777,36 @@ lines.}
 \end{figure}
 
 In our analysis of the \textcite{Barghi2019-qy} data, we describe our statistic
-$G(t)$ as an lower bound for two reasons: (1) the population is sequenced every
+$G(t)$ as a lower bound for two reasons: (1) the population is sequenced every
 ten generations, meaning the temporal covariances between adjacent generations
 cannot contribute to the numerator of $G(t)$ but contribute to the denominator,
 and (2) the estimate of $G(t)$ ignores linked selection's contribution to the
 variance in allele frequency change (this is the difference between $G(t)$ and
-$G'(t)$, the latter of which includes these variance terms \cite{Buffalo2019-io}).
-To verify that $G(t)$ estimated every ten generations is indeed a lower bound,
-we used a simulation procedure similar to the exponential fitness function
-simulations (described in Supplementary Material Section
-\ref{supp:genetic-arch}), and calculated the temporal covariances and $G(t)$
-both each generation, and every ten generations. Unlike the simulations
-described in \ref{supp:genetic-arch}, we began selection at $10N$ generations,
-and used trait $V_A = 0.01$ and $L = 1000$ sites affecting the trait. 
+$G'(t)$, the latter of which includes these variance terms
+\parencite{Buffalo2019-io}).  To verify that $G(t)$ estimated every ten
+generations is indeed a lower bound, we used a simulation procedure similar to
+the exponential fitness function simulations (described in Supplementary
+Material Section \ref{supp:genetic-arch}), and calculated the temporal
+covariances and $G(t)$ both each generation, and every ten generations. Unlike
+the simulations described in \ref{supp:genetic-arch}, we began selection at
+$10N$ generations, and used trait $V_A = 0.01$ and targeted $L = 1000$ sites
+affecting the trait. 
 
 First, comparing $G(t)$ when sampling population frequencies every generation
 versus every ten generations, we confirm that the ten-generation block $G(t)$
-is a lower bound of the true every generation $G(t)$ (red and blue lines in
-Supplementary Figure \ref{suppfig:supp-blocks}A). Furthermore, since we control
-the population size in our simulations at $N = 1000$ diploids, we know the
-drift effective population size in the absence of selection. This allows us to
-estimate $G(t)'$, which is a measure of $G(t)$ that accounts for the linked
-selection's inflation of the variance in allele frequency change between two
-generations (equation 26, \cite{Buffalo2019-io}). Plugging in the drift
-effective population size $N_e = 1000$ into the expression for $G'(t)$ and
-using the $\var(p_t - p_0)$ calculated for different $t$'s, we see that the
-every generation $G(t)$ that does not account for linked selection's inflation
-of $\var(\Delta p_t)$ does underestimate the true impact of linked selection as
-expected (dashed gray line in Supplementary Figure \ref{suppfig:supp-blocks}A).
+is a lower bound of the $G(t)$ trajectory when sampling is every generation
+(red and blue lines in Supplementary Figure \ref{suppfig:supp-blocks}A).
+Furthermore, since we control the population size in our simulations at $N =
+1000$ diploids, we know the drift effective population size in the absence of
+selection. This allows us to estimate $G(t)'$, which is a measure of $G(t)$
+that accounts for the linked selection's inflation of the variance in allele
+frequency change between two generations (equation 26, \cite{Buffalo2019-io}).
+Plugging in the drift effective population size $N_e = 1000$ into the
+expression for $G'(t)$ and using the $\var(p_t - p_0)$ calculated for different
+$t$'s, we see that the every generation $G(t)$ that does not account for linked
+selection's inflation of $\var(\Delta p_t)$ does underestimate the true impact
+of linked selection as expected (dashed gray line in Supplementary Figure
+\ref{suppfig:supp-blocks}A).
 
 To further understand the effects of calculating temporal covariances every ten
 generations rather than every generation, we also compared their magnitudes and
@@ -1782,8 +1817,59 @@ scales are different). The larger magnitude is expected, as each ten generation
 block temporal covariance is the sum of 45 temporal covariances between
 adjacent generations (e.g. $10 \choose 2$).
 
-\subsubsection{Background Selection's Effect on Temporal Covariance}
+\subsubsection{Background Selection}
 
+In our previous work, \textcite{Buffalo2019-io}, we did not investigate whether
+background selection can lead to temporal autocovariance. Here, using
+Forward-in-time simulations, we find that background selection can indeed
+generate temporal autocovariance and lead to convergence correlations when
+deleterious haplotypes are shared between populations and both removed by
+selection. 
+
+We simulated background selection in a 50 megabase region, where deleterious
+alleles are randomly introduced by mutation. Following background selection
+literature
+\parencite{Charlesworth1993-gb,Nordborg1996-nq,Hudson1994-oh,Hudson1995-xc}, we
+parameterize the mutation rate as the total number of deleterious mutations
+introduced per diploid genome, per generation, and simulate values $U = \{0.5,
+1.0, 1.5\}$. We also vary the strength of selection against the deleterious
+mutations, $s = \{0.0, 0.01, 0.05, 0.1\}$ (where $s=0$ is a neutral control),
+as well as different recombination rates ($r_{bp} = \{10^{-7}, 10^{-8}\}$).
+Like other simulations, we burnin the population for $10N$ generations under
+backgrounds selection. Overall, we find background selection does create
+temporal covariance (Supplementary Material Figure
+\ref{suppfig:supp-bgs-covs}), which are stronger under (1) higher deleterious
+mutation rates and (2) larger selection coefficients. This latter point
+initially seems at odds with background selection theory, as the level of
+pairwise diversity in a region under background selection is invariant with
+respect to the selection coefficient. However, looking at the background
+selection $G(t)$ trajectories, we find that over time, the impact of linked
+selection created by background selection appears to trend towards an
+equilibrium in the $r_{BP} = 10^{-7}$ subfigure, and reaches an equilibrium in
+the $r_{BP} = 10^{-8}$ subfigure (Supplementary Material Figure
+\ref{suppfig:supp-bgs-g}). However, further future work is needed to fully
+explore and understand the temporal covariance dynamics of background
+selection.
+
+
+
+Note about fixations 
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig-bgs-covars-without-fixations.pdf}
+
+  \caption{The temporal covariances, $\cov(\Delta p_{50}, \Delta p_t)$ (where $t$
+    varies along the x-axis) created by background selection. Unlike
+    directional selection figures, where we choose the reference generation to
+    be the first generation after the onset of selection, here we choose an
+    arbitrary reference generation (generation 50). The symmetry of temporal
+    covariance around the reference generation, is expected, since unlike
+    directional selection the level of additive genetic variance for fitness has
+    hit mutation-selection-drift balance.}
+
+  \label{suppfig:supp-bgs-covs}
+\end{figure}
 
 
 
@@ -1796,15 +1882,6 @@ adjacent generations (e.g. $10 \choose 2$).
   \label{suppfig:supp-bgs-g}
 \end{figure}
 
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig-bgs-covars-without-fixations.pdf}
-
-  \caption{}
-
-  \label{suppfig:supp-bgs-covs}
-\end{figure}
 
 
 

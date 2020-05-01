@@ -1852,21 +1852,22 @@ explore and understand the temporal covariance dynamics of background
 selection.
 
 
-
-Note about fixations 
-
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/fig-bgs-covars-without-fixations.pdf}
 
-  \caption{The temporal covariances, $\cov(\Delta p_{50}, \Delta p_t)$ (where $t$
-    varies along the x-axis) created by background selection. Unlike
-    directional selection figures, where we choose the reference generation to
-    be the first generation after the onset of selection, here we choose an
-    arbitrary reference generation (generation 50). The symmetry of temporal
-    covariance around the reference generation, is expected, since unlike
-    directional selection the level of additive genetic variance for fitness has
-    hit mutation-selection-drift balance.}
+  \caption{The temporal covariances, $\cov(\Delta p_{50}, \Delta p_t)$ (where
+    $t$ varies along the x-axis) created by background selection, under
+    different recombination rates ($r_{BP}$, rows), selection coefficients
+    ($s$), and deleterious mutation rates ($U$). Unlike directional selection
+    figures, where we choose the reference generation to be the first
+    generation after the onset of selection, here we choose an arbitrary
+    reference generation (generation 50). The symmetry of temporal covariance
+    around the reference generation, is expected, since unlike directional
+    selection the level of additive genetic variance for fitness has hit
+    mutation-selection-drift balance. Note that the first column sets constant
+  $U = 1.0$, and $s$ varies, while the second column sets $s=0.05$ constant,
+and varies $U$.}
 
   \label{suppfig:supp-bgs-covs}
 \end{figure}
@@ -1877,16 +1878,43 @@ Note about fixations
   \centering
   \includegraphics[width=\textwidth]{figures/fig-bgs-G-without-fixations.pdf}
 
-  \caption{}
+  \caption{The trajectories of $G(t)$ through time under background selection,
+    under different recombination rates ($r_{BP}$, rows), selection
+    coefficients ($s$), and deleterious mutation rates ($U$). The first column
+    sets $U = 1.0$, and $s$ varies, while in the second column $s=0.05$ is held
+  constant, and $U$ varies.}
 
   \label{suppfig:supp-bgs-g}
 \end{figure}
 
 
 
+Note that to investigate whether different selection coefficients converged to
+the same levels of $G(t)$, we extended the number of generations we calculated
+our statistics on (e.g. in earlier exponential and Gaussian stabilizing
+selection fitness function, these were calculated to fifty generations; here
+we've calculated them to one hundred generations). This lead us to discover a
+subtle bias temporal covariance: whether sites that fix or are lost through
+time are included or excluded in the temporal covariance calculation can lead
+to biases in temporal covariance. We discuss this extensively in the next
+section, Supplementary Materials Section \ref{supp:fixation}, but here we note
+that all the background selection results exclude fixed and lost sites; these
+are marked as missing and excluded from the temporal covariance and $G(t)$
+calculations.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig-bgs-convergence-correlation.pdf}
+
+  \caption{}
+
+  \label{suppfig:supp-bgs-converg}
+\end{figure}
+
 
 
 \subsubsection{The Effect of Fixations}
+\label{supp:fixation}
 
 In analyzing both the empirical datasets included in our study and our
 simulation results, we noticed the temporal covariances and $G(t)$ statistics

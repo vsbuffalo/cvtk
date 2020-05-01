@@ -1971,108 +1971,19 @@ leads to trajectories that, purely by chance, have many upward (or downward)
 allele frequency changes, which leads to a positive sum of pairwise temporal
 covariances (the numerator of $G(t)$). Similarly, conditioning on long sojourn
 times implies that frequency changes alternate back and forth quite a bit, such
-the sum of pairwise temporal covariances could be slightly negative. 
+the sum of pairwise temporal covariances could be slightly negative. However,
+the overall affect could also be affected by the average allele frequency
+change across loci and other factors. 
 
-When all pairwise covariances are calculated and
-summed to calculate the numerator of $G(t)$, this leads to this subset of
-neutral trajectories to have spuriously significant and positive $G(t)$
-trajectories. We briefly confirmed that conditioning on fixation leads to a
-spurious positive numerator of $G(t)$. Looking at one neutral simulation, we
-conditioned on alleles fixing during the 105 generations of which temporal
-covariances are calculated. Per locus, we calculated the sum of all pairwise
-products between allele frequency changes (analogous to the numerator of
-$G(t)$). Whether we condition on fixation, or a large absolute allele frequency
-change between the initial generation and the last generation, we find that
-quickly fixing sites and sites with large allele frequency shifts have a
-significant positive sum of covariances as expected, despite being neutral
-trajectories. Thus, even under neutrality, one must mind how fixations are
-handled. 
-
-
-
-Since our simulation allele
-frequencies are population, rather than sample frequencies, when an allele is
-fixed or lost is known with certainty. 
-
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig-both-trunc.pdf}
-
-  \caption{$G(t)$ trajectories (left) and temporal covariances (right) from
-    truncation selection simulations for different numbers of individuals
-    selected (line color). Dashed lines indicate $G(t)$ trajectories and
-    temporal covariances calculated \emph{including} fixed sites, while the
-    solid lines exclude fixed sites. All values are averaged over 30 replicate
-    simulations; the lines in the right figure are loess smoothed, while points
-    are averages. The solid lines of the temporal covariances have been
-    excluded in the left figure for clarity, but are similar except they do not
-    become negative.}
-
-  \label{suppfig:supp-bgs-g-fix}
-\end{figure}
-
-
-
-
-First, we found that under strong truncation selection (i.e. the number of
-selected individuals is small), our measure $G(t)$ can become negative. This
-possibility was discussed in \textcite{Buffalo2019-io} as a result of
-fluctuating selection; here, however, the buildup of negative covariances
-driving this 
-
-Since our simulations were focused on understanding how genetic architecture
-and mode of selection impact temporal covariance and $G(t)$ (with a limited
-number of neutral sites, due to computational limitations), population
-frequencies were used. 
-
-
-
-If frequencies are measured without sampling noise, including fixed or lost
-sites in the calculation of temporal covariance and $G(t)$ has the effect of
-shrinking the covariance estimates towards zero, 
-
-how fixations (i.e. when a site is polymorphic but is fixed or
-lost during the course of its trajectory) are handled. Through simulations and
-comparing the results of analyzing our empirical datasets both ways, we have
-found trade-offs to both approaches, but overall find that not removing fixed
-sites is a more conservative, safer approach, and is what we use throughout our
-paper. 
-
-
-Temporal covariances (and related statistics like convergence correlations,
-$G(t)$, etc.) are calculated on allele frequency changes, $\Delta p_t$; when an
-allele is fixed or lost, the allele frequency changes are zero thereafter
-$\Delta p_t = 0$. When temporal covariance is calculated by averaging over the
-loci in a region or across the genome, fixed sites zero out the terms in the
-sum of the right hand side of temporal covariance, $\cov(\Delta p_t, \Delta
-p_s) = \E(\Delta p_t \Delta p_s) - \E(\Delta p_t) \E(\Delta p_s)$ and can
-shrink the second terms towards zero. From simulations using population
-frequencies (e.g. no sampling noise), we have found that including neutral
-sites into the temporal covariance calculation that are lost or fix will tend
-to shrink the covariance towards zero, and in some cases create spurious
-negative temporal covariances. We observed this when conducting the background
-selection simulations of Supplementary Materials Section XXX, and have included
-an alternative version of this figure that includes $G(t)$ trajectories
-calculated by including fixed neutral sites (Supplementary Figure
-\ref{suppfig:supp-bgs-g-fix}). We find, as expected, $G(t)$ trajectories
-calculated including fixed sites are shrunk towards zero, and in some cases,
-can become negative. In contrast, the $G(t)$ trajectories ignoring fixations
-(dashed lines in Supplementary Figure \ref{suppfig:supp-bgs-g-fix}) are higher.
-
-XXX truncation selection, exponential.
-
-
-While simulation results using population frequencies show that including fixed
-sites has the downside of shrinking the temporal covariance towards zero, and
-in some cases can create negative covariances, we have found excluding fixed
-sites on sample frequency data has a severe drawback: low frequency alleles
-will occasionally not be observed at a sample timepoint (leading to a frequency
-of zero of the minor allele), and excluding these observations (instead of
-treating it as a trajectory that has a 0 frequency timepoint) biases estimates.
-We observed this bias created by ignoring fixed or loss sites by comparing our
-$N_e$ estimates for the \textcite{Barghi2019-qy} study (estimated from the
-total variance in allele frequency change) with the estimates from the original
+To further complicate the matter, our simulation allele frequencies are
+population, rather than sample frequencies, when an allele is fixed or lost is
+known with certainty. With empirical data calculated on sample allele
+frequencies, low frequency minor alleles many not be sampled at some
+timepoints, and excluding these observations (instead of treating it as a
+trajectory that has a 0 frequency timepoint) biases estimates.  We observed
+this bias created by ignoring fixed or loss sites by comparing our $N_e$
+estimates for the \textcite{Barghi2019-qy} study (estimated from the total
+variance in allele frequency change) with the estimates from the original
 paper. We found that ignoring fixed or lost sites (by treating them as missing
 data in calculating the covariances) led to many low-frequency alleles not
 contributing to the variance, leading this statistic to be calculated on more
@@ -2085,26 +1996,11 @@ congruent with the original studies. Overall, we found by trying all these
 approaches that not removing fixed or lost sites was the best way to deal with
 sample allele frequencies that could be missing from some timepoints. 
 
-Still, we wanted to ensure that our empirical re-analyses were robust to our
-choice of how we handled fixed sites. Given that under some simulation
-conditions, we find that spurious negative covariances can occur when fixations
-are included, we wanted to ensure that our result that the temporal covariances
-of \textcite{Barghi2019-qy} that become negative at later timepoints are not an
-artifact of the way fixations are handled. First, we regenerated Figure 1 A and
-B, except with temporal covariances and $G(t)$ calculated excluding fixed or
-lost sites. We find the same qualitative results regardless of whether we
-include or exclude fixed/lost sites; importantly, we still see a significant
-signal that the temporal covariances at later timepoints become negative. As
-expected the temporal covariances are lessened by excluding fixed sites. 
-
-XXX
-
-
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.6\textwidth]{figures/figure-1-G-covs-nofix.pdf}
 
-  \caption{The effect of including fixed/lost sites in the calculation of the
+  \caption{The effect of excluding fixed/lost sites in the calculation of the
   temporal covariances and $G(t)$ trajectories of the \textcite{Barghi2019-qy}
 data. Dashed lines are those including fixed/lost sites (i.e. the original
 Figure 1), and solid lines are excluding fixed/lost sites.}
@@ -2128,6 +2024,47 @@ covariances at more distant timepoints ($k=2$). }
 
 
 
+To ensure that our findings were robust to handling sites with a frequency of
+zero or one differently, we regenerated Figures \ref{fig:figure-1} and Figure
+\ref{fig:figure-3} but excluded frequencies of zero or one. Specifically, we
+wanted to ensure that our finding that later timepoints had negative
+covariances at later timepoints was not spuriously caused by the way fixed or
+lost sites are handled. We see no qualitative difference (Supplementary
+Material Figures \ref{suppfig:supp-fig-1-nofix} and
+\ref{suppfig:supp-fig-3-nofix}) that emerges when sites with frequency zero or
+one are excluded.
+
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig-both-trunc.pdf}
+
+  \caption{$G(t)$ trajectories (A) and temporal covariances (B) from
+    truncation selection simulations for different numbers of individuals
+    selected (line color). Dashed lines indicate $G(t)$ trajectories and
+    temporal covariances calculated \emph{including} fixed sites, while the
+    solid lines exclude fixed sites. All values are averaged over 30 replicate
+    simulations; the lines in the right figure are loess smoothed, while points
+    are averages. The solid lines of the temporal covariances have been
+    excluded in the left figure for clarity, but are similar except they do not
+    become negative.}
+
+    \label{suppfig:supp-trunc}
+\end{figure}
+
+Through simulations, we noticed the strongest effect fixation  or loss of sites
+has on temporal covariance and $G(t)$ is under truncation selection. Here,
+since only a (potentially small) fraction of individuals contribute to the next
+generation, sites can fix over very short timescales. Furthermore, the small
+number of effective breeders contributing to the next generation shrinks $N_e$
+considerably, which increases $\var(p_t - p_0$, the denominator of $G(t)$. We
+see the effect of handling fixed/lost sites differently, and the faster rate of
+drift in Supplementary Materials Figure \ref{suppfig:supp-trunc} (A), where
+weaker truncation selection actually has higher levels of $G(t)$. Looking just
+at temporal covariances, we find that stronger truncation selection (e.g.  a
+smaller tail of individuals selected) does lead to greater temporal
+covariances.
 
 \setcounter{section}{1}
 \section*{Supplementary Figures}

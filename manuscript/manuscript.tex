@@ -1924,8 +1924,6 @@ calculations.
   \label{suppfig:supp-bgs-converg}
 \end{figure}
 
-
-
 \subsubsection{The Effect of Fixations}
 \label{supp:fixation}
 
@@ -1941,6 +1939,61 @@ may still be segregating, but by chance not sampled at a timepoint. Here, we
 discuss the effect of including sites with frequency zero or one, and show our
 empirical results are not qualitatively different when analyzed excluding fixed
 sites.
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig-bgs-G-with-fixations.pdf}
+
+  \caption{$G(t)$ trajectories from background selection simulations both
+  including fixed sites (solid lines) and not including fixed sites (dashed
+lines). The dashed lines are identical to those in Supplementary Materials
+Figure \ref{suppfig:supp-bgs-g}. }
+
+  \label{suppfig:supp-bgs-g-fix}
+\end{figure}
+
+We noticed in some simulations, when temporal covariances are calculated over
+longer time periods (i.e. $>50$ generations), that neutral simulations appear
+to slowly trend towards negative $G(t)$ (Supplementary Materials Figure
+\ref{suppfig:supp-bgs-g-fix}). In investigating this bias, we found that the
+effect went away when we marked fixed or lost sites as missing, and calculated
+the temporal covariance; furthermore, this affected the $G(t)$ trajectories
+under selection too (Supplementary Material Figure
+\ref{suppfig:supp-bgs-g-fix}). 
+
+Looking a neutral simulations results, we found that spuriously significant
+$G(t)$ trajectories (e.g. different from zero under the case of neutrality) can
+be created by conditioning on sojourn time. Our intuition, which will need to
+be confirmed by future work and theory, is that by conditioning on a quick
+sojourn time to fixation (or loss) from an initial intermediate frequency,
+leads to trajectories that, purely by chance, have many upward (or downward)
+allele frequency changes, which leads to a positive sum of pairwise temporal
+covariances (the numerator of $G(t)$). Similarly, conditioning on long sojourn
+times implies that frequency changes alternate back and forth quite a bit, such
+the sum of pairwise temporal covariances could be slightly negative. 
+
+When all pairwise covariances are calculated and
+summed to calculate the numerator of $G(t)$, this leads to this subset of
+neutral trajectories to have spuriously significant and positive $G(t)$
+trajectories. We briefly confirmed that conditioning on fixation leads to a
+spurious positive numerator of $G(t)$. Looking at one neutral simulation, we
+conditioned on alleles fixing during the 105 generations of which temporal
+covariances are calculated. Per locus, we calculated the sum of all pairwise
+products between allele frequency changes (analogous to the numerator of
+$G(t)$). Whether we condition on fixation, or a large absolute allele frequency
+change between the initial generation and the last generation, we find that
+quickly fixing sites and sites with large allele frequency shifts have a
+significant positive sum of covariances as expected, despite being neutral
+trajectories. Thus, even under neutrality, one must mind how fixations are
+handled. 
+
+
+
+Since our simulation allele
+frequencies are population, rather than sample frequencies, when an allele is
+fixed or lost is known with certainty. 
+
 
 \begin{figure}[!ht]
   \centering
@@ -1985,20 +2038,6 @@ comparing the results of analyzing our empirical datasets both ways, we have
 found trade-offs to both approaches, but overall find that not removing fixed
 sites is a more conservative, safer approach, and is what we use throughout our
 paper. 
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig-bgs-G-with-fixations.pdf}
-
-  \caption{$G(t)$ trajectories from background selection simulations both
-  including fixed sites (solid lines) and not including fixed sites (dashed
-lines). The dashed lines are identical to those in Supplementary Materials
-Figure \ref{suppfig:supp-bgs-g}. As expected, including fixed sites shrinks the
-$G(t)$ towards zero, and in some cases, they can become negative.}
-
-  \label{suppfig:supp-bgs-g-fix}
-\end{figure}
-
 
 
 Temporal covariances (and related statistics like convergence correlations,
@@ -2075,9 +2114,14 @@ Figure 1), and solid lines are excluding fixed/lost sites.}
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.6\textwidth]{figures/figure-3-hists-b-without-fixations.pdf}
+  \includegraphics{figures/figure-3-hists-b-without-fixations.pdf}
 
-  \caption{}
+  \caption{A version of Figure \ref{fig:figure-3} (A) and (B) excluding fixed
+    and lost sites. The same qualitative pattern holds as the original figure,
+    which did not exclude fixed and lost sites: there is an enrichment of
+    positive temporal covariances between near timepoints ($k=2$) in the
+  \textcite{Barghi2019-qy} study, and an excess of negative temporal
+covariances at more distant timepoints ($k=2$). }
 
   \label{suppfig:supp-fig-3-nofix}
 \end{figure}

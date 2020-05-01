@@ -1743,8 +1743,8 @@ distinguished from zero reliably, (top row of Supplementary Material Figure
   \includegraphics[width=\textwidth]{figures/fig-convergence-corrs-gss.pdf}
 
   \caption{The convergence correlations across the two population line Gaussian
-    stabilizing selection sudden optima shift simulations; panel rows are for
-    differing line population sizes, and panel columns are the modes of
+    stabilizing selection sudden optima shift simulations; selection line
+    population sizes vary across rows, and panel columns are the modes of
     selection across the lines (convergent, divergent, and only a single
     selected line control). All simulations have a target number of loci
     affecting the trait of $L = 1000$; line color indicates the size of the
@@ -1887,7 +1887,17 @@ and varies $U$.}
   \label{suppfig:supp-bgs-g}
 \end{figure}
 
-
+Additionally, we investigated whether background selection can create
+convergence correlations between two replicate populations. Much like the
+exponential directional selection and Gaussian stabilizing selection
+simulations, we burned in a population for $10N$ generations with background
+selection, which continued after the population was split into two replicate
+populations. These simulations fixed $U = 1.0$, $r_{BP} = 10^{-8}$, and varied
+the replicate population size $n = \{200, 1000\}$. We find that background
+selection can create convergence correlations (Supplementary Material Figure
+\ref{suppfig:supp-bgs-converg}). We find the convergence correlation is weaker
+in smaller replicate population sizes, as there are fewer shared haplotypes
+carrying deleterious alleles between the two populations.
 
 Note that to investigate whether different selection coefficients converged to
 the same levels of $G(t)$, we extended the number of generations we calculated
@@ -1906,7 +1916,10 @@ calculations.
   \centering
   \includegraphics[width=\textwidth]{figures/fig-bgs-convergence-correlation.pdf}
 
-  \caption{}
+  \caption{The convergence correlation created by background selection through
+    time, since the population split. The replicate population size varies
+    between the two panels. Values are averaged over 30 replicate simulations,
+    while the interval is a 95\% confidence interval.}
 
   \label{suppfig:supp-bgs-converg}
 \end{figure}
@@ -2059,6 +2072,16 @@ Figure 1), and solid lines are excluding fixed/lost sites.}
 
   \label{suppfig:supp-fig-1-nofix}
 \end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.6\textwidth]{figures/figure-3-hists-b-without-fixations.pdf}
+
+  \caption{}
+
+  \label{suppfig:supp-fig-3-nofix}
+\end{figure}
+
 
 
 

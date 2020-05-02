@@ -1524,9 +1524,11 @@ routines are available in the Github repository
 We first investigated the effects of the selected trait's genetic architecture
 on temporal covariances and $G(t)$ by neutrally burning in a population for
 $10N$ generations, and selecting on the trait with an exponential fitness
-function. By using an exponential fitness function (a form of selection
-multiplicative across sites), we ensure there is no build up of LD due to
-selection and epistasis \parencite{Turelli1990-kd,Bulmer1980-zo}; this serves
+function. By using an exponential fitness function (\gc{corresponding
+  to multiplicate}
+selection across sites), we ensure there is no build up of LD due to
+selection and epistasis \parencite{Turelli1990-kd,Bulmer1980-zo}
+\gc{IS THIS PHRASED CORRECTLY, IS IT only in infinite pop that this holds?}; this serves
 as the simplest directional selection model of a trait to understand the
 effects of genetic architecture on the statistics we have used in the paper.
 
@@ -1588,22 +1590,28 @@ on our measure $G(t)$. Using the exponential fitness function simulations, we
 also calculated $G(t)$ for each of the replicate simulations. We find that the
 $G(t)$ trajectories can vary considerably across replicates depending on the
 number of sites ($L$) determining the trait's value (Supplementary Figure
-\ref{suppfig:sim-expfit-Gs}). When a trait is monogenic ($L \approx 1$), $G(t)$
-trajectories vary considerably across replicate lines, as certain lines may not
-contain the few selected alleles (top row of Supplementary Figure
+\ref{suppfig:sim-expfit-Gs}). When a trait is
+gc{reasonably} monogenic ($L \approx 1$), $G(t)$
+trajectories vary considerably across replicate lines, as certain
+lines may \gc{stochastically lose } %notcontain
+the few \gc{copies
+  of the} selected alleles (top row of Supplementary Figure
 \ref{suppfig:sim-expfit-Gs}). However, with a polygenic trait, ($L \ge 100$),
-the $G(t)$ trajectories across replicates are all quite close as each replicate
-contains an abundance of alleles that affect the trait's value (bottom rows of
+the $G(t)$ trajectories across replicates are \gc{similar} as each
+replicate %that affect the trait's value
+contains an abundance of \gc{trait} alleles (bottom rows of
 Supplementary Figure \ref{suppfig:sim-expfit-Gs}). Comparing the simulated
 $G(t)$ replicate trajectories of Supplementary Figure
 \ref{suppfig:sim-expfit-Gs} with the \textcite{Barghi2019-qy} $G(t)$
 trajectories in Figure \ref{fig:figure-1}B, we again confirm a finding of
 \textcite{Barghi2019-qy}: that there is considerable genetic redundancy among
-beneficial alleles. We should note that our simplified simulation routines are
+beneficial alleles \gc{? Meaning lots of loci?}. We should note that our simplified simulation routines are
 slightly different from the \textcite{Barghi2019-qy} study in that the burnin
 populations are all independent; however we expect the same qualitative result. 
 
 %\vb{TODO: note about different burnin pops?}
+
+
 
 \subsubsection{Temporal Covariances and $G(t)$ under Gaussian Stabilizing Selection}
 
@@ -1623,14 +1631,18 @@ populations are all independent; however we expect the same qualitative result.
 Additionally, we wanted to ensure that our temporal covariances and $G(t)$
 trajectories were robust to more complicated, but realistic fitness models. To
 this end, we also simulated Gaussian stabilizing selection (GSS) on a trait
-during burnin, with two optima shift routines: (1) sudden optima shifts of
+during burnin, \gc{followed by one of two} two optima shift routines: (1) sudden optima shifts of
 $\mu_\text{sudden} = \{0.1\sigma, 0.5\sigma, 1\sigma\}$, and (2) very graduate
 optima shifts of $\mu_\text{gradual} = \{0.001\sigma, 0.01\sigma\}$ per
 generation using the same two population simulation scheme described above. We
 used a polygenic architecture for these simulations ($L = 1000$ trait affecting
-loci), and the optima shift began at five generations after a $10N$ generation.
+loci), and the optima shift began at five generations after a $10N$
+generation \gc{burnin}.
 Across our GSS simulations, we see the expected selection response
 (Supplementary Material Figure \ref{suppfig:gss-zbar}).
+
+\gc{do you say what the effect size
+  distribution is? Is it +/- again? How big is effect?}
 
 \begin{figure}[!ht]
   \centering

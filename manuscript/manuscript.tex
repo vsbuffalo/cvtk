@@ -626,6 +626,48 @@ genome having had a reversed fitness effect at later timepoints.
 
 
 
+
+Finally we used forward-in-time simulations to explore the conditions under
+which temporal and convergent correlations arise. We show a subset of our
+results for a model of Gaussian stabilizing selection (GSS) on a phenotype
+where directional selection is induced by a sudden shift in the optimum
+phenotype of varying magnitudes (Figure \ref{fig:figure-4}A).  We find that
+positive temporal covariances are produced by such selection (Figure
+\ref{fig:figure-4}B), and that these positive temporal covariances can compound
+together to generate a large proportion of allele frequency change being due to
+selection (i.e. large G) over the relatively short time periods similar to our
+analyzed selection datasets span (Figure \ref{fig:figure-4}C). The magnitude of
+these covariances increases with the strength of selection, i.e. the variance
+in fitness, such that stronger selection generates larger proportions of allele
+frequency change.  We find a similar picture of stronger convergent selection
+pressures generating larger convergence correlations. 
+
+These results are often relatively insensitive to the number of loci underlying
+the trait, suggesting that they may be capturing highly polygenic signals.
+Indeed if only a small number of loci influence the trait, the $G(t)$
+trajectories are typically much more stochastic, such that replicates do not
+reliably generate temporal covariances (compare Figure \ref{fig:figure-1}B to
+Supplementary Material Figure XXX).
+
+Additionally, we explored other selection schemes. We find that the long term
+dynamics of the covariances under truncation selection, which generates
+substantial epistasis, are richer than we see under GSS and multiplicative
+selection (Supplementary Material Figure XXX).  We also conducted simulations
+of purifying selection alone (i.e. background selection) and find that this can
+also generate positive temporal covariances (Figure XXX), thus it is unlikely
+that all of the allele frequency change we see is the result of the novel
+selection pressure the populations are exposed to, and some of this selection
+may be ongoing purifying selection. Only in the case of the Longshanks
+experiment, does the control line mean that we can quantify selection that is
+due to the novel selection pressure.
+
+While none of our experiments have selected the populations in divergent
+directions, in our simulations we find that such selection can generate
+negative convergent correlations. This suggests that selection experiments
+combining multiple replicates, control lines, as well as divergent selection
+pressures might be quite informative for unpacking the contribution of
+particular selection pressures to genome-wide allele frequency change. 
+
 \section{Discussion}
 
 Since the seminal analysis of \textcite{Maynard_Smith1974-lc} demonstrating
@@ -1525,10 +1567,10 @@ routines are available in the Github repository
 We first investigated the effects of the selected trait's genetic architecture
 on temporal covariances and $G(t)$ by neutrally burning in a population for
 $10N$ generations, and selecting on the trait with an exponential fitness
-function. \gc{The exponential fitness function corresponds to
-multiplicative selection across sites and so serves as the simplest
-directional selection model of a trait to understand the effects of genetic
-architecture on the statistics we have used in the paper.}
+function. The exponential fitness function corresponds to multiplicative
+selection across sites and so serves as the simplest directional selection
+model of a trait to understand the effects of genetic architecture on the
+statistics we have used in the paper.
 
 %By using an exponential fitness function (corresponding to
 %multiplicative selection across sites), \vb{we ensure there is no build up of

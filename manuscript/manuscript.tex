@@ -335,7 +335,7 @@ frequency change is caused by linked selection \parencite{Buffalo2019-io}. We
 call this measure $G(t)$, defined as
 
 \begin{align}
-  G(t) = \frac{\sum_{i\ne j}^{t-1} \cov(\Delta p_i, \Delta p_j)}{\var(p_t - p_0)}
+  \vb{G(t) = \frac{ \sum_{i=0}^{t-1} \sum_{j \ne i}^{t-1} \cov(\Delta p_i, \Delta p_j)}{\var(p_t - p_0)}}
 \end{align}
 %
 which estimates the effect of selection on allele frequency change between the
@@ -343,12 +343,16 @@ initial generation $0$ and some later generation $t$, which can be varied to
 see how this quantity grows through time. Since \textcite{Barghi2019-qy}
 experiment is sequenced every ten generations, in the numerator for the
 covariance we use the allele frequency changes between adjacent timepoints,
-which are ten generations apart. Consequently, this leads our measure $G(t)$ to
-be strongly conservative, since the temporal covariances within each
-ten-generation block are not directly observable, and thus are not included in
-the numerator of $G(t)$. Still, we find a remarkably strong signal. Greater
-than $20\%$ of total, genome-wide allele frequency change over 60 generations
-is the result of selection (Figure \ref{fig:figure-1} B).
+which are ten generations apart; \vb{thus the strong covariances between
+  adjacent generations are not observable and do not contribute to the
+  numerator of $G(t)$}. \vb{Additionally, selection also inflates the variance
+  in allele frequency change per generation; however, this effect cannot be
+  easily distinguished from drift.} \vb{For both these reasons, our measure
+  $G(t)$ is strongly conservative} (\vb{we demonstrate this through simulations
+in Supplementary Material Section \ref{supp:tempblocks}}). Still, we find a
+remarkably strong signal. Greater than $20\%$ of total, genome-wide allele
+frequency change over 60 generations is the result of selection (Figure
+\ref{fig:figure-1} B).
 
 Additionally, we looked for a signal of temporal autocovariance in
 \textcite{Bergland2014-ij}, a study that collected \emph{Drosophila
@@ -412,18 +416,23 @@ contribute to longer term adaptation across the different replicates.
     represents the convergence correlation $\mathrm{cor}(\Delta p_{s}, \Delta
     p_{s})$ from a starting reference generation $s$ to a later time $t$, which
     varies along the x-axis; each line corresponds to a row of the temporal
-    convergence correlation matrix depicted to the right. We note that
-    convergent correlation for the last timepoint is an outlier; we are unsure
-    as to the cause of this, e.g. it does not appear to be driven by a single
-    pair of replicates. {\bf B}: The convergence \vb{correlations} between
-    individual pairs of replicates in the \textcite{Kelly2019-dc} data
-    (\vb{note the confidence intervals are plotted, but are small on this
-    y-axis scale; see note XXX}). {\bf C}:  The convergence \vb{correlations}
-    between individual pairs of replicates in \parencite{Castro2019-uk} data,
-    for the two selection lines  (LS1 and LS2) and the control (Ctrl); gray CIs
-    are those using the complete dataset, blue CIs exclude chromosomes 5 and 10
-    which harbor the two regions \textcite{Castro2019-uk} found to have signals
-  of parallel selection between LS1 and LS2.}
+    convergence correlation matrix depicted to the right \vb{(where the
+      diagonal elements represent the convergence correlations between the same
+      timepoints across replicate populations)}. We note that convergent
+      correlation for the last timepoint is an outlier; we are unsure as to the
+      cause of this, e.g. it does not appear to be driven by a single pair of
+      replicates. {\bf B}: The convergence \vb{correlations} between individual
+      pairs of replicates in the \textcite{Kelly2019-dc} data (\vb{note the
+      confidence intervals are plotted, but are small on this y-axis scale}).
+      {\bf C}:  The convergence \vb{correlations} between individual pairs of
+      replicates in \parencite{Castro2019-uk} data, for the two selection lines
+      (LS1 and LS2) and the control (Ctrl); gray CIs are those using the
+      complete dataset, blue CIs exclude chromosomes 5 and 10 which harbor the
+      two regions \textcite{Castro2019-uk} found to have signals of parallel
+      selection between LS1 and LS2. \vb{Through simulations, we have found
+        that the differences in convergence correlation confidence interval
+        widths between these \emph{Drosophila} studies and the Longshanks study
+        are due to the differing population sizes.}}
 
   \label{fig:figure-2}
 \end{figure}
@@ -647,19 +656,20 @@ the trait, suggesting that they may be capturing highly polygenic signals.
 Indeed if only a small number of loci influence the trait, the $G(t)$
 trajectories are typically much more stochastic, such that replicates do not
 reliably generate temporal covariances (compare Figure \ref{fig:figure-1}B to
-Supplementary Material Figure XXX).
+Supplementary Material Figure \ref{suppfig:sim-expfit-covs}).
 
 Additionally, we explored other selection schemes. We find that the long term
 dynamics of the covariances under truncation selection, which generates
 substantial epistasis, are richer than we see under GSS and multiplicative
-selection (Supplementary Material Figure XXX).  We also conducted simulations
-of purifying selection alone (i.e. background selection) and find that this can
-also generate positive temporal covariances (Figure XXX), thus it is unlikely
-that all of the allele frequency change we see is the result of the novel
-selection pressure the populations are exposed to, and some of this selection
-may be ongoing purifying selection. Only in the case of the Longshanks
-experiment, does the control line mean that we can quantify selection that is
-due to the novel selection pressure.
+selection (Supplementary Material Figure \ref{suppfig:supp-trunc}).  We also
+conducted simulations of purifying selection alone (i.e. background selection)
+and find that this can also generate positive temporal covariances
+(Supplementary Material Figure \ref{suppfig:supp-bgs-covs}), thus it is
+unlikely that all of the allele frequency change we see is the result of the
+novel selection pressure the populations are exposed to, and some of this
+selection may be ongoing purifying selection. Only in the case of the
+Longshanks experiment, does the control line mean that we can quantify
+selection that is due to the novel selection pressure.
 
 While none of our experiments have selected the populations in divergent
 directions, in our simulations we find that such selection can generate
@@ -715,7 +725,8 @@ effects of stronger correlations between adjacent generations.  Furthermore,
 our estimation methods are intentionally conservative, for example they exclude
 the contribution of selection that does not persist across generations and
 selection that reverses sign; thus they can be seen as a strong lower bound of
-the effects of selection.
+the effects of selection, \vb{which we have confirmed through forward-in-time
+simulations}.
 
 These estimates of the contribution of selection could be refined by using
 patterns of LD and recombination which would allow us to more fully
@@ -1572,13 +1583,6 @@ selection across sites and so serves as the simplest directional selection
 model of a trait to understand the effects of genetic architecture on the
 statistics we have used in the paper.
 
-%By using an exponential fitness function (corresponding to
-%multiplicative selection across sites), \vb{we ensure there is no build up of
-%LD beyond what is initially present due to selection and epistasis}
-%\parencite{Turelli1990-kd,Bulmer1980-zo}; this serves as the simplest
-%directional selection model of a trait to understand the effects of genetic
-%architecture on the statistics we have used in the paper.
-
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/fig-architecture-cov.pdf}
@@ -1811,6 +1815,7 @@ lines.}
 \end{figure}
 
 \subsubsection{Sampling in Temporal Blocks}
+\label{supp:tempblocks}
 
 \begin{figure}[!ht]
   \centering

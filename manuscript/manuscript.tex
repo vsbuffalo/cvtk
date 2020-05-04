@@ -625,11 +625,11 @@ genome having had a reversed fitness effect at later timepoints.
     loess-smoothed average (solid line). (C) $G(t)$ trajectories through time,
     for 30 replicate simulations across two optima shifts. The solid line is a
     loess-smoothed average. (D) The convergence correlations between two
-    populations split from a common population, that underwent either an optima
-    shift in the same direction (converge) and opposite directions (diverge)
-    at generation five. In subfigures (B), (C), and (D), directional selection
-    begins at generation five, when the optima shifts; this is indicated by the
-    vertical dashed red line.}
+    populations (each $1000$ diploids) split from a common population, that
+    underwent either an optima shift in the same direction (converge) and
+    opposite directions (diverge) at generation five. In subfigures (B), (C),
+    and (D), directional selection begins at generation five, when the optima
+    shifts; this is indicated by the vertical dashed red line.}
 
   \label{fig:figure-4}
 \end{figure}
@@ -815,7 +815,12 @@ Material Sections \ref{supp:ind-depth-var-corr}, \ref{supp:cov-corr}, and
 assess that our bias correction procedure is working adequately through a
 series of diagnostic plots that ensure that the procedure removes the
 relationship between sampling depth and uncorrected variance and covariances
-(Supplementary Figure \ref{suppfig:bergland-correction}).
+(Supplementary Figure \ref{suppfig:bergland-correction}).  \vb{Through our
+  simulations we find that our estimates can differ based on how fixations and
+  losses are handled in long time-series (Supplementary Material Section
+  \ref{supp:fixation}) but none of our findings in the main text are altered by
+  this decision (Supplementary Material Figures \ref{suppfig:supp-fig-1-nofix}
+  and \ref{suppfig:supp-fig-3-nofix}).}
 
 
 \subsection{Estimating Uncertainty with a Block Bootstrap}
@@ -899,10 +904,39 @@ the chromosome-level, and found the same qualitative shift (Supplementary
 Figure \ref{suppfig:barghi-tailprobs-seqid}).
 
 \subsection{Forward-in-time Simulations}
+\label{supp:forward}
+\vb{
+To explore how aspects of genetic architecture, model of selection, and
+experimental design impact temporal covariance, the $G(t)$ trajectories, and
+convergence correlations, we ran extensive forward-in-time using SLiM
+\parencite{Haller2019-vu}; here we discuss the Gaussian Stabilizing Selection
+simulations in Figured \ref{fig:figure-4}, but Supplementary Materials Section
+\ref{supp:forward} describes these simulation routines in much more detail as
+well as additional simulations we have conducted.
 
-
-
-
+We simulated directional selection on a trait by first burning in a population
+of $N = 1000$ diploids under GSS for $10N$ generations with the stabilizing
+selection trait variance $V_s = 1$ and an optima set at zero. We targeted a
+polygenic architecture by setting the trait mutation rate to $10^{-8}$ per
+basepair, per generation, in addition to having a separate neutral mutation of
+$10^{-8}$ which created neutral mutations which we used to calculate the
+temporal covariances. Our simulated region was 50 megabases in length (about
+one quarter of a \emph{Drosophila} chromosome), and trait alleles were randomly
+selected to have a $\pm 0.01$ effect size. By tracking the trait mean through
+the burnin, we found it converged as expected. After a $10N$ burnin, the
+population was split into two different replicate population sizes, to capture
+the effect of bottlenecks in selection experiments (these population sizes
+were, 50, 500, and 1000 diploids; the later representing no bottleneck). Each
+population then underwent an optima shift of either 0.1, 0.5, or 1 on
+generation five, with the first four generations serving as a control. These
+optima shifts were either in the same direction (converging), different
+directions (diverging), or only one optima shifted (as a control). By tracking
+the trait mean, we saw that it converged as expected during burnin, and had the
+appropriate response to selection (Supplementary Material Figure
+\ref{suppfig:gss-zbar}). Using the neutral population frequency data from these
+simulations, we calculated the temporal covariances, $G(t)$ trajectories, and
+convergence correlations.
+}
 
 \section{Acknowledgments} 
 

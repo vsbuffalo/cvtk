@@ -398,14 +398,15 @@ covariance matrices. Like temporal covariances, we visualize these through time
 correlation from a particular reference generation $s$ as it varies with $t$
 (shown on the x-axis). In other words, each of the colored lines corresponds to
 the like-colored row of the convergence correlation matrix (upper left in
-Figure \ref{fig:figure-2} A). We find these convergent covariances are
-relatively weak, and decay very quickly from an initial value of about 0.1
-(95\% block bootstrap confidence intervals $[0.094, 0.11]$) to around 0.01
-(95\% CIs [0.0087, 0.015]) within 20 generations. This suggests that while
-a reasonable fraction of the initial response is shared over the replicates,
-this is followed by a rapid decay, a result consistent with the primary
-finding of the original \textcite{Barghi2019-qy} study: that alternative loci
-contribute to longer term adaptation across the different replicates. 
+Figure \ref{fig:figure-2} A). We find these convergent \vb{correlation
+coefficients} are relatively weak, and decay very quickly from an initial value
+of about 0.1 (95\% block bootstrap confidence intervals $[0.094, 0.11]$) to
+around 0.01 (95\% CIs [0.0087, 0.015]) within 20 generations. This suggests
+that while a reasonable fraction of the initial response is shared over the
+replicates, this is followed by a rapid decay, a result consistent with the
+primary finding of the original \textcite{Barghi2019-qy} study: that
+alternative loci contribute to longer term adaptation across the different
+replicates. 
 
 \begin{figure}[!htb]
   \centering
@@ -896,6 +897,12 @@ positive to mostly negative windowed covariances through time (Figure
 kilobase windows. We took the conservative approach of also sign-permuting at
 the chromosome-level, and found the same qualitative shift (Supplementary
 Figure \ref{suppfig:barghi-tailprobs-seqid}).
+
+\subsection{Forward-in-time Simulations}
+
+
+
+
 
 \section{Acknowledgments} 
 

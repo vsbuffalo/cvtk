@@ -556,7 +556,9 @@ values of $k$ are in Supplementary Figures
 \end{figure}
 
 
-Finally, we observed that in the longest study  we analyzed
+%Finally, we
+
+\gc{We} observed that in the longest study  we analyzed
 \parencite{Barghi2019-qy}, some genome-wide temporal covariances become
 negative at future timepoints (see the first two rows in Figure
 \ref{fig:figure-1} A). This shows that alleles that were on average going up
@@ -624,12 +626,11 @@ genome having had a reversed fitness effect at later timepoints.
   \label{fig:figure-4}
 \end{figure}
 
-
-
-
 Finally we used forward-in-time simulations to explore the conditions under
 which temporal and convergent correlations arise. We show a subset of our
-results for a model of Gaussian stabilizing selection (GSS) on a phenotype
+results for a model of Gaussian stabilizing selection (GSS) on a
+phenotype  \gc{DO WE actually need to say Gaussian here? Or just in
+  methods. }
 where directional selection is induced by a sudden shift in the optimum
 phenotype of varying magnitudes (Figure \ref{fig:figure-4}A).  We find that
 positive temporal covariances are produced by such selection (Figure
@@ -640,17 +641,23 @@ analyzed selection datasets span (Figure \ref{fig:figure-4}C). The magnitude of
 these covariances increases with the strength of selection, i.e. the variance
 in fitness, such that stronger selection generates larger proportions of allele
 frequency change.  We find a similar picture of stronger convergent selection
-pressures generating larger convergence correlations. 
+pressures generating larger convergence correlations \gc{(Figure {fig:figure-4}D)}. 
 
 These results are often relatively insensitive to the number of loci underlying
 the trait, suggesting that they may be capturing highly polygenic signals.
 Indeed if only a small number of loci influence the trait, the $G(t)$
 trajectories are typically much more stochastic, such that replicates do not
 reliably generate temporal covariances (compare Figure \ref{fig:figure-1}B to
-Supplementary Material Figure XXX).
+Supplementary Material Figure \gc{XXX}). \gc{This again suggests that
+  the genome-wide linked selection response we see in the empirical data is highly
+polygenic. Using our simulations we find that sampling only every 10
+generations does indeed mean that our estimates of $G(t)$ are an
+underestimate of the contribution of linked selection as they cannot include the covariance between closely
+spaced generations (see XXXX).
+}
 
 Additionally, we explored other selection schemes. We find that the long term
-dynamics of the covariances under truncation selection, which generates
+dynamics of the covariances under \gc{directional} truncation selection, which generates
 substantial epistasis, are richer than we see under GSS and multiplicative
 selection (Supplementary Material Figure XXX).  We also conducted simulations
 of purifying selection alone (i.e. background selection) and find that this can
@@ -663,7 +670,7 @@ due to the novel selection pressure.
 
 While none of our experiments have selected the populations in divergent
 directions, in our simulations we find that such selection can generate
-negative convergent correlations. This suggests that selection experiments
+negative convergent correlations \gc{(Figure {fig:figure-4}D)}. This suggests that selection experiments
 combining multiple replicates, control lines, as well as divergent selection
 pressures might be quite informative for unpacking the contribution of
 particular selection pressures to genome-wide allele frequency change. 
@@ -899,10 +906,7 @@ This research was supported by an NSF Graduate Research Fellowship grant
 awarded to VB (1650042), and NIH (R01-GM108779) and NSF (1353380) awarded to
 GC.
 
-
-
 \printbibliography
-
 
 
 \setcounter{section}{1}

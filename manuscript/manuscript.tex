@@ -338,21 +338,28 @@ call this measure $G(t)$, defined as
   \vb{G(t) = \frac{ \sum_{i=0}^{t-1} \sum_{j \ne i}^{t-1} \cov(\Delta p_i, \Delta p_j)}{\var(p_t - p_0)}}
 \end{align}
 %
-which estimates the effect of selection on allele frequency change between the
-initial generation $0$ and some later generation $t$, which can be varied to
-see how this quantity grows through time. Since \textcite{Barghi2019-qy}
-experiment is sequenced every ten generations, in the numerator for the
-covariance we use the allele frequency changes between adjacent timepoints,
-which are ten generations apart; \vb{thus the strong covariances between
-  adjacent generations are not observable and do not contribute to the
-  numerator of $G(t)$}. \vb{Additionally, selection also inflates the variance
-  in allele frequency change per generation; however, this effect cannot be
-  easily distinguished from drift.} \vb{For both these reasons, our measure
-  $G(t)$ is strongly conservative} (\vb{we demonstrate this through simulations
-in Supplementary Material Section \ref{supp:tempblocks}}). Still, we find a
-remarkably strong signal. Greater than $20\%$ of total, genome-wide allele
-frequency change over 60 generations is the result of selection (Figure
-\ref{fig:figure-1} B).
+
+which estimates the \vb{impact of selection} on allele frequency change between
+the initial generation $0$ and some later generation $t$, which can be varied
+to see how this quantity grows through time. \vb{This measure can intuitively
+  be understood as the relative fraction of allele frequency change normally
+  thought of as ``drift" that is actually due to selection; the denominator of
+  $G(t)$ is $\var(p_t - p_0)$, which under drift alone is proportional to
+  $\nicefrac{1}{2 N_e}$. By measuring the contribution of temporal covariances
+caused by selection, $G(t)$ looks at the fraction selection contributes to what
+looks like a faster rate of drift, or lower $N_e$.} Since
+\textcite{Barghi2019-qy} experiment is sequenced every ten generations, in the
+numerator for the covariance we use the allele frequency changes between
+adjacent timepoints, which are ten generations apart; \vb{thus the strong
+  covariances between adjacent generations are not observable and do not
+  contribute to the numerator of $G(t)$}. \vb{Additionally, selection also
+  inflates the variance in allele frequency change per generation; however,
+  this effect cannot be easily distinguished from drift.} \vb{For both these
+reasons, our measure $G(t)$ is strongly conservative} (\vb{we demonstrate this
+through simulations in Supplementary Material Section \ref{supp:tempblocks}}).
+Still, we find a remarkably strong signal. Greater than $20\%$ of total,
+genome-wide allele frequency change over 60 generations is the result of
+selection (Figure \ref{fig:figure-1} B).
 
 Additionally, we looked for a signal of temporal autocovariance in
 \textcite{Bergland2014-ij}, a study that collected \emph{Drosophila

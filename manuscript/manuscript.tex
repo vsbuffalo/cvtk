@@ -1771,6 +1771,29 @@ directional selection (Supplementary Material Figure \ref{suppfig:gss-G}).
   \label{suppfig:gss-G}
 \end{figure}
 
+\vb{Additionally, we looked at the effect the size of each replicate population
+  has on a single population's $G(t)$ trajectories. These simulations had the
+  same $10N$ generation burnin, followed by a change in population size
+  emulating the bottlenecks associated with creating selection lines. Overall,
+  we find that smaller population sizes lead to a reduced $G(t)$ (Supplementary
+  Material Figure \ref{suppfig:gss-G-sampleN}). This is expected, as the
+  denominator of $G(t)$ is $\var(p_t - p_0)$, which has an inverse relationship
+with $N_e$; as replicate population size is reduced, the proportion of allele
+frequency change driven by linked selection is lower, since the rate of drift
+is increased.}
+
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/gss-G-sampleN.pdf}
+
+  \caption{$G(t)$ trajectories for a sudden optima shift of 1, for varying
+  replicate population sizes.}
+
+  \label{suppfig:gss-G-sampleN}
+\end{figure}
+
+
 \subsubsection{Convergence Correlations}
 
 Using the same exponential fitness function simulations described above, we

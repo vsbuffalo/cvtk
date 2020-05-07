@@ -2077,7 +2077,20 @@ calculations.
   larger initial covariances (Figure
   \ref{suppfig:supp-trunc}B). However, weaker truncation selection
   generated more sustained positive covariances and so had a larger
-  long term impact 
+  long term overall impact on the variance in allele frequency change. 
+\gc{We noticed again  strong effect fixation  or loss of sites
+has on temporal covariance and $G(t)$ under truncation selection.}  Here,
+since only a (potentially small) fraction of individuals contribute to the next
+generation, sites can fix over very short timescales. Furthermore, the small
+number of effective breeders contributing to the next generation shrinks $N_e$
+considerably, which increases $\var(p_t - p_0$, the denominator of $G(t)$. We
+see the effect of handling fixed/lost sites differently, and the faster rate of
+drift in Supplementary Materials Figure \ref{suppfig:supp-trunc} (A), where
+weaker truncation selection actually has higher levels of $G(t)$. Looking just
+at temporal covariances, we find that stronger truncation selection (e.g.  a
+smaller tail of individuals selected) does lead to greater temporal
+covariances.
+  
 
 \begin{figure}[!ht]
   \centering
@@ -2096,18 +2109,7 @@ calculations.
     \label{suppfig:supp-trunc}
 \end{figure}
 
-Through simulations, we noticed the strongest effect fixation  or loss of sites
-has on temporal covariance and $G(t)$ is under truncation selection. Here,
-since only a (potentially small) fraction of individuals contribute to the next
-generation, sites can fix over very short timescales. Furthermore, the small
-number of effective breeders contributing to the next generation shrinks $N_e$
-considerably, which increases $\var(p_t - p_0$, the denominator of $G(t)$. We
-see the effect of handling fixed/lost sites differently, and the faster rate of
-drift in Supplementary Materials Figure \ref{suppfig:supp-trunc} (A), where
-weaker truncation selection actually has higher levels of $G(t)$. Looking just
-at temporal covariances, we find that stronger truncation selection (e.g.  a
-smaller tail of individuals selected) does lead to greater temporal
-covariances.
+
 
 
 \subsubsection{The Effect of Fixations}

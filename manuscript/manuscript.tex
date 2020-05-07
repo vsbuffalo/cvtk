@@ -1919,17 +1919,16 @@ $G(t)$ as a lower bound for two reasons: (1) the population is sequenced every
 ten generations, meaning the temporal covariances between adjacent generations
 cannot contribute to the numerator of $G(t)$ but contribute to the denominator,
 and (2) the estimate of $G(t)$ ignores linked selection's contribution to the
-\gc{per-generation} variance in allele frequency change (this is the
-difference between \gc{our} $G(t)$ and
-$G'(t)$ \gc{estimators}, the latter of which includes these variance terms
-\parencite{Buffalo2019-io}).  To verify that $G(t)$ estimated every ten
-generations is indeed a lower bound, we used a simulation procedure similar to
-the exponential fitness function simulations (described in Supplementary
-Material Section \ref{supp:genetic-arch}), and calculated the temporal
-covariances and $G(t)$ both each generation, and every ten generations. Unlike
-the simulations described in \ref{supp:genetic-arch}, we began selection at
-$10N$ generations, and used trait $V_A = 0.01$ and targeted $L = 1000$ sites
-affecting the trait. 
+per-generation variance in allele frequency change (this is the difference
+between our $G(t)$ and $G'(t)$ estimators, the latter of which includes these
+variance terms \parencite{Buffalo2019-io}).  To verify that $G(t)$ estimated
+every ten generations is indeed a lower bound, we used a simulation procedure
+similar to the exponential fitness function simulations (described in
+Supplementary Material Section \ref{supp:genetic-arch}), and calculated the
+temporal covariances and $G(t)$ both each generation, and every ten
+generations. Unlike the simulations described in \ref{supp:genetic-arch}, we
+began selection at $10N$ generations, and used trait $V_A = 0.01$ and targeted
+$L = 1000$ sites affecting the trait. 
 
 First, comparing $G(t)$ when sampling population frequencies every generation
 versus every ten generations, we confirm that the ten-generation block $G(t)$
@@ -1980,17 +1979,18 @@ temporal covariance (Supplementary Material Figure
 \ref{suppfig:supp-bgs-covs}), which are stronger under (1) higher deleterious
 mutation rates and (2) larger selection coefficients. This latter point
 initially seems at odds with background selection theory, as the level of
-pairwise diversity in a region under \gc{stroong} background selection is invariant with
-respect to the selection coefficient. However, looking at the background
+pairwise diversity in a region under strong background selection is invariant
+with respect to the selection coefficient. However, looking at the background
 selection $G(t)$ trajectories, we find that over time, the impact of linked
 selection created by background selection appears to trend towards an
 equilibrium in the $r_{BP} = 10^{-7}$ subfigure, and reaches an equilibrium in
-the $r_{BP} = 10^{-8}$ subfigure \gc{that seems reasonably invariant
-  to the choice of $s$} (Supplementary Material Figure
-\ref{suppfig:supp-bgs-g}). \gc{We believe that these observations can
-  be reconciled by $Cov(\Delta ap_t,~ \Delta p_{t^{\prime}})$ being larger for larger
-  $s$ when $|t^{\prime}-t|$ is small, but also decaying more rapidly
-  with $|t^{\prime}-t|$, such that the overall contribution of selection to allele frequency variance is invariant to $s$ (for strong background selection).} However, further future work is needed to fully
+the $r_{BP} = 10^{-8}$ subfigure that seems reasonably invariant to the choice
+of $s$ (Supplementary Material Figure \ref{suppfig:supp-bgs-g}). We believe
+that these observations can be reconciled by $Cov(\Delta p_t,~ \Delta
+p_{t^{\prime}})$ being larger for larger $s$ when $|t^{\prime}-t|$ is small,
+but also decaying more rapidly with $|t^{\prime}-t|$, such that the overall
+contribution of selection to allele frequency variance is invariant to $s$ (for
+strong background selection). However, further future work is needed to fully
 explore and understand the temporal covariance dynamics of background
 selection.
 
@@ -2040,9 +2040,9 @@ the replicate population size $n = \{200, 1000\}$. We find that background
 selection can create convergence correlations (Supplementary Material Figure
 \ref{suppfig:supp-bgs-converg}). We find the convergence correlation is weaker
 in smaller replicate population sizes, as there are fewer shared haplotypes
-carrying \gc{the same} deleterious alleles between the two populations.
+carrying the same deleterious alleles between the two populations.
 
-\gc{While investigating} whether different selection coefficients converged to
+While investigating} whether different selection coefficients converged to
 the same levels of $G(t)$, we extended the number of generations we calculated
 our statistics on (e.g. in earlier exponential and Gaussian stabilizing
 selection fitness function, these were calculated to fifty generations; here
@@ -2069,16 +2069,16 @@ calculations.
 
 
 \subsubsection{Truncation Selection.}
-\gc{We explored how directional truncation selection generated
-  temporal covariances.In these simulations we select the top ${\bf X
-    \%}$ of the phenotypic distribution of individuals to form the
-  next generation. We burnin these simulations {\bf by
-    XXXX}. More extreme directional truncation selection generated
-  larger initial covariances (Figure
-  \ref{suppfig:supp-trunc}B). However, weaker truncation selection
-  generated more sustained positive covariances and so had a larger
-  long term overall impact on the variance in allele frequency change. 
-\gc{We noticed again  strong effect fixation  or loss of sites
+We \vb{also} explored how directional truncation selection generates temporal
+covariances. In these simulations we select the top \vb{10\%, 25\%, or 50\%} of
+the phenotypic distribution of individuals to form the next generation. We
+burnin these simulations \vb{using a neutral burnin routine, where trait
+alleles are selectively neutral until directional selection is imposed}. More
+extreme directional truncation selection generated larger initial covariances
+(Figure \ref{suppfig:supp-trunc}B).  However, weaker truncation selection
+generated more sustained positive covariances and so had a larger long-term
+impact on the variance in allele frequency change. 
+\gc{We noticed again strong effect fixation  or loss of sites
 has on temporal covariance and $G(t)$ under truncation selection.}  Here,
 since only a (potentially small) fraction of individuals contribute to the next
 generation, sites can fix over very short timescales. Furthermore, the small
@@ -2090,7 +2090,7 @@ weaker truncation selection actually has higher levels of $G(t)$. Looking just
 at temporal covariances, we find that stronger truncation selection (e.g.  a
 smaller tail of individuals selected) does lead to greater temporal
 covariances.
-  
+
 
 \begin{figure}[!ht]
   \centering
@@ -2112,7 +2112,7 @@ covariances.
 
 
 
-\subsubsection{The Effect of Fixations}
+\subsubsection{The Effect of Fixations in the empirical datasets}
 \label{supp:fixation}
 
 In analyzing both the empirical datasets included in our study and our

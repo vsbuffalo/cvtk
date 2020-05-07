@@ -23,7 +23,7 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 	 ../../manuscript/figures/fig-convergence-corrs-gss.pdf \
 	 ../../manuscript/figures/gss-covs.pdf ../../manuscript/figures/gss-G.pdf ../../manuscript/figures/gss-zbar.pdf \
    ../../manuscript/figures/figure-4.pdf ../../manuscript/figures/figure-4-edited.pdf \
-	 ../../manuscript/figures/gss-G-sampleN.pdf
+	 ../../manuscript/figures/gss-G-sampleN.pdf ../../manuscript/figures/gss-covs-sampleN.pdf
 
 ../../manuscript/figures/figure-1.pdf: figure-1.pdf
 		cp figure-1.pdf ../../manuscript/figures/figure-1.pdf
@@ -170,4 +170,7 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 		cp $< $@
 
 ../../manuscript/figures/gss-G-sampleN.pdf: gss-G-sampleN.pdf
+		cp $< $@
+
+../../manuscript/figures/gss-covs-sampleN.pdf: gss-covs-sampleN.pdf
 		cp $< $@

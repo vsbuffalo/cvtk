@@ -1964,6 +1964,8 @@ generate temporal autocovariance and lead to convergence correlations when
 deleterious haplotypes are shared between populations and both removed by
 selection. 
 
+\gc{COMMENT ON LARGER U than usual}
+
 We simulated background selection in a 50 megabase region, where deleterious
 alleles are randomly introduced by mutation. Following background selection
 literature
@@ -1985,7 +1987,7 @@ selection $G(t)$ trajectories, we find that over time, the impact of linked
 selection created by background selection appears to trend towards an
 equilibrium in the $r_{BP} = 10^{-7}$ subfigure, and reaches an equilibrium in
 the $r_{BP} = 10^{-8}$ subfigure that seems reasonably invariant to the choice
-of $s$ (Supplementary Material Figure \ref{suppfig:supp-bgs-g}). We believe
+of $s$ (Supplementary Material Figure \ref{suppfig:supp-bgs-g-fix}). We believe
 that these observations can be reconciled by $Cov(\Delta p_t,~ \Delta
 p_{t^{\prime}})$ being larger for larger $s$ when $|t^{\prime}-t|$ is small,
 but also decaying more rapidly with $|t^{\prime}-t|$, such that the overall
@@ -1994,6 +1996,20 @@ strong background selection). However, further future work is needed to fully
 explore and understand the temporal covariance dynamics of background
 selection.
 
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig-bgs-G-with-fixations.pdf}
+
+  \caption{The trajectories of $G(t)$ through time under background selection,
+    under different recombination rates ($r_{BP}$, rows), selection
+    coefficients ($s$), and deleterious mutation rates ($U$). The first column
+    sets $U = 1.0$, and $s$ varies, while in the second column $s=0.05$ is held
+  constant, and $U$ varies. Calculated using both
+  including fixed sites (solid lines) and not including fixed sites (dashed
+lines). \gc{MOVED THIS FIG UP} }
+
+  \label{suppfig:supp-bgs-g-fix}
+\end{figure}
 
 \begin{figure}[!ht]
   \centering
@@ -2017,18 +2033,20 @@ and varies $U$.}
 
 
 
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig-bgs-G-without-fixations.pdf}
 
-  \caption{The trajectories of $G(t)$ through time under background selection,
-    under different recombination rates ($r_{BP}$, rows), selection
-    coefficients ($s$), and deleterious mutation rates ($U$). The first column
-    sets $U = 1.0$, and $s$ varies, while in the second column $s=0.05$ is held
-  constant, and $U$ varies.}
 
-  \label{suppfig:supp-bgs-g}
-\end{figure}
+%\begin{figure}[!ht]
+ % \centering
+  %\includegraphics[width=\textwidth]{figures/fig-bgs-G-without-fixations.pdf}
+
+  %\caption{The trajectories of $G(t)$ through time under background selection,
+   % under different recombination rates ($r_{BP}$, rows), selection
+  %  coefficients ($s$), and deleterious mutation rates ($U$). The first column
+  %  sets $U = 1.0$, and $s$ varies, while in the second column $s=0.05$ is held
+ %% constant, and $U$ varies.}
+
+ % \label{suppfig:supp-bgs-g}
+%\end{figure}
 
 Additionally, we investigated whether background selection can create
 convergence correlations between two replicate populations. Much like the
@@ -2042,18 +2060,25 @@ selection can create convergence correlations (Supplementary Material Figure
 in smaller replicate population sizes, as there are fewer shared haplotypes
 carrying the same deleterious alleles between the two populations.
 
-While investigating} whether different selection coefficients converged to
-the same levels of $G(t)$, we extended the number of generations we calculated
-our statistics on (e.g. in earlier exponential and Gaussian stabilizing
-selection fitness function, these were calculated to fifty generations; here
-we've calculated them to one hundred generations). This lead us to discover a
-subtle bias temporal covariance: whether sites that fix or are lost through
+\gc{We found that the the results for background selection varied
+  according to whether sites that fix or are lost through
 time are included or excluded in the temporal covariance calculation can lead
-to biases in temporal covariance. We discuss this extensively in the next
-section, Supplementary Materials Section \ref{supp:fixation}, but here we note
-that all the background selection results exclude fixed and lost sites; these
-are marked as missing and excluded from the temporal covariance and $G(t)$
-calculations.
+to differences in the estimated $G(t)$temporal covariance. We discuss
+this extensively in a subsequent section, Supplementary Materials Section \ref{supp:fixation}.}
+
+
+%While investigating} whether different selection coefficients converged to
+%the same levels of $G(t)$, we extended the number of generations we calculated
+%our statistics on (e.g. in earlier exponential and Gaussian stabilizing
+%selection fitness function, these were calculated to fifty generations; here
+%we've calculated them to one hundred generations). This lead us to discover a
+%subtle bias temporal covariance: whether sites that fix or are lost through
+%ime are included or excluded in the temporal covariance calculation can lead
+%to biases in temporal covariance. We discuss this extensively in the next
+%section, Supplementary Materials Section \ref{supp:fixation}, but here we note
+%that all the background selection results exclude fixed and lost sites; these
+%are marked as missing and excluded from the temporal covariance and $G(t)$
+%calculations.
 
 \begin{figure}[!ht]
   \centering
@@ -2114,75 +2139,78 @@ covariances.
 
 \subsubsection{The Effect of Fixations in the empirical datasets}
 \label{supp:fixation}
-
-In analyzing both the empirical datasets included in our study and our
-simulation results, we noticed the temporal covariances and $G(t)$ statistics
+\gc{In our simulation results, we noticed the temporal covariances and $G(t)$ statistics
 can differ depending on how allele frequencies of zero or one are handled.
+
+%In analyzing both the empirical datasets included in our study and our
+%simulation results, we noticed the temporal covariances and $G(t)$ statistics
+%can differ depending on how allele frequencies of zero or one are handled.
 Generally, temporal covariances should be calculated on polymorphic sites; once
 a site has reached fixation or loss, its allele frequency change $\Delta p_t =
 0$ and including these sites in the temporal covariance calculation can lead to
-biases, which we discuss below. However, with \emph{sample} allele frequencies,
+biases. However, with \emph{sample} allele frequencies,
 rather than population frequencies, a site with observed frequency zero or one
 may still be segregating, but by chance not sampled at a timepoint. Here, we
 discuss the effect of including sites with frequency zero or one, and show our
 empirical results are not qualitatively different when analyzed excluding fixed
 sites.
 
+With empirical data calculated on sample allele
+ frequencies, low frequency minor alleles many not be sampled at some
+ timepoints, and excluding these observations (instead of treating it as a
+ trajectory that has a 0 frequency timepoint) biases estimates of
+ quantities such as $N_e$ as it biased the analysis towards
+ intermediate frequency alleles.
+ Additionally, we tried only dropping fixed or loss sites from the temporal
+ covariance calculations that were at the end or the beginning of a trajectory
+ (e.g., as if the site was created by a new mutation or fixed); while this
+ ameliorated some of this bias it did not remove all of it. 
+ Overall, we found by trying all these approaches that not removing fixed or lost sites was the best way to deal with
+ sample allele frequencies that could be missing from some timepoints. }
 
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig-bgs-G-with-fixations.pdf}
+% We noticed in some simulations, when temporal covariances are calculated over
+% longer time periods (i.e. $>50$ generations), that neutral simulations appear
+% to slowly trend towards negative $G(t)$ (Supplementary Materials Figure
+% \ref{suppfig:supp-bgs-g-fix}). In investigating this bias, we found that the
+% effect went away when we marked fixed or lost sites as missing, and calculated
+% the temporal covariance; furthermore, this affected the $G(t)$ trajectories
+% under selection too (Supplementary Material Figure
+% \ref{suppfig:supp-bgs-g-fix}). 
 
-  \caption{$G(t)$ trajectories from background selection simulations both
-  including fixed sites (solid lines) and not including fixed sites (dashed
-lines). The dashed lines are identical to those in Supplementary Materials
-Figure \ref{suppfig:supp-bgs-g}. }
+% Looking a neutral simulations results, we found that spuriously significant
+% $G(t)$ trajectories (e.g. different from zero under the case of neutrality) can
+% be created by conditioning on sojourn time. Our intuition, which will need to
+% be confirmed by future work and theory, is that by conditioning on a quick
+% sojourn time to fixation (or loss) from an initial intermediate frequency,
+% leads to trajectories that, purely by chance, have many upward (or downward)
+% allele frequency changes, which leads to a positive sum of pairwise temporal
+% covariances (the numerator of $G(t)$). Similarly, conditioning on long sojourn
+% times implies that frequency changes alternate back and forth quite a bit, such
+% the sum of pairwise temporal covariances could be slightly negative. However,
+% the overall affect could also be affected by the average allele frequency
+% change across loci and other factors. 
 
-  \label{suppfig:supp-bgs-g-fix}
-\end{figure}
-
-We noticed in some simulations, when temporal covariances are calculated over
-longer time periods (i.e. $>50$ generations), that neutral simulations appear
-to slowly trend towards negative $G(t)$ (Supplementary Materials Figure
-\ref{suppfig:supp-bgs-g-fix}). In investigating this bias, we found that the
-effect went away when we marked fixed or lost sites as missing, and calculated
-the temporal covariance; furthermore, this affected the $G(t)$ trajectories
-under selection too (Supplementary Material Figure
-\ref{suppfig:supp-bgs-g-fix}). 
-
-Looking a neutral simulations results, we found that spuriously significant
-$G(t)$ trajectories (e.g. different from zero under the case of neutrality) can
-be created by conditioning on sojourn time. Our intuition, which will need to
-be confirmed by future work and theory, is that by conditioning on a quick
-sojourn time to fixation (or loss) from an initial intermediate frequency,
-leads to trajectories that, purely by chance, have many upward (or downward)
-allele frequency changes, which leads to a positive sum of pairwise temporal
-covariances (the numerator of $G(t)$). Similarly, conditioning on long sojourn
-times implies that frequency changes alternate back and forth quite a bit, such
-the sum of pairwise temporal covariances could be slightly negative. However,
-the overall affect could also be affected by the average allele frequency
-change across loci and other factors. 
-
-To further complicate the matter, our simulation allele frequencies are
-population, rather than sample frequencies, when an allele is fixed or lost is
-known with certainty. With empirical data calculated on sample allele
-frequencies, low frequency minor alleles many not be sampled at some
-timepoints, and excluding these observations (instead of treating it as a
-trajectory that has a 0 frequency timepoint) biases estimates.  We observed
-this bias created by ignoring fixed or loss sites by comparing our $N_e$
-estimates for the \textcite{Barghi2019-qy} study (estimated from the total
-variance in allele frequency change) with the estimates from the original
-paper. We found that ignoring fixed or lost sites (by treating them as missing
-data in calculating the covariances) led to many low-frequency alleles not
-contributing to the variance, leading this statistic to be calculated on more
-intermediate frequency alleles and thus biasing the $N_e$ estimate downwards.
-Additionally, we tried only dropping fixed or loss sites from the temporal
-covariance calculations that were at the end or the beginning of a trajectory
-(e.g., as if the site was created by a new mutation or fixed); while this
-ameliorated some of this bias, it still did not lead to $N_e$ estimates
-congruent with the original studies. Overall, we found by trying all these
-approaches that not removing fixed or lost sites was the best way to deal with
-sample allele frequencies that could be missing from some timepoints. 
+% To further complicate the matter, our simulation allele frequencies are
+% population, rather than sample frequencies, when an allele is fixed or lost is
+% known with certainty. With empirical data calculated on sample allele
+% frequencies, low frequency minor alleles many not be sampled at some
+% timepoints, and excluding these observations (instead of treating it as a
+% trajectory that has a 0 frequency timepoint) biases estimates.  We observed
+% this bias created by ignoring fixed or loss sites by comparing our $N_e$
+% estimates for the \textcite{Barghi2019-qy} study (estimated from the total
+% variance in allele frequency change) with the estimates from the original
+% paper. We found that ignoring fixed or lost sites (by treating them as missing
+% data in calculating the covariances) led to many low-frequency alleles not
+% contributing to the variance, leading this statistic to be calculated on more
+% intermediate frequency alleles and thus biasing the $N_e$ estimate downwards.
+% Additionally, we tried only dropping fixed or loss sites from the temporal
+% covariance calculations that were at the end or the beginning of a trajectory
+% (e.g., as if the site was created by a new mutation or fixed); while this
+% ameliorated some of this bias, it still did not lead to $N_e$
+% estimates  GUESS I"M UNSURE WHY THIS IS A CRITERIA FOR BEING CORRECT
+% congruent with the original studies. Overall, we found by trying all these
+% approaches that not removing fixed or lost sites was the best way to deal with
+% sample allele frequencies that could be missing from some timepoints. 
 
 \begin{figure}[!ht]
   \centering
@@ -2211,7 +2239,6 @@ covariances at more distant timepoints ($k=2$). }
 \end{figure}
 
 
-
 To ensure that our findings were robust to handling sites with a frequency of
 zero or one differently, we regenerated Figures \ref{fig:figure-1} and Figure
 \ref{fig:figure-3} but excluded frequencies of zero or one. Specifically, we
@@ -2221,9 +2248,6 @@ lost sites are handled. We see no qualitative difference (Supplementary
 Material Figures \ref{suppfig:supp-fig-1-nofix} and
 \ref{suppfig:supp-fig-3-nofix}) that emerges when sites with frequency zero or
 one are excluded.
-
-
-
 
 % \subsubsection{The Effect of Fixations}
 % \label{supp:fixation}

@@ -362,7 +362,10 @@ reasons, our measure $G(t)$ is strongly conservative} (\vb{we demonstrate this
 through simulations in Supplementary Material Section \ref{supp:tempblocks}}).
 Still, we find a remarkably strong signal. Greater than $20\%$ of total,
 genome-wide allele frequency change over 60 generations is the result of
-selection (Figure \ref{fig:figure-1} B).
+selection (Figure \ref{fig:figure-1} B). 
+
+%\vb{This implies that the $N_e$
+%without the effects of selection is at XXX $\nicefrac{}{(1-G(t))}$}
 
 Additionally, we looked for a signal of temporal autocovariance in
 \textcite{Bergland2014-ij}, a study that collected \emph{Drosophila
@@ -926,6 +929,62 @@ positive to mostly negative windowed covariances through time (Figure
 kilobase windows. We took the conservative approach of also sign-permuting at
 the chromosome-level, and found the same qualitative shift (Supplementary
 Figure \ref{suppfig:barghi-tailprobs-seqid}).
+
+
+\subsection{Approximating the Reduction in Diversity from $G(t)$}
+
+To help help reconcile our measure of linked selection, $G(t)$, with familiar
+reductions in $N_e$, or, equivalently neutral diversity, we develop some rough
+approximations here. First, we introduce some convenient notation. Let $V_{T} =
+\var(p_t - p_0)$ be the total observed variation in allele frequency, $C_{LS} =
+\sum_{i=0}^{t-1} \sum_{j \ne i}^{t-1} \cov(\Delta p_i, \Delta p_j)$ be the
+contribution of all pairwise temporal covariances (observable), $V_D$ be the
+unobservable drift-only variance in allele frequency, and $V_{LS} =
+\sum_{i=0}^{t-1} \var(\Delta_{LS} p_i$ which is the (unobservable) effect
+linked selection has on the variances in allele frequency change.
+
+\begin{align}
+  V_{T} = V_{LS} + C_{LS} + V_D
+\end{align}
+
+Our measure $G(t)$ is then,
+
+\begin{align}
+  G(t) = \frac{C_{LS}}{V_T}
+\end{align}
+
+meaning we can express the fraction of total variance due to drift alone as 
+
+\begin{align}
+  \frac{V_D}{V_T} &= 1 - G(t) - \frac{V_{LS}}{V_T} \\
+                  &= 1 - G(t) - \varepsilon \\
+                  & \le 1 - G(t).
+\end{align}
+
+where $\varepsilon \ge 0$ since these variances must be positive.
+
+For small $t$, it is common to approximate $N_e$ as,
+
+\begin{align}
+  N_e \approx \frac{t p_0(1-p_0)}{2 V_T}
+\end{align}
+
+Then, the drift-only $N_e$ (that is, removing the effects of linked selection)
+replaces $V_T$ with $V_D$, 
+
+\begin{align}
+  N_{e,D} &\approx \frac{t p_0(1-p_0)}{2 V_T(1 - G(t) - \varepsilon)} \\
+          &\gtrsim  \frac{t p_0(1-p_0)}{2 V_T(1 - G(t))} \\
+          &\gtrsim  \frac{N_e}{1 - G(t)}
+\end{align}
+
+In the linked selection literature, it is common to translate the impact of
+linked selection as a reduction in the background level of neutral pairwise
+diversity, $\pi_0$. Under the coalescent, $\pi = 2 \mu \E(T_2)$ where $\E(T_2)$
+is the pairwise time to coalescence, which under drift alone in a constant
+population of size $N$, is $\E(T_2) = 2N$. 
+
+
 
 \subsection{Forward-in-time Simulations}
 \label{supp:forward}

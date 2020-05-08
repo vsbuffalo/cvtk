@@ -245,7 +245,8 @@ short timescales.
  \hline
   \end{tabular}
   \caption{A summary of the main selection studies we
-    analyzed. \gc{$^{\dagger}$ approximate census population size during experiment.}}}
+    analyzed. \gc{$^{\dagger}$ approximate census population size
+      during experiment.}} \label{table:study_summary} 
 \end{table}
 
 We first analyzed \textcite{Barghi2019-qy}, an evolve-and-resequence study with
@@ -767,14 +768,16 @@ autocovariance, and allow the fitting of more parametric models to estimate
 population parameters such as the additive genetic variation for fitness
 directly from temporal genomic data alone \parencite{Buffalo2019-io}.
 
+%very small effective population sizes, estimated
+%at 300, 450, and 45 for the \textcite{Barghi2019-qy}, \textcite{Kelly2019-dc},
+%and \textcite{Castro2019-uk} studies respectively
+
 Our primary focus here has been on evolution in laboratory populations. It is
 unclear whether we should expect a similar impact of selection in natural
 populations. In some of these experiments, selection pressures may have been
 stronger or more sustained that in natural populations
 \parencite{Hendry1999-zu,Hairston2005-ga}. Conversely, these lab
-populations were maintained at very small effective population sizes, estimated
-at 300, 450, and 45 for the \textcite{Barghi2019-qy}, \textcite{Kelly2019-dc},
-and \textcite{Castro2019-uk} studies respectively, which will amplify the role
+populations \gc{were maintained at relatively small census sizes ()}, which will amplify the role
 of genetic drift. The advantage of lab experiments is that they are closed
 populations, in natural populations temporal covariance could also arise from
 the systematic migration of alleles from differentiated populations.

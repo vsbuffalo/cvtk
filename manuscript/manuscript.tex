@@ -118,10 +118,10 @@
  drift.  One promising signal comes from the genome-wide covariance between
  allele frequency changes observable from temporal genomic data, e.g.
  evolve-and-resequence studies. These temporal covariances reflect how the
- change in neutral allele frequency at one timepoint is predictive of the
+ change \gc{in allele} frequency at one timepoint is predictive of the
  changes at later timepoints when there is heritable fitness variation in the
- population, as neutral alleles can remain associated with selected alleles
- over time. Since genetic drift does not lead to temporal covariance, we can
+ population, \gc{as alleles} can remain associated with selected alleles
+ over time \gc{and so be indirectly selected for}. Since genetic drift does not lead to temporal covariance, we can
  use these covariances to estimate what fraction of the variation in allele
  frequency change through time is driven by linked selection. Here, we
  reanalyze \vb{three selection experiments}, \vbout{two \emph{Drosophila
@@ -207,13 +207,14 @@ timepoints is the temporal autocovariance (\vb{i.e. covariance between two
 timepoints}) in allele frequency changes \parencite{Buffalo2019-io}.  These
 covariances \vb{can be estimated} from temporal genomic data and are created
 when the loci that underly heritable fitness variation perturb the frequencies
-of linked neutral alleles; in contrast, when genetic drift acts alone in a
-closed population, these covariances are zero in expectation.  Mathematically,
+of linked \gc{alleles}; in contrast, when genetic drift acts alone in a
+closed population, these covariances are zero in expectation \gc{for
+  neutral alleles}.  Mathematically,
 temporal covariances are useful because it is natural to decompose the total
 variance in allele frequency change across a set of time intervals into the
 variances and covariances in allele frequency change among time intervals.
 Furthermore, biologically, these covariances reflect the extent to which
-neutral allele frequency changes in one generation predict changes in another
+\gc{allele} frequency changes in one generation predict changes in another
 due to a shared selection pressures and associations to selected loci.
 
 Here, we provide the first empirical analyses to quantify the impact of linked
@@ -273,8 +274,8 @@ changes over very short time periods. The covariances between all adjacent time
 intervals are positive and then decay towards zero as we look at more distant
 time intervals (Figure \ref{fig:figure-1} A), as expected when directional
 selection affects linked variants' frequency trajectories until ultimately
-linkage disequilibrium and the additive genetic variance for fitness associated
-with neutral alleles decays (\vb{which could occur as a population reaches
+linkage disequilibrium and the \gc{associated} additive genetic
+variance for fitness decays (\vb{which could occur as a population reaches
 a new optimum}) \parencite{Buffalo2019-io}. The temporal covariances per
 replicate are noisier but this general pattern holds; see Supplementary Figure
 \ref{suppfig:barghi-cov-panels}.  \textcite{Barghi2019-qy}'s design means that
@@ -384,10 +385,10 @@ The replicate design of \textcite{Barghi2019-qy} allows us to quantify another
 covariance: the covariance in allele frequency change between replicate
 populations experiencing convergent selection pressures. These
 between-replicate covariances are created in the same way as temporal
-covariances: neutral alleles linked to a particular fitness background are
+covariances: \gc{alleles} linked to a particular fitness background are
 expected to have allele frequency changes in the same direction if the
 selection pressures are similar. Intuitively, where temporal covariances
-reflect that neutral alleles associated with heritable fitness backgrounds are
+reflect that \gc{alleles} associated with heritable fitness backgrounds are
 predictive of frequency changes between generations, replicate covariances
 reflect that heritable fitness backgrounds common to each replicate predict
 (under the same selection pressures) frequency changes between replicates. We

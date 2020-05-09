@@ -935,7 +935,7 @@ Figure \ref{suppfig:barghi-tailprobs-seqid}).
 \subsection{Approximating the Reduction in Diversity from $G(t)$}
 
 To help help reconcile our measure of linked selection, $G(t)$, with familiar
-reductions in $N_e$, or, equivalently neutral diversity, we develop some rough
+reductions  \gc{in neutral diversity, as parameterized by} $N_e$, we develop some rough
 approximations here. First, we introduce some convenient notation. Let $V_{T} =
 \var(p_t - p_0)$ be the total observed variation in allele frequency, $C_{LS} =
 \sum_{i=0}^{t-1} \sum_{j \ne i}^{t-1} \cov(\Delta p_i, \Delta p_j)$ be the
@@ -964,7 +964,7 @@ meaning we can express the fraction of total variance due to drift alone as
 
 where $\varepsilon \ge 0$ since these variances must be positive.
 
-Under a Wright--Fisher population, 
+\gc{In a neutral} Wright--Fisher population, 
 
 \begin{align}
   V_T = \var(p_t - p_0) = p_0(1 - p_0) \left[ 1 - (1 - \nicefrac{1}{2N_e})^t \right]

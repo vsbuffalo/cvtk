@@ -942,7 +942,7 @@ approximations here. First, we introduce some convenient notation. Let $V_{T} =
 contribution of all pairwise temporal covariances (observable), $V_D$ be the
 unobservable drift-only variance in allele frequency, and $V_{LS} =
 \sum_{i=0}^{t-1} \var(\Delta_{LS} p_i$ which is the (unobservable) effect
-linked selection has on the variances in allele frequency change.
+linked selection has on the variances in allele frequency change. 
 
 \begin{align}
   V_{T} = V_{LS} + C_{LS} + V_D
@@ -964,19 +964,28 @@ meaning we can express the fraction of total variance due to drift alone as
 
 where $\varepsilon \ge 0$ since these variances must be positive.
 
-For small $t$, it is common to approximate $N_e$ as,
+Under a Wright--Fisher population, 
+
+\begin{align}
+  V_T = \var(p_t - p_0) = p_0(1 - p_0) \left[ 1 - (1 - \nicefrac{1}{2N_e})^t \right]
+\end{align}
+
+For small $t$, a common temporal estimator for the variance effective
+population size $N_e$ is,
 
 \begin{align}
   N_e \approx \frac{t p_0(1-p_0)}{2 V_T}
 \end{align}
 
-Then, the drift-only $N_e$ (that is, removing the effects of linked selection)
-replaces $V_T$ with $V_D$, 
+Then, the drift-only $N_e$ estimate (that is, removing the effects of linked
+selection) replaces the observable $V_T$ with unobservable $V_D$, and uses the
+$G(t)$ estimate to bound this:
 
 \begin{align}
   N_{e,D} &\approx \frac{t p_0(1-p_0)}{2 V_T(1 - G(t) - \varepsilon)} \\
           &\gtrsim  \frac{t p_0(1-p_0)}{2 V_T(1 - G(t))} \\
-          &\gtrsim  \frac{N_e}{1 - G(t)}
+          &\gtrsim  \frac{N_e}{1 - G(t)} \\
+  \frac{N_e}{N_{e,D}} &\lesssim  1 - G(t)
 \end{align}
 
 In the linked selection literature, it is common to translate the impact of

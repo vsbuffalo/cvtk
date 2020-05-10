@@ -117,11 +117,11 @@
  faint genomic signals indistinguishable from a noisy background of genetic
  drift.  One promising signal comes from the genome-wide covariance between
  allele frequency changes observable from temporal genomic data, e.g.
- evolve-and-resequence studies. These temporal covariances reflect \vb{how
+ evolve-and-resequence studies. These temporal covariances reflect how
    heritable fitness variation in the population leads the changes in allele
    frequencies at one timepoint to be predictive of the changes at later
- timepoints, as alleles are indirectly selected for due to remaining
- associations} with selected sites. Since genetic drift does not lead to
+ timepoints, as alleles are indirectly selected \gc{due} to remaining
+ associations with selected \gc{alleles}. Since genetic drift does not lead to
  temporal covariance, we can use these covariances to estimate what fraction of
  the variation in allele frequency change through time is driven by linked
  selection. Here, we reanalyze \vb{three selection experiments} to quantify the
@@ -162,7 +162,7 @@ impact on genome-wide allele frequency changes.
 A long-standing problem in evolutionary genetics is quantifying the roles of
 genetic drift and selection in shaping genome-wide allele frequency changes.
 Selection can affect allele frequencies, \vb{both directly and indirectly,}
-with the indirect effect coming from the action of selection on \vb{linked}
+with the indirect effect coming from the action of selection on \gc{correlated} %\vb{linked}
 loci elsewhere in genome e.g. linked selection (\cite{Maynard_Smith1974-lc},
 \cite{Charlesworth1993-gb,Nordborg1996-nq}; see \cite{Barton2000-zg} for a
 review). Previous work \vbout{on this question} has mostly focused on teasing
@@ -843,12 +843,13 @@ Material Sections \ref{supp:ind-depth-var-corr}, \ref{supp:cov-corr}, and
 assess that our bias correction procedure is working adequately through a
 series of diagnostic plots that ensure that the procedure removes the
 relationship between sampling depth and uncorrected variance and covariances
-(Supplementary Figure \ref{suppfig:bergland-correction}).  \vb{Through our
+(Supplementary Figure \ref{suppfig:bergland-correction}).  Through our
   simulations we find that our estimates can differ based on how fixations and
   losses are handled in long time-series (Supplementary Material Section
-  \ref{supp:fixation}) but none of our findings in the main text are altered by
+  \ref{supp:fixation}) but none of our findings in the main text are
+  \gc{qualitatively} altered by
   this decision (Supplementary Material Figures \ref{suppfig:supp-fig-1-nofix}
-  and \ref{suppfig:supp-fig-3-nofix}).}
+  and \ref{suppfig:supp-fig-3-nofix}).
 
 
 \subsection{Estimating Uncertainty with a Block Bootstrap}
@@ -933,18 +934,22 @@ Figure \ref{suppfig:barghi-tailprobs-seqid}).
 
 \subsection{Forward-in-time Simulations}
 \label{supp:forward}
-\vb{
+
 To explore how aspects of genetic architecture, model of selection, and
 experimental design impact temporal covariance, the $G(t)$ trajectories, and
 convergence correlations, we ran extensive forward-in-time using SLiM
 \parencite{Haller2019-vu}; here we discuss the Gaussian Stabilizing Selection
 simulations in Figured \ref{fig:figure-4}, but Supplementary Materials Section
-\ref{supp:forward} describes these simulation routines in much more detail as
+\ref{supp:forward} describes these simulation routines in \gc{more} detail as
 well as additional simulations we have conducted.
 
 We simulated directional selection on a trait by first burning in a population
 of $N = 1000$ diploids under GSS for $10N$ generations with the stabilizing
-selection trait variance $V_s = 1$ and an optima set at zero. We targeted a
+selection trait variance $V_s = 1$ and an optima set at zero.
+\gc{We note that the small burnin population size means that these
+  simulations should not be taken as reflecting any specific natural
+  population and they are for illustrative purposes only.}
+We targeted a
 polygenic architecture by setting the trait mutation rate to $10^{-8}$ per
 basepair, per generation, in addition to having a separate neutral mutation of
 $10^{-8}$ which created neutral mutations which we used to calculate the
@@ -964,7 +969,7 @@ appropriate response to selection (Supplementary Material Figure
 \ref{suppfig:gss-zbar}). Using the neutral population frequency data from these
 simulations, we calculated the temporal covariances, $G(t)$ trajectories, and
 convergence correlations.
-}
+
 
 \section{Acknowledgments} 
 

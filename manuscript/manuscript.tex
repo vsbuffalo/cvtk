@@ -604,8 +604,9 @@ genetic drift, and the neutral distribution of the covariance is complicated
 due to linkage disequilibria, which can occur over long physical distances in
 E\&R and selection studies \parencite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}. To
 address this, we have developed a permutation-based procedure that constructs
-an empirical null distribution by randomly flipping the signs of the allele
-frequency changes per-genomic window. This destroys the systematic covariances
+an empirical null distribution by randomly flipping the \gc{sign }of the allele
+frequency changes \gc{in each} genomic window \gc{(i.e. a single random sign
+flip is applied to all loci in a window)}. This destroys the systematic covariances
 created by linked selection and creates a sampling distribution of the
 covariances spuriously created by neutral genetic drift while preserving the
 complex dependencies between adjacent loci created by linkage disequilibrium.
@@ -613,10 +614,17 @@ This empirical neutral null distribution is conservative in the sense that the
 variances of the covariances are wider than expected under drift alone as they
 include the effect of selection on the allele frequency change within a
 time-interval, just not between time-intervals. We see (Figure
-\ref{fig:figure-3} A and B) that windowed temporal covariances between close
-timepoints are skewed positive (a heavy right tail), while between more distant
-timepoints these windowed temporal covariances tend to shift to become more
-negative (a heavy left tail).  We quantified the degree to which the left and
+\ref{fig:figure-3} A and B) \gc{that there are an empirical excess of windows
+  with positive
+  covariances between close timepoints compared to the null
+  distribution (a heavier right tail), and that this then shifts to an excess of windows
+  with negative covariances between more distant
+timepoints (a heavier left tail)}
+%that windowed temporal covariances between close
+t%imepoints are skewed positive (a heavy right tail), while between more distant
+%timepoints these windowed temporal covariances tend to shift to become more
+%negative (a heavy left tail).
+We quantified the degree to which the left and
 right tails are inflated compared to the null distribution as a function of
 time, and see excesses in both tails in Figure \ref{fig:figure-3} C. This
 finding is also robust to sign-permuting allele frequency changes on a
@@ -625,7 +633,6 @@ extend (Supplementary Figure \ref{suppfig:barghi-tailprobs-seqid}). We see a
 striking pattern that the windowed covariances not only decay towards zero, but
 in fact become negative through time, consistent with many regions in the
 genome having had a reversed fitness effect at later timepoints.
-
 
 \begin{figure}[!htb]
   \centering

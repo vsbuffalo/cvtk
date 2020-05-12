@@ -1599,12 +1599,16 @@ p-values when seasonal labels are randomly permuted (Supplementary Figure
 more variants with a seasonal fluctuating pattern than found in the original
 \textcite{Bergland2014-ij} study. While surprising, this could be explained by
 the presence of temporal structure across the samples not consistent with
-seasonal fluctuating selection. Some fraction of the permutations happen to fit
-this structure well, leading to an enrichment of small p-values. This
+seasonal fluctuating selection. Some fraction of the permutations happen to fit non-seasonal structure
+well, leading to an enrichment of small p-values.  We note that
+genetic drift is not accounted for in the model used to estimate the
+significance of seasonally fluctuations and so some of these issues
+from non-seasonal structure may be due to a poorly calibrated null model.  Furthermore,  
 non-seasonal temporal structure is also evident in our temporal covariances
 (Supplementary Figure \ref{suppfig:bergland-covs-figure}), where we see strong
 evidence of selection (non-zero temporal covariances), yet the pattern does not
 follow that of seasonal fluctuating selection.  
+
 
 \subsection{Approximating the Reduction in Diversity from $G(t)$}
 \label{supp:reduction-approx}

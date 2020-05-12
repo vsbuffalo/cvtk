@@ -70,9 +70,7 @@
 \addbibresource{biblio.bib}
 
 % TODO
-% - sig impact
-% - ref table 1
-% - more correction plots?
+% - divide through the temp block supp. figure by combinatorics
 % - mention PCA
 
 
@@ -124,7 +122,7 @@
  associations with selected alleles. Since genetic drift does not lead to
  temporal covariance, we can use these covariances to estimate what fraction of
  the variation in allele frequency change through time is driven by linked
- selection. Here, we reanalyze \vb{three selection experiments} to quantify the
+ selection. Here, we reanalyze three selection experiments to quantify the
  effects of linked selection over short timescales using covariance among
  time-points and across replicates. We estimate that at least 17\% to 37\% of
  allele frequency change is driven by selection in these experiments.  Against
@@ -141,16 +139,16 @@
 
 A long-standing problem in evolution biology is to understand the different
 processes that shape the genetic composition of populations. In a population
-closed to migrants, the two processes that change \vb{allele frequencies} are
+closed to migrants, the two processes that change allele frequencies are
 selection, which systematically increases beneficial alleles and removes
-\vb{deleterious} ones, and genetic drift which stochastically changes allele
-frequencies as some parents have more or less copies of specific alleles to the
-next generation. Previous efforts to disentangle these two processes have often
-used population genomic samples from a single timepoint and specific models of
-how selection at one allele affects its neighbors (known as linked selection).
-Here, we use genomic data taken at multiple timepoints to \vbout{directly}
-quantify \vb{the relative contributions of} selection and drift \vb{to} allele
-frequency \vb{changes} at a genome-wide level through time. We show selection acts
+deleterious ones, and genetic drift which stochastically changes allele
+frequencies as some parents \vb{contribute} more or less copies of specific
+alleles to the next generation. Previous efforts to disentangle these two
+processes have often used population genomic samples from a single timepoint
+and specific models of how selection at one allele affects its neighbors (known
+as linked selection). Here, we use genomic data taken at multiple timepoints
+to quantify the relative contributions of selection and drift to allele
+frequency changes at a genome-wide level through time. We show selection acts
 over short timescales in three evolve-and-resequence studies and has a sizeable
 impact on genome-wide allele frequency changes. 
 
@@ -161,25 +159,23 @@ impact on genome-wide allele frequency changes.
 
 A long-standing problem in evolutionary genetics is quantifying the roles of
 genetic drift and selection in shaping genome-wide allele frequency changes.
-Selection can affect allele frequencies, \vb{both directly and indirectly,}
-with the indirect effect coming from the action of selection on correlated
-loci elsewhere in genome e.g. linked selection (\cite{Maynard_Smith1974-lc},
+Selection can affect allele frequencies, both directly and indirectly, with the
+indirect effect coming from the action of selection on correlated loci
+elsewhere in genome, e.g. linked selection (\cite{Maynard_Smith1974-lc},
 \cite{Charlesworth1993-gb,Nordborg1996-nq}; see \cite{Barton2000-zg} for a
-review). Previous work \vbout{on this question} has mostly focused on teasing
-apart the impacts of drift and selection on genome-wide diversity using
-population samples from a single contemporary timepoint, often by modeling the
-correlation between regional recombination rate, gene density, and diversity
-created in the presence of linked selection
-\parencite{Cutter2013-ba,Sella2009-nx}. This approach has shown linked
-selection has a major role in shaping patterns of genome-wide diversity across
-the genomes of a range of sexual species
+review). Previous work has mostly focused on teasing apart the impacts of drift
+and selection on genome-wide diversity using population samples from a single
+contemporary timepoint, often by modeling the correlation between regional
+recombination rate, gene density, and diversity created in the presence of
+linked selection \parencite{Cutter2013-ba,Sella2009-nx}. This approach has
+shown linked selection has a major role in shaping patterns of genome-wide
+diversity across the genomes of a range of sexual species
 \parencite{Macpherson2007-qt,Andolfatto2007-uy,Begun2007-bg,Beissinger2016-cm,Sattath2011-dr,Williamson2014-oy,Andersen2012-bj,Cutter2010-gi,Elyashiv2016-vt},
 and has allowed us to quantify the relative influence of positive selection
 (hitchhiking) and negative selection (background selection;
 \cite{Nordborg2005-dc,McVicker2009-ax,Andolfatto2007-uy,Macpherson2007-qt,Hernandez2011-gs,Elyashiv2016-vt}).
-However, we lack an understanding of both how linked selection acts over
-\vb{short time intervals and its full impact on genome-wide allele frequency
-changes.}
+However, we lack an understanding of both how linked selection acts over short
+time intervals and its full impact on genome-wide allele frequency changes.
 
 There are numerous examples of rapid phenotypic adaptation
 \parencite{Grant2011-wk,Grant2006-hj,Reznick1997-mh,Franks2007-dr} and rapid,
@@ -187,32 +183,32 @@ selection-driven genomic evolution in asexual populations
 \parencite{Good2017-om,Bennett1990-bc,Baym2016-kh}.  Yet the polygenic nature
 of fitness makes detecting the impact of selection on genome-wide variation
 over short timescales in sexual populations remarkably difficult
-\vb{\parencite{Latta1998-me, Pritchard2010-tk,Kemper2014-bx}}. This is because
-the effect of selection on a polygenic trait (such as fitness) is distributed
-across \vb{numerous} loci. This can lead to subtle allele frequency shifts on
+\parencite{Latta1998-me, Pritchard2010-tk,Kemper2014-bx}. This is because the
+effect of selection on a polygenic trait (such as fitness) is distributed
+across numerous loci. This can lead to subtle allele frequency shifts on
 standing variation that are difficult to distinguish from background levels of
-genetic drift and sampling variance. \vb{Increasingly}, genomic experimental
+genetic drift and sampling variance. Increasingly, genomic experimental
 evolution studies with multiple timepoints, and in some cases multiple
-replicate populations, are being used to detect large effect selected loci
+replicate populations, are being used to detect \vb{large-effect} selected loci
 \parencite{Turner2011-sx,Turner2012-bm} and differentiate modes of selection
 \parencite{Burke2010-tz,Barghi2019-qy,Therkildsen2019-zy}.  In addition these
 temporal-genomic studies have begun in wild populations, some with the goal of
 finding variants that exhibit frequency changes consistent with fluctuating
 selection \parencite{Bergland2014-ij,Machado2018-cs}. In a previous paper, we
 proposed that one useful signal for understanding the genome-wide impact of
-polygenic linked selection detectable from genomic studies with multiple
-timepoints is the temporal autocovariance (\vb{i.e. covariance between two
-timepoints}) in allele frequency changes \parencite{Buffalo2019-io}.  These
-covariances \vb{can be estimated} from temporal genomic data and are created
-when the loci that underly heritable fitness variation perturb the frequencies
-of linked alleles; in contrast, when genetic drift acts alone in a closed
-population, these covariances are zero in expectation for neutral alleles.
-Mathematically, temporal covariances are useful because it is natural to
-decompose the total variance in allele frequency change across a set of time
-intervals into the variances and covariances in allele frequency change among
-time intervals.  Furthermore, biologically, these covariances reflect the
-extent to which allele frequency changes in one generation predict changes in
-another due to a shared selection pressures and associations to selected loci.
+polygenic linked selection detectable from \vb{temporal genomic data} is the
+temporal autocovariance (i.e. covariance between two timepoints) in allele
+frequency changes \parencite{Buffalo2019-io}.  These covariances \vbout{can be
+estimated from temporal genomic data and} are created when the loci that
+underly heritable fitness variation perturb the frequencies of linked alleles;
+in contrast, when genetic drift acts alone in a closed population, these
+covariances are zero in expectation for neutral alleles.  Mathematically,
+temporal covariances are useful because it is natural to decompose the total
+variance in allele frequency change across a \vb{time interval} into the
+variances and covariances in allele frequency change \vb{between generations}.
+Furthermore, biologically, these covariances reflect the extent to which allele
+frequency changes in one generation predict changes in another due to a shared
+selection pressures and associations to selected loci.
 
 Here, we provide the first empirical analyses to quantify the impact of linked
 selection acting over short timescales (tens of generations) across two evolve
@@ -221,12 +217,11 @@ artificial selection experiment \parencite{Castro2019-uk}. We repeatedly find a
 signal of temporal covariance, consistent with linked selection acting to
 significantly perturb genome-wide allele frequency changes across the genome in
 a manner that other approaches would not be able differentiate from genetic
-drift. \vb{We estimate a lower bound of the fraction of variance in allele
-  frequency change caused by selection, as well as the correlation between
-  allele frequency changes between replicate populations caused by convergent
-selection pressures. Overall, we demonstrate that linked selection has a
-powerful role in shaping genome-wide allele frequency changes over very short
-timescales.}
+drift. We estimate a lower bound of the fraction of variance in allele
+frequency change caused by selection, as well as the correlation between allele
+frequency changes between replicate populations caused by convergent selection
+pressures. Overall, we demonstrate that linked selection has a powerful role in
+shaping genome-wide allele frequency changes over very short timescales.
 
 \section{Results}
 
@@ -255,10 +250,10 @@ seven timepoints and ten replicate populations, we estimated the genome-wide $6
 \times 6$ temporal covariance matrix $\mathbf{Q}$ for each of the ten
 replicates. Each row of these matrices represent the temporal covariance
 $\cov(\Delta_{_{10}} p_s, \Delta_{_{10}} p_t)$, between the allele frequency
-change (in ten-generation intervals, denoted $\Delta_{_{10}} p_t$) in some
+change (in ten-generation intervals, denoted $\Delta_{_{10}} p_t$) \vb{of} some
 initial reference generation $s$ (the row of the matrix), and some later
 timepoint $t$ (the column of the matrix). We corrected these matrices for
-biases created due to sampling noise, and normalize the entries for
+biases created due to sampling noise, and \vb{normalized} the entries for
 heterozygosity (see Supplementary Materials Sections
 \ref{supp:ind-depth-var-corr} and \ref{supp:matrix-correction}). These
 covariances are expected to be zero when only drift is acting, as only
@@ -275,27 +270,24 @@ linkage disequilibrium and the associated additive genetic variance for fitness
 decays (\vb{which could occur as a population reaches a new optimum})
 \parencite{Buffalo2019-io}. The temporal covariances per replicate are noisier
 but this general pattern holds; see Supplementary Figure
-\ref{suppfig:barghi-cov-panels}.  \textcite{Barghi2019-qy}'s design means that
-the covariances we see in adjacent time intervals are on average ten
-generations apart, and given the temporal decay in covariance we see, the
-covariances on shorter time-scales (e.g. if adjacent generations had been
-sequenced) may well be higher yet (see Supplementary Material Section
-\ref{supp:barghi-covs} for more details).
+\ref{suppfig:barghi-cov-panels}. \textcite{Barghi2019-qy}'s design means that
+we cannot \vb{observe covariances between pairs of generations that constitute
+the estimated covariances between ten-generation time intervals; had these
+covariances been measurable on shorter timescales, their cumulative effect may
+have been higher yet (see Supplementary Material Sections
+\ref{supp:barghi-covs} and \ref{supp:tempblocks} for more details).}
 
-\vbout{One concern is that these covariances reflect the localized impact of a
-  few large-effect loci rather than selection on a polygenic trait.} Since our
-  covariances are essentially averages over loci, the covariance estimate \vb{could}
-  be strongly affected by \vb{a few} outlier regions. To test whether large
-  outlier regions drive the genome-wide signal we see in the
-  \textcite{Barghi2019-qy} data, we calculate the covariances in 100kb windows
-  along the genome (we refer to these as windowed covariances throughout) and
-  take the median windowed covariance, and trimmed-mean windowed covariance, as
-  a measure of the genome-wide covariance robust to large-effect loci. These
-  robust estimates (Supplementary Table \ref{supp:table-trimmed-mean} and
-  Supplementary Figure \ref{suppfig:barghi-trimmed-mean}) confirm the patterns
-  we see using the mean covariance, confirming that genomic temporal
-  covariances are non-zero due to the impact of selection acting across many
-  genomic windows. 
+Since our covariances are essentially averages over loci, the covariance
+estimate could be strongly affected by a few outlier regions. To test whether
+large outlier regions drive the genome-wide signal we see in the
+\textcite{Barghi2019-qy} data, we calculate the covariances in 100kb windows
+along the genome (we refer to these as windowed covariances throughout) and
+take the median windowed covariance, and trimmed-mean windowed covariance, as a
+measure of the genome-wide covariance robust to large-effect loci. These robust
+estimates (Supplementary Table \ref{supp:table-trimmed-mean} and Supplementary
+Figure \ref{suppfig:barghi-trimmed-mean}) confirm the patterns we see using the
+mean covariance, confirming that genomic temporal covariances are non-zero due
+to the impact of selection acting across many genomic \vb{regions}. 
 
 
 \begin{figure}[!htb]
@@ -328,12 +320,12 @@ ratio of total covariance in allele frequency change to the total variance in
 allele frequency change. We denote the change in allele frequency as $\Delta
 p_t = p_{t+1}-p_t$, where $p_t$ is the allele frequency in generation $t$.
 Since the total variation in allele frequency change can be partitioned into
-variance and covariance components, $\var(p_t - p_0) = \sum_{i=0}^{t-1}
-\var(\Delta p_i) + \sum_{i \ne j}^{t-1} \cov(\Delta p_i, \Delta p_j)$ (we bias
-correct these for sequencing depth), and the covariances are zero when drift
-acts alone, this is a lower bound on how much of the variance in allele
-frequency change is caused by linked selection \parencite{Buffalo2019-io}. We
-call this measure $G(t)$, defined as
+variance and covariance components, \vb{$\var(p_t - p_0) = \sum_{i=0}^{t-1}
+  \var(\Delta p_i) + \sum_{i=0}^{t-1} \sum_{j \ne i}^{t-1} \cov(\Delta p_i,
+\Delta p_j)$} (we \vb{bias-correct} these for sequencing depth), and the
+covariances are zero when drift acts alone, this is a lower bound on how much
+of the variance in allele frequency change is caused by linked selection
+\parencite{Buffalo2019-io}. We call this measure $G(t)$, defined as
 
 \begin{align}
   \vb{G(t) = \frac{ \sum_{i=0}^{t-1} \sum_{j \ne i}^{t-1} \cov(\Delta p_i, \Delta p_j)}{\var(p_t - p_0)}}
@@ -350,22 +342,22 @@ estimate of the reduction in neutral diversity due to linked selection (or
 equivalently the reduction in neutral effective population size needed to
 account linked selection, see Supplementary Materials Section
 \ref{supp:reduction-approx}). Since \textcite{Barghi2019-qy} experiment is
-sequenced every ten generations, in the numerator for the covariance we use the
-allele frequency changes between adjacent timepoints, which are ten generations
-apart; \vb{thus the strong covariances between adjacent generations are not
-  observable and do not contribute to the numerator of $G(t)$}.
-  \vb{Additionally, selection also inflates the variance in allele frequency
-    change per generation; however, this effect cannot be easily distinguished
-  from drift.} \vb{For both these reasons, our measure $G(t)$ is strongly
-conservative} (\vb{we demonstrate this through simulations in Supplementary
-Material Section \ref{supp:tempblocks}}).  Still, we find a remarkably strong
-signal. Greater than $20\%$ of total, genome-wide allele frequency change over
-60 generations is the result of selection (Figure \ref{fig:figure-1} B). This
-proportion of variance attributable to selection builds over time in Figure
-\ref{fig:figure-1}B as the effects of linked selection are compounded over the
-generations unlike genetic drift. Our G(t) starts to plateau to a constant
-level as the covariances from earlier generations have decayed and so no longer
-contribute as strongly (Figure \ref{fig:figure-1}).
+sequenced every ten generations, \vb{the numerator uses the covariances
+  estimated between ten-generation blocks of allele frequency change}; \vb{thus
+  the strong, unobservable, covariances between adjacent generations do not
+contribute to the numerator of $G(t)$}. Additionally, selection also inflates
+the variance in allele frequency change per generation; however, this effect
+cannot be easily distinguished from drift. For both these reasons, our measure
+$G(t)$ is \vb{considerably} conservative (\vb{we demonstrate this through
+simulations in Supplementary Material Section \ref{supp:tempblocks}}).  Still,
+we find a remarkably strong signal. Greater than $20\%$ of total, genome-wide
+allele frequency change over 60 generations is the result of selection (Figure
+\ref{fig:figure-1} B). This proportion of variance attributable to selection
+builds over time in Figure \ref{fig:figure-1}B as the effects of linked
+selection are compounded over the generations unlike genetic drift. Our G(t)
+starts to plateau to a constant level as the covariances from earlier
+generations have decayed and so no longer contribute as strongly (Figure
+\ref{fig:figure-1}).
 
 %\vb{This implies that the $N_e$
 %without the effects of selection is at XXX $\nicefrac{}{(1-G(t))}$}
@@ -377,11 +369,11 @@ a strong  pattern of genome-wide fluctuating selection, we might expect a
 pattern of positive covariances between similar seasonal changes, e.g.
 Spring-Fall in two adjacent years, and negative covariances between dissimilar
 seasonal changes, e.g. Spring-Fall and Fall-Spring in two adjacent years.
-However, we find no such signal over years, \vb{and in reproducing their
-  original analysis, we find that their number of statistically significant
-  seasonal SNPs is not enriched compared to an empirical null distribution
-  created by permuting seasonal labels}; we discuss this in more depth in
-  Supplementary Materials Section \ref{supp:bergland-reanalysis}.
+However, we find no such signal over years, and in reproducing their original
+analysis, we find that their number of statistically significant seasonal SNPs
+is not enriched compared to an empirical null distribution created by permuting
+seasonal labels; we discuss this in more depth in Supplementary Materials
+Section \ref{supp:bergland-reanalysis}.
 
 The replicate design of \textcite{Barghi2019-qy} allows us to quantify another
 covariance: the covariance in allele frequency change between replicate

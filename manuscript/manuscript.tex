@@ -398,50 +398,50 @@ replicates,
 \end{align}
 %
 where $A$ and $B$ here are two replicate labels, and for the
-\textcite{Barghi2019-qy} data, we use $\Delta_{_{10}} p_t$.
+\textcite{Barghi2019-qy} data, we use $\Delta_{_{10}} p_t$. \vb{Between
+replicate populations with identical allele frequency changes, this is one.}
 
 We've calculated the convergent correlation for all rows of the replicate
 covariance matrices. Like temporal covariances, we visualize these through time
-(Figure \ref{fig:figure-2} A), with each line representing the convergent
+(Figure \ref{fig:figure-2}A), with each line representing the convergent
 correlation from a particular reference generation $s$ as it varies with $t$
 (shown on the x-axis). In other words, each of the colored lines corresponds to
 the like-colored row of the convergence correlation matrix (upper left in
-Figure \ref{fig:figure-2} A). We find these convergent \vb{correlation
-coefficients} are relatively weak, and decay very quickly from an initial value
-of about 0.1 (95\% block bootstrap confidence intervals $[0.094, 0.11]$) to
-around 0.01 (95\% CIs [0.0087, 0.015]) within 20 generations. This suggests
-that while a \vb{substantial} fraction of the initial response is shared over
-the replicates, this is followed by a rapid decay, a result consistent with the
-primary finding of the original \textcite{Barghi2019-qy} study: that
-alternative loci contribute to longer term adaptation across the different
-replicates. 
+Figure \ref{fig:figure-2}A). We find these convergent correlation coefficients
+are relatively weak, and decay very quickly from an initial value of about 0.1
+(95\% block bootstrap confidence intervals $[0.094, 0.11]$) to around 0.01
+(95\% CIs [0.0087, 0.015]) within 20 generations. This suggests that while a
+substantial fraction of the initial response is shared over the replicates,
+this is followed by a rapid decay, a result consistent with the primary finding
+of the original \textcite{Barghi2019-qy} study: that alternative loci
+contribute to longer term adaptation across the different replicates. 
 
 \begin{figure}[!htb]
   \centering
   \includegraphics[width=\textwidth]{figures/figure-2-revision.pdf}
 
-  \caption{{\bf A}: The convergence \vb{correlations}, averaged across
+  \caption{{\bf A}: The convergence correlations, averaged across
     \textcite{Barghi2019-qy} replicate pairs, through time. Each line
     represents the convergence correlation $\mathrm{cor}(\Delta p_{s}, \Delta
     p_{s})$ from a starting reference generation $s$ to a later time $t$, which
     varies along the x-axis; each line corresponds to a row of the temporal
-    convergence correlation matrix depicted to the right \vb{(where the
+    convergence correlation matrix depicted to the right (where the
       diagonal elements represent the convergence correlations between the same
-      timepoints across replicate populations)}. We note that convergent
+      timepoints across replicate populations). We note that convergent
       correlation for the last timepoint is an outlier; we are unsure as to the
       cause of this, e.g. it does not appear to be driven by a single pair of
-      replicates. {\bf B}: The convergence \vb{correlations} between individual
-      pairs of replicates in the \textcite{Kelly2019-dc} data (\vb{note the
-      confidence intervals are plotted, but are small on this y-axis scale}).
-      {\bf C}:  The convergence \vb{correlations} between individual pairs of
+      replicates. {\bf B}: The convergence correlations between individual
+      pairs of replicates in the \textcite{Kelly2019-dc} data (note the
+      confidence intervals are plotted, but are small on this y-axis scale).
+      {\bf C}:  The convergence correlations between individual pairs of
       replicates in \parencite{Castro2019-uk} data, for the two selection lines
       (LS1 and LS2) and the control (Ctrl); gray CIs are those using the
       complete dataset, blue CIs exclude chromosomes 5 and 10 which harbor the
       two regions \textcite{Castro2019-uk} found to have signals of parallel
-      selection between LS1 and LS2. \vb{Through simulations, we have found
+      selection between LS1 and LS2. Through simulations, we have found
         that the differences in convergence correlation confidence interval
         widths between these \emph{Drosophila} studies and the Longshanks study
-        are due to the differing population sizes.}}
+        are due to the differing population sizes.}
 
   \label{fig:figure-2}
 \end{figure}
@@ -456,17 +456,17 @@ of \textcite{Kelly2019-dc}, which evolved three replicate wild populations of
 environment. Since each replicate was exposed to the same selection pressure
 and share linkage disequilibria common to the original natural founding
 population, we expected each of the three replicate populations to have
-positive between-replicate covariances. We find all three pairwise
-between-replicate covariances are positive and statistically significant
-(Figure \ref{fig:figure-2} B. We estimate the convergent correlation
-coefficient across these replicates as 0.36 ($95\%$ CI $[0.31, 0.40]$).
-Similarly, we can calculate the proportion of the total variance in allele
-frequency change from convergent selection pressure analogous to $G$ where the
-numerator is is the convergent covariance and the denominator is the total
-variance (see Supplementary Material \ref{supp:replicate-g}). We find that 37\%
-of the total variance is due to shared allele frequency changes caused by
-selection (95\% CI [29\%, 41\%]; these are similar to the convergence
-correlation, since the variance is relatively constant across the replicates.
+positive \vb{convergence correlations}.  \vb{We find all three convergent
+correlation coefficients between replicate pairs are significant (Figure
+\ref{fig:figure-2}B), and average to 0.36 ($95\%$ CI $[0.31, 0.40]$)}.
+\vb{Additionally,} we can calculate the proportion of the total variance in
+allele frequency change from convergent selection pressure, \vb{analogous to
+our $G(t)$,} where the numerator is the convergent covariance and the
+denominator is the total variance (see Supplementary Material
+\ref{supp:replicate-g}). We find that 37\% of the total variance is due to
+shared allele frequency changes caused by selection (95\% CI [29\%, 41\%];
+these are similar to the convergence correlation, since the variance is
+relatively constant across the replicates.
 
 % 95\% CIs, [0.00635, 0.00860], [0.00636, 0.00859], [0.00608, 0.00834])
 
@@ -475,16 +475,16 @@ longer tibiae length relative to body size in mice, leading to a response to
 selection of about 5 standard deviations over the course of twenty generations
 \parencite{Marchini2014-de,Castro2019-uk}. This study includes two independent
 selection lines, Longshanks 1 and 2 (LS1 and LS2), and an unselected control
-line (Ctrl) \vb{where parents were randomly selected}. Consequently, this
-selection experiment offers a useful control to test our between-replicate
-covariances: we expect to see positive between-replicate covariance in the
-comparison between the two Longshanks selection lines, but not between the two
-pairwise comparisons between the control line and each of the two Longshanks
-lines. We find that this is the case (gray confidence intervals in Figure
-\ref{fig:figure-2} C), with the two Longshanks comparisons to the control line
-not being significantly different from zero, while the comparison between the
-two Longshanks lines is statistically significantly different from zero (CIs
-[0.0129, 0.0400]).
+line (Ctrl) where parents were randomly selected. Consequently, this selection
+experiment offers a useful control to test our \vb{convergence correlations}:
+we expect to see \vb{significant} positive \vb{convergence correlations} in the
+comparison between the two Longshanks selection lines, but not \vb{between each
+of the control line and Longshanks line pairs}. We find that this is the case
+(gray confidence intervals in Figure \ref{fig:figure-2}C), with \vb{convergence
+correlations between each of the Longshanks lines to the control not being
+statistically different from zero}, while the convergence correlation between
+the two Longshanks lines is \vb{strong (0.18)} and statistically significant
+(CIs [0.07, 0.25]).
 
 One finding in the Longshanks study was that two major-effect loci showed
 parallel frequency shifts between the two selection lines: a region harboring
@@ -496,7 +496,7 @@ which linkage disequilibrium around these large-effect loci affects neighboring
 loci, we took the conservative precaution of excluding the entire chromosomes
 these loci reside on (chromosomes 5 and 10), and re-calculating the temporal
 covariances. We find excluding these large effect loci has little impact on the
-confidence intervals (blue confidence intervals in Figure \ref{fig:figure-2} C),
+confidence intervals (blue confidence intervals in Figure \ref{fig:figure-2}C),
 indicating that these across-replicate covariances are indeed driven by a large
 number of loci. This is consistent with a signal of selection on a polygenic
 trait driving genome-wide change, although we note that large-effect loci can
@@ -517,9 +517,7 @@ Methods \ref{sec:mm-partition} and Supplementary Material Section
 $[21\%, 48\%]$) of the variance in allele frequency change is driven by the
 effects of selection, of which 14\% (95\% CI $[3\%, 33\%]$) is estimated to be
 unique to a selection line, and 17\% (95\% CI $[9\%, 23\%]$) is the effect of
-shared selection between the two Longshanks selection lines (and the value of
-the convergence correlation between the Longshanks lines, a related statistic,
-is 0.18, 95\% CI [0.0743, 0.254]).
+shared selection between the two Longshanks selection lines. 
 
 % We can partition the
 % allele frequency change between the two timepoints (20 generations apart) for a
@@ -577,16 +575,16 @@ values of $k$ are in Supplementary Figures
 
 We observed that in the longest study  we analyzed \parencite{Barghi2019-qy},
 some genome-wide temporal covariances become negative at future timepoints (see
-the first two rows in Figure \ref{fig:figure-1} A). This shows that alleles
-that were on average going up initially are later going down in frequency, i.e.
+the first two rows in Figure \ref{fig:figure-1}A). This shows that alleles that
+were on average going up initially are later going down in frequency, i.e.
 that the average direction of selection experienced by alleles has flipped.
 This \vb{might} reflect either a change in the environment or the genetic
 background, due to epistatic relationships among alleles altered by frequency
-changes or recombination breaking up selective alleles; \vb{such reversals are
-also theorized to occur after optima shifts (XXX)}.  Such reversals of
-selective dynamics could be occurring at other timepoints but the signal of a
-change in the direction of selection at particular loci may be washed out when
-we calculate our genome-wide average temporal covariances. To address this
+changes (\vb{which can occur during an optima shift; \cite{Hayward2019-kt}}) or
+recombination breaking up selective alleles. Such reversals in selective
+dynamics could be occurring at other timepoints but the signal of a change in
+the direction of selection at particular loci may be washed out when we
+calculate our genome-wide average temporal covariances.  To address this
 limitation, we calculated the distribution of the temporal covariances over
 100kb windowed covariances (Figure \ref{fig:figure-3} shows these distributions
 pooling across all replicates; see Supplementary Figure
@@ -594,7 +592,7 @@ pooling across all replicates; see Supplementary Figure
 covariance estimate of each genomic window will be noisy, due to sampling and
 genetic drift, and the neutral distribution of the covariance is complicated
 due to linkage disequilibria, which can occur over long physical distances in
-E\&R and selection studies \parencite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}. To
+E\&R and selection studies \parencite{Nuzhdin2013-gf,Baldwin-Brown2014-cl}.  To
 address this, we have developed a permutation-based procedure that constructs
 an empirical \vb{neutral} null distribution by randomly flipping the sign of
 the allele frequency changes in each genomic window (i.e. a single random sign

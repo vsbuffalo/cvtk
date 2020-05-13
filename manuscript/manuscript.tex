@@ -270,14 +270,9 @@ linkage disequilibrium and the associated additive genetic variance for fitness
 decays (\vb{which could occur as a population reaches a new optimum})
 \parencite{Buffalo2019-io}. The temporal covariances per replicate are noisier
 but this general pattern holds; see Supplementary Figure
-\ref{suppfig:barghi-cov-panels}. \textcite{Barghi2019-qy}'s design means that
-we cannot \vb{observe covariances between pairs of generations that constitute
-the estimated covariances between ten-generation time intervals; had these
-covariances been measurable on shorter timescales, their cumulative effect may
-have been higher yet (see Supplementary Material Sections
-\ref{supp:barghi-covs} and \ref{supp:tempblocks} for more details).}
+\ref{suppfig:barghi-cov-panels}. 
 
-Since our covariances are essentially averages over loci, the covariance
+Since our covariances are \gc{averages} over loci, the covariance
 estimate could be strongly affected by a few outlier regions. To test whether
 large outlier regions drive the genome-wide signal we see in the
 \textcite{Barghi2019-qy} data, we calculate the covariances in 100kb windows
@@ -332,6 +327,10 @@ of the variance in allele frequency change is caused by linked selection
 \end{align}
 %
 
+%\textcite{Barghi2019-qy}'s design means that
+%we cannot \vb{observe covariances between pairs of generations that constitute
+%the estimated covariances between ten-generation time intervals
+%
 which estimates the \vb{impact of selection} on allele frequency change between
 the initial generation $0$ and some later generation $t$, which can be varied
 to see how this quantity grows through time. When the sum of the covariances is
@@ -345,7 +344,11 @@ account linked selection, see Supplementary Materials Section
 sequenced every ten generations, \vb{the numerator uses the covariances
   estimated between ten-generation blocks of allele frequency change}; \vb{thus
   the strong, unobservable, covariances between adjacent generations do not
-contribute to the numerator of $G(t)$}. Additionally, selection also inflates
+  contribute to the numerator of $G(t)$}. \gc{Had these
+covariances been measurable on shorter timescales, their cumulative
+effect would likely have been higher yet (see Supplementary Material Sections
+\ref{supp:barghi-covs} and \ref{supp:tempblocks} for more details).}
+Additionally, selection also inflates
 the variance in allele frequency change per generation; however, this effect
 cannot be easily distinguished from drift. For both these reasons, our measure
 $G(t)$ is \vb{considerably} conservative (\vb{we demonstrate this through

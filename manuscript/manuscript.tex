@@ -272,17 +272,17 @@ decays (\vb{which could occur as a population reaches a new optimum})
 but this general pattern holds; see Supplementary Figure
 \ref{suppfig:barghi-cov-panels}. 
 
-Since our covariances are \gc{averages} over loci, the covariance
-estimate could be strongly affected by a few outlier regions. To test whether
-large outlier regions drive the genome-wide signal we see in the
-\textcite{Barghi2019-qy} data, we calculate the covariances in 100kb windows
-along the genome (we refer to these as windowed covariances throughout) and
-take the median windowed covariance, and trimmed-mean windowed covariance, as a
-measure of the genome-wide covariance robust to large-effect loci. These robust
-estimates (Supplementary Table \ref{supp:table-trimmed-mean} and Supplementary
-Figure \ref{suppfig:barghi-trimmed-mean}) confirm the patterns we see using the
-mean covariance, confirming that genomic temporal covariances are non-zero due
-to the impact of selection acting across many genomic \vb{regions}. 
+Since our covariances are averages over loci, the covariance estimate could be
+strongly affected by a few outlier regions. To test whether large outlier
+regions drive the genome-wide signal we see in the \textcite{Barghi2019-qy}
+data, we calculate the covariances in 100kb windows along the genome (we refer
+to these as windowed covariances throughout) and take the median windowed
+covariance, and trimmed-mean windowed covariance, as a measure of the
+genome-wide covariance robust to large-effect loci. These robust estimates
+(Supplementary Table \ref{supp:table-trimmed-mean} and Supplementary Figure
+\ref{suppfig:barghi-trimmed-mean}) confirm the patterns we see using the mean
+covariance, confirming that genomic temporal covariances are non-zero due to
+the impact of selection acting across many genomic \vb{regions}. 
 
 
 \begin{figure}[!htb]
@@ -327,9 +327,9 @@ of the variance in allele frequency change is caused by linked selection
 \end{align}
 %
 
-%\textcite{Barghi2019-qy}'s design means that
-%we cannot \vb{observe covariances between pairs of generations that constitute
-%the estimated covariances between ten-generation time intervals
+%\textcite{Barghi2019-qy}'s design means that we cannot \vb{observe covariances
+%between pairs of generations that constitute the estimated covariances between
+%ten-generation time intervals
 %
 which estimates the \vb{impact of selection} on allele frequency change between
 the initial generation $0$ and some later generation $t$, which can be varied
@@ -344,11 +344,10 @@ account linked selection, see Supplementary Materials Section
 sequenced every ten generations, \vb{the numerator uses the covariances
   estimated between ten-generation blocks of allele frequency change}; \vb{thus
   the strong, unobservable, covariances between adjacent generations do not
-  contribute to the numerator of $G(t)$}. \gc{Had these
-covariances been measurable on shorter timescales, their cumulative
-effect would likely have been higher yet (see Supplementary Material Sections
-\ref{supp:barghi-covs} and \ref{supp:tempblocks} for more details).}
-Additionally, selection also inflates
+contribute to the numerator of $G(t)$}. Had these covariances been measurable
+on shorter timescales, their cumulative effect would likely have been higher
+yet (see Supplementary Material Sections \ref{supp:barghi-covs} and
+\ref{supp:tempblocks} for more details).  Additionally, selection also inflates
 the variance in allele frequency change per generation; however, this effect
 cannot be easily distinguished from drift. For both these reasons, our measure
 $G(t)$ is \vb{considerably} conservative (\vb{we demonstrate this through
@@ -490,21 +489,19 @@ the two Longshanks lines is \vb{strong (0.18)} and statistically significant
 (CIs [0.07, 0.25]).
 
 One finding in the Longshanks study was that two major-effect loci showed
-parallel frequency shifts between the two selection lines: a region harboring
-the gene Nkx3-2 known to be involved in limb development, and another region
-containing six other candidate genes. We were curious to what extent our
-genome-wide covariances were being driven by these two outlier large-effect
-loci, so we excluded them from the analysis. Since we do not know the extent to
-which linkage disequilibrium around these large-effect loci affects neighboring
-loci, we took the conservative precaution of excluding the entire chromosomes
-these loci reside on (chromosomes 5 and 10), and re-calculating the temporal
-covariances. We find excluding these large effect loci has little impact on the
-confidence intervals (blue confidence intervals in Figure \ref{fig:figure-2}C),
-indicating that these across-replicate covariances are indeed driven by a large
-number of loci. This is consistent with a signal of selection on a polygenic
-trait driving genome-wide change, although we note that large-effect loci can
-contribute to the indirect change at unlinked loci
-\parencite{Robertson1961-ho,Santiago1995-hx}. 
+parallel frequency shifts between the two selection lines. We were curious to
+what extent our genome-wide covariances were being driven by these two outlier
+large-effect loci, so we excluded them from the analysis. Since we do not know
+the extent to which linkage disequilibrium around these large-effect loci
+affects neighboring loci, we took the conservative precaution of excluding the
+entire chromosomes these loci reside on (chromosomes 5 and 10), and
+re-calculating the temporal covariances. We find excluding these large effect
+loci has little impact on the confidence intervals (blue confidence intervals
+in Figure \ref{fig:figure-2}C), indicating that these across-replicate
+covariances are indeed driven by a large number of loci. This is consistent
+with a signal of selection on a polygenic trait driving genome-wide change,
+although we note that large-effect loci can contribute to the indirect change
+at unlinked loci \parencite{Robertson1961-ho,Santiago1995-hx}. 
 
 The presence of an unselected control line provides an alternative way to
 partition the effects of linked selection and genetic drift: we can compare the
@@ -1599,15 +1596,15 @@ p-values when seasonal labels are randomly permuted (Supplementary Figure
 more variants with a seasonal fluctuating pattern than found in the original
 \textcite{Bergland2014-ij} study. While surprising, this could be explained by
 the presence of temporal structure across the samples not consistent with
-seasonal fluctuating selection. \gc{Some fraction of the permutations happen to fit non-seasonal structure
-well, leading to an enrichment of small p-values.  We note that
-genetic drift is not accounted for in the model used to estimate the
-significance of seasonally fluctuations and so some of these issues
-from non-seasonal structure may be due to a poorly calibrated null model.  Furthermore,  }
-non-seasonal temporal structure is also evident in our temporal covariances
-(Supplementary Figure \ref{suppfig:bergland-covs-figure}), where we see strong
-evidence of selection (non-zero temporal covariances), yet the pattern does not
-follow that of seasonal fluctuating selection.  
+seasonal fluctuating selection. Some fraction of the permutations happen to fit
+non-seasonal structure well, leading to an enrichment of small p-values.  We
+note that genetic drift is not accounted for in the model used to estimate the
+significance of seasonally fluctuations and so some of these issues from
+non-seasonal structure may be due to a poorly calibrated null model.
+Furthermore, non-seasonal temporal structure is also evident in our temporal
+covariances (Supplementary Figure \ref{suppfig:bergland-covs-figure}), where we
+see strong evidence of selection (non-zero temporal covariances), yet the
+pattern does not follow that of seasonal fluctuating selection.  
 
 
 \subsection{Approximating the Reduction in Diversity from $G(t)$}

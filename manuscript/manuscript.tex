@@ -397,8 +397,7 @@ replicates,
 \end{align}
 %
 where $A$ and $B$ here are two replicate labels, and for the
-\textcite{Barghi2019-qy} data, we use $\Delta_{_{10}} p_t$. Between
-replicate populations with identical allele frequency changes, this is one.
+\textcite{Barghi2019-qy} data, we use $\Delta_{_{10}} p_t$. 
 
 We've calculated the convergent correlation for all rows of the replicate
 covariance matrices. Like temporal covariances, we visualize these through time
@@ -1848,21 +1847,21 @@ Additionally, we wanted to ensure that our temporal covariances and $G(t)$
 trajectories were robust to more complicated, but realistic fitness models. To
 this end, we also simulated Gaussian stabilizing selection (GSS) on a trait
 during burnin, followed by one of two two optima shift routines: (1) sudden
-optima shifts of $\mu_\text{sudden} = \{0.1, 0.5, 1\}$, and
-(2) very graduate optima shifts of $\mu_\text{gradual} = \{0.001,
-0.01\}$ per generation using the same two population simulation scheme
-described above.  We used a polygenic architecture for these simulations,
-\vb{with trait alleles assigned a $\pm 0.01$ effect size with equal
-probability, trait mutation rate $10^{-8}$}, and the optima shift began at five
-generations after a $10N$ generation burnin. Across our GSS simulations, we
-see the expected selection response (Supplementary Material Figure
-\ref{suppfig:gss-zbar}).
+optima shifts of $\mu_\text{sudden} = \{0.1, 0.5, 1\}$, and (2) very graduate
+optima shifts of $\mu_\text{gradual} = \{0.001, 0.01\}$ per generation using
+the same two population simulation scheme described above (\vb{these shifts are
+in standard deviations, since $V_S = 1$}).  We used a polygenic architecture
+for these simulations, with trait alleles assigned a $\pm 0.01$ effect size
+with equal probability, trait mutation rate $10^{-8}$, and the optima shift
+began at five generations after a $10N$ generation burnin.  Across our GSS
+simulations, we see the expected selection response (Supplementary Material
+Figure \ref{suppfig:gss-zbar}).
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/gss-covs.pdf}
 
-  \caption{Mean temporal covariance ($\cov \Delta p_5, p_t$, with $t$ varying
+  \caption{Mean temporal covariance ($\cov(\Delta p_5, p_t)$, with $t$ varying
     across the x-axis) across 30 replicate simulations (light gray points are
     before the onset of selection; dark gray points are after selection
     begins), under different Gaussian stabilizing selection with optima shift
@@ -1875,7 +1874,7 @@ Overall, we see the same qualitative results under Gaussian stabilizing
 selection with optima shifts as under exponential directional selection.
 Stronger directional selection, here determined by larger sudden optima shifts
 or larger gradual shifts per generation, lead to stronger temporal covariances
-(Supplementary Materials Figure \ref{suppfig:covs}). Furthermore, we see a
+(Supplementary Materials Figure \ref{suppfig:gss-covs}). Furthermore, we see a
 stronger effect of linked selection, as measured by $G(t)$, under stronger
 directional selection (Supplementary Material Figure \ref{suppfig:gss-G}).
 
@@ -1890,7 +1889,7 @@ directional selection (Supplementary Material Figure \ref{suppfig:gss-G}).
   \label{suppfig:gss-G}
 \end{figure}
 
-\vb{Additionally, we looked at the effect the size of each replicate population
+Additionally, we looked at the effect the size of each replicate population
   has on a single population's $G(t)$ trajectories. These simulations had the
   same $10N$ generation burnin, followed by a change in population size
   emulating the bottlenecks associated with creating selection lines. Overall,
@@ -1907,7 +1906,7 @@ directional selection (Supplementary Material Figure \ref{suppfig:gss-G}).
   with replicate population size (since all burnin populations had the same
   size). This implies that the linkage disequilibria is higher in smaller
 populations, due to founder effects, which has the effect inflating the
-temporal covariance as predicted by our theory \parencite{Buffalo2019-io}.}
+temporal covariance as predicted by our theory \parencite{Buffalo2019-io}.
 
 \begin{figure}[!ht]
   \centering

@@ -2002,7 +2002,7 @@ impose directional selection in the same direction across the two populations
 (single). We also vary the type (gradual versus sudden) and magnitude of optima
 shifts in the two populations. Overall, simulations show convergence
 correlations for the sudden optima shifts in Supplementary Figure
-\ref{suppfig:convergence-corrs-gss}. Importantly, optima shifts in the opposite
+\ref{suppfig:convergence-corrs-gss}. Again, optima shifts in the opposite
 direction cause negative convergence correlations. We found that for slow
 moving optima shifts, the convergence correlations are generally too weak to be
 distinguished from zero reliably, (top row of Supplementary Material Figure
@@ -2050,7 +2050,7 @@ lines.}
 In our analysis of the \textcite{Barghi2019-qy} data, we describe our statistic
 $G(t)$ as a lower bound for two reasons: (1) the population is sequenced every
 ten generations, meaning the temporal covariances between adjacent generations
-cannot contribute to the numerator of $G(t)$ but contribute to the denominator,
+cannot contribute to the numerator of $G(t)$ but contributes to the denominator,
 and (2) the estimate of $G(t)$ ignores linked selection's contribution to the
 per-generation variance in allele frequency change (this is the difference
 between our $G(t)$ and $G'(t)$ estimators, the latter of which includes these
@@ -2074,10 +2074,10 @@ that accounts for the linked selection's inflation of the variance in allele
 frequency change between two generations (equation 26, \cite{Buffalo2019-io}).
 Plugging in the drift effective population size $N_e = 1000$ into the
 expression for $G'(t)$ and using the $\var(p_t - p_0)$ calculated for different
-$t$'s, we see that the every generation $G(t)$ that does not account for linked
-selection's inflation of $\var(\Delta p_t)$ does underestimate the true impact
-of linked selection as expected (dashed gray line in Supplementary Figure
-\ref{suppfig:supp-blocks}A).
+$t$'s, we see that $G(t)$ \vb{calculated every generation} does not account for
+linked selection's inflation of $\var(\Delta p_t)$ and underestimates the true
+impact of linked selection as expected (dashed gray line in Supplementary
+Figure \ref{suppfig:supp-blocks}A).
 
 To further understand the effects of calculating temporal covariances every ten
 generations rather than every generation, we also compared their magnitudes and
@@ -2094,7 +2094,7 @@ In our previous work, \textcite{Buffalo2019-io}, we did not investigate whether
 background selection can lead to temporal autocovariance. Here, using
 forward-in-time simulations, we find that background selection can indeed
 generate temporal autocovariance and lead to convergence correlations when
-deleterious haplotypes are shared between populations and both removed by
+deleterious haplotypes are shared between populations and both are removed by
 selection. 
 
 We simulated background selection in a 50 megabase region, where deleterious
@@ -2110,28 +2110,28 @@ introduced per diploid genome, per generation, and simulate values $U = \{0.5,
 \emph{Drosophila} genome is $\approx 140$Mb, our region is $\approx 36\%$ of
 the genome; this implies a reasonable $U$ for our region is $U \approx 0.57$,
 which is close to the bottom end of our parameter range.} We also vary the
-strength of selection against the deleterious mutations, $s = \{0.0, 0.01,
-0.05, 0.1\}$ (where $s=0$ is a neutral control), as well as different
-recombination rates ($r_{bp} = \{10^{-7}, 10^{-8}\}$).  Like other simulations,
-we burnin the population for $10N$ generations under backgrounds selection.
-Overall, we find background selection does create temporal covariance
-(Supplementary Material Figure \ref{suppfig:supp-bgs-covs}), which are stronger
-under (1) higher deleterious mutation rates and (2) larger selection
-coefficients. This latter point initially seems at odds with background
-selection theory, as the level of pairwise diversity in a region under strong
-background selection is invariant with respect to the selection coefficient.
-However, looking at the background selection $G(t)$ trajectories, we find that
-over time, the impact of linked selection created by background selection
-appears to trend towards an equilibrium in the $r_{BP} = 10^{-7}$ subfigure,
-and reaches an equilibrium in the $r_{BP} = 10^{-8}$ subfigure that seems
-reasonably invariant to the choice of $s$ (Supplementary Material Figure
-\ref{suppfig:supp-bgs-g-fix}). We believe that these observations can be
-reconciled by $Cov(\Delta p_t,~ \Delta p_{t^{\prime}})$ being larger for larger
-$s$ when $|t^{\prime}-t|$ is small, but also decaying more rapidly with
-$|t^{\prime}-t|$, such that the overall contribution of selection to allele
-frequency variance is invariant to $s$ (for strong background selection).
-However, further future work is needed to fully explore and understand the
-temporal covariance dynamics of background selection.
+strength of selection against the deleterious mutations, $s = \{0.01, 0.05,
+0.1\}$, as well as different recombination rates ($r_{bp} = \{10^{-7},
+10^{-8}\}$).  Like other simulations, we burnin the population for $10N$
+generations under backgrounds selection.  Overall, we find background selection
+does create temporal covariance (Supplementary Material Figure
+\ref{suppfig:supp-bgs-covs}), which are stronger under (1) higher deleterious
+mutation rates and (2) larger selection coefficients. This latter point
+initially seems at odds with background selection theory, as the level of
+pairwise diversity in a region under strong background selection is invariant
+with respect to the selection coefficient.  However, looking at the background
+selection $G(t)$ trajectories, we find that over time, the impact of linked
+selection created by background selection appears to trend towards an
+equilibrium in the $r_{BP} = 10^{-7}$ subfigure, and reaches an equilibrium in
+the $r_{BP} = 10^{-8}$ subfigure that seems reasonably invariant to the choice
+of $s$ (Supplementary Material Figure \ref{suppfig:supp-bgs-g-fix}). We believe
+that these observations can be reconciled by $Cov(\Delta p_t,~ \Delta
+p_{t^{\prime}})$ being larger for larger $s$ when $|t^{\prime}-t|$ is small,
+but also decaying more rapidly with $|t^{\prime}-t|$, such that the overall
+contribution of selection to allele frequency variance is invariant to $s$ (for
+strong background selection).  However, further future work is needed to fully
+explore and understand the temporal covariance dynamics of background
+selection.
 
 \begin{figure}[!ht]
   \centering
@@ -2179,10 +2179,11 @@ selection can create convergence correlations (Supplementary Material Figure
 in smaller replicate population sizes, as there are fewer shared haplotypes
 carrying the same deleterious alleles between the two populations.
 
-\vb{Finally, we found in these background selection results that including or
+Finally, we found in these background selection results that including or
 excluding sites fixed or lost through time can lead  to differences in the
-estimated $G(t)$ trajectories and temporal covariance. We discuss this extensively in a
-subsequent section, Supplementary Materials Section \ref{supp:fixation}.}
+estimated $G(t)$ trajectories and temporal covariance. We discuss this
+extensively in a subsequent section, Supplementary Materials Section
+\ref{supp:fixation}.
 
 \begin{figure}[!ht]
   \centering
@@ -2199,33 +2200,33 @@ subsequent section, Supplementary Materials Section \ref{supp:fixation}.}
 
 \subsubsection{Truncation Selection.} 
 
-We \vb{also} explored how directional truncation selection generates temporal
-covariances. In these simulations we select the top \vb{10\%, 25\%, or 50\%} of
-the phenotypic distribution of individuals to form the next generation. We
-burnin these simulations \vb{using a neutral burnin routine, where trait
-alleles are selectively neutral until directional selection is imposed}. More
-extreme directional truncation selection generated larger initial covariances
-(Figure \ref{suppfig:supp-trunc}B).  However, weaker truncation selection
-generated more sustained positive covariances and so had a larger long-term
-impact on the variance in allele frequency change.  We again noticed strong
-effect fixation  or loss of sites has on temporal covariance and $G(t)$ under
-truncation selection.  Here, since only a (potentially small) fraction of
-individuals contribute to the next generation, sites can fix over very short
-timescales. Furthermore, the small number of effective breeders contributing to
-the next generation shrinks $N_e$ considerably, which increases $\var(p_t -
-p_0)$, the denominator of $G(t)$. We see the effect of handling fixed/lost
-sites differently, and the faster rate of drift in Supplementary Materials
-Figure \ref{suppfig:supp-trunc}A, where weaker truncation selection actually
-has higher levels of $G(t)$. Looking just at temporal covariances, we find that
+We also explored how directional truncation selection generates temporal
+covariances. In these simulations we select the top 10\%, 25\%, or 50\% of the
+phenotypic distribution of individuals to form the next generation. We burnin
+these simulations using a neutral burnin routine, where trait alleles are
+selectively neutral until directional selection is imposed. More extreme
+directional truncation selection generated larger initial covariances
+(Supplementary Material Figure \ref{suppfig:supp-trunc}B).  However, weaker
+truncation selection generated more sustained positive covariances and so had a
+larger long-term impact on the variance in allele frequency change.  We again
+noticed fixation or loss of sites has \vb{a strong effect} on temporal
+covariance and $G(t)$ under truncation selection.  Here, since only a
+(potentially small) fraction of individuals contribute to the next generation,
+sites can fix over very short timescales.  Furthermore, the small number of
+effective breeders contributing to the next generation shrinks $N_e$
+considerably, which increases $\var(p_t - p_0)$, the denominator of $G(t)$. We
+see \vb{both} the effect of handling fixed/lost sites differently and the
+faster rate of drift in Supplementary Materials Figure
+\ref{suppfig:supp-trunc}A, where weaker truncation selection actually has
+higher levels of $G(t)$. Looking just at temporal covariances, we find that
 stronger truncation selection (e.g.  a smaller tail of individuals selected)
-does lead to greater temporal covariances. \vb{Overall, these truncation
-  selection simulations demonstrate the value of considering both absolute
-  measures of selection's effect on allele frequency changes, i.e. temporal
-  covariance, as well as measures relative to drift, i.e. the $G(t)$
-  trajectories. While selecting a smaller tail of individuals is associated
-  with \emph{stronger} selection, it also is leading to a faster rate of drift,
-which can distort conclusions inferred from considering the $G(t)$ trajectories
-alone.}
+does lead to greater temporal covariances. Overall, these truncation selection
+simulations demonstrate the value of considering both absolute measures of
+selection's effect on allele frequency changes, i.e. temporal covariance, as
+well as measures relative to drift, i.e. the $G(t)$ trajectories. While
+selecting a smaller tail of individuals is associated with \emph{stronger}
+selection, it also is leading to a faster rate of drift, which can distort
+conclusions inferred from considering the $G(t)$ trajectories alone.
 
 
 \begin{figure}[!ht]
@@ -2305,9 +2306,9 @@ covariances at more distant timepoints ($k=2$). }
 To ensure that our findings were robust to handling sites with a frequency of
 zero or one differently, we regenerated Figures \ref{fig:figure-1} and Figure
 \ref{fig:figure-3} but excluded frequencies of zero or one. Specifically, we
-wanted to ensure that our finding that \vb{temporal covariances were negative
-at later timepoints} was not spuriously caused by the way fixed or lost sites
-are handled. We see no qualitative difference (Supplementary Material Figures
+wanted to ensure that our finding that temporal covariances were negative at
+later timepoints was not spuriously caused by the way fixed or lost sites are
+handled. We see no qualitative difference (Supplementary Material Figures
 \ref{suppfig:supp-fig-1-nofix} and \ref{suppfig:supp-fig-3-nofix}) that emerges
 when sites with frequency zero or one are excluded.
 
@@ -2336,10 +2337,11 @@ We have investigated the effectiveness of our correction on real data by
 exploiting the relationship between sampling depth and the magnitude of the
 variance and covariance biases, and comparing the observed variances and
 covariances before and after correction. We plot the variance and covariance
-(between adjacent timepoints) before and after the bias correction against the
-average sample depth in 100kb genomic windows in Figure
+(between adjacent time intervals) before and after the bias correction against
+the average sample depth in 100kb genomic windows in Figure
 \ref{suppfig:barghi-correction}. Overall, we find the biased-correction
-procedure removes the relationship between variance and covariance and depth, indicating it is working adequately.
+procedure removes the relationship between variance and covariance and depth,
+indicating it is working adequately.
 
 \begin{figure}[!ht]
   \centering
@@ -2427,12 +2429,13 @@ genomic windows.
   \centering
   \includegraphics[]{figures/barghi-trimmed-mean.pdf}
 
-  \caption{The genome-wide covariance ($\cov(\Delta p_0, \Delta p_10)$ pooling
-    all replicates) averaged (red line) and the median windowed covariance
-    (blue) for the \textcite{Barghi2019-qy} dataset. The trimmed average window
-    covariance, excluding the $\alpha$ lower and upper tails, converges to the
-     median windowed covariance. This indicates that genome-wide covariance are
-     not being overly dominated by a large-effect loci in few windows.}
+  \caption{The genome-wide covariance ($\cov(\Delta p_0, \Delta p_{10})$
+    pooling all replicates) averaged (red line) and the median windowed
+    covariance (blue) for the \textcite{Barghi2019-qy} dataset. The trimmed
+    average window covariance, excluding the $\alpha$ lower and upper tails,
+    converges to the median windowed covariance. This indicates that
+  genome-wide covariances are not being overly dominated by a large-effect loci
+in few windows.}
 
   \label{suppfig:barghi-trimmed-mean}
 \end{figure}

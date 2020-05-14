@@ -1,7 +1,7 @@
 \documentclass[11pt]{article}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL old.tex          Thu May 14 10:13:08 2020
-%DIF ADD manuscript.tex   Thu May 14 12:16:20 2020
+%DIF ADD manuscript.tex   Thu May 14 13:15:09 2020
 \RequirePackage{fullpage}
 \RequirePackage[font=small,labelfont=bf]{caption}
 \RequirePackage{amsmath,amssymb,amsthm}
@@ -272,7 +272,7 @@ frequency changes \parencite{Buffalo2019-io}.  These covariances are \DIFdelbegi
 temporal genomic data and are }\DIFdelend created
 when the loci that underly heritable fitness variation perturb the frequencies
 of linked \DIFdelbegin \DIFdel{neutral }\DIFdelend alleles; in contrast, when genetic drift acts alone in a closed
-population, these covariances are zero in expectation \DIFaddbegin \DIFadd{for neutral alleles}\DIFaddend .
+population, these covariances are \DIFdelbegin \DIFdel{zero in expectation}\DIFdelend \DIFaddbegin \DIFadd{expected to be zero for neutral alleles}\DIFaddend .
 Mathematically, temporal covariances are useful because it is natural to
 decompose the total variance in allele frequency change across a \DIFdelbegin \DIFdel{set of time intervals }\DIFdelend \DIFaddbegin \DIFadd{time interval
 }\DIFaddend into the variances and covariances in allele frequency change \DIFdelbegin \DIFdel{among time intervals}\DIFdelend \DIFaddbegin \DIFadd{between
@@ -1178,16 +1178,28 @@ to GC.
 
 \printbibliography
 
-\DIFaddbegin \setcounter{equation}{0}
+\DIFdelbegin %DIFDELCMD < \setcounter{section}{1}
+%DIFDELCMD < %%%
+\DIFdelend \section*{Supplementary Material}
+\DIFdelbegin %DIFDELCMD < \beginsupplement
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{equation}{0}
 \renewcommand{\theequation}{S\arabic{equation}}
-\DIFaddend \setcounter{section}{1}
-\DIFaddbegin \renewcommand{\thesection}{S\arabic{section}}
-\DIFaddend \section*{Supplementary Material}
-\beginsupplement
+\setcounter{section}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\DIFaddend 
 
-\subsection{Estimator Bias Correction}
-\subsubsection{Correcting variance bias with a single depth sampling process}
-\label{supp:depth-var-corr}
+
+\DIFaddbegin \section{\DIFadd{Estimator Bias Correction}}
+\DIFaddend \subsection{\DIFdelbegin \DIFdel{Estimator Bias Correction}\DIFdelend \DIFaddbegin \DIFadd{Correcting variance bias with a single depth sampling process}\DIFaddend }
+\DIFdelbegin \subsubsection{\DIFdel{Correcting variance bias with a single depth sampling process}}
+%DIFAUXCMD
+\addtocounter{subsubsection}{-1}%DIFAUXCMD
+\DIFdelend \label{supp:depth-var-corr}
 
 Following \textcite{Waples1989-sj}, we have that the variance in allele
 frequency change at a locus in the initial generation, which is entirely due to
@@ -1278,8 +1290,11 @@ unbiased sample estimators, e.g. $\frac{d_t}{d_t-1} \widetilde{p}_t (1-
   \frac{d_0-1}{d_0} \frac{\var(\widetilde{p}_1 - \widetilde{p}_0)}{\widetilde{p}_0(1-\widetilde{p}_0)} - \frac{(d_0-1)}{d_0 (d_1 - 1)} \frac{\widetilde{p}_1(1-\widetilde{p}_1)}{\widetilde{p}_0(1-\widetilde{p}_0)} - \frac{1}{d_0} + \frac{C}{N}  &= \frac{\var(\Delta_{_H} p_0)}{p_0(1-p_0)} + \frac{1}{2N} 
 \end{align}
 
-\subsubsection{Correcting variance bias with individual and depth sampling processes}
-\label{supp:ind-depth-var-corr}
+\DIFdelbegin \subsubsection{\DIFdel{Correcting variance bias with individual and depth sampling processes}}
+%DIFAUXCMD
+\addtocounter{subsubsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \subsection{\DIFadd{Correcting variance bias with individual and depth sampling processes}}
+\DIFaddend \label{supp:ind-depth-var-corr}
 
 Here, we extend the sampling bias correction described above to handle two
 binomial sampling processes: one as individuals are binomially sampled from the
@@ -1331,8 +1346,11 @@ to get a biased-corrected estimate of the variance in allele frequency change
 between adjacent generations, $\var(\Delta p_t)$. 
 
 
-\subsubsection{Covariance Correction}
-\label{supp:cov-corr}
+\DIFdelbegin \subsubsection{\DIFdel{Covariance Correction}}
+%DIFAUXCMD
+\addtocounter{subsubsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \subsection{\DIFadd{Covariance Correction}}
+\DIFaddend \label{supp:cov-corr}
 
 We also need to apply a bias correction to the temporal covariances (and
 possibly the replicate covariances if the initial sample frequencies are all
@@ -1345,8 +1363,11 @@ of this bias, derived above, back in. We discuss this in more detail below in
 deriving the bias correction for the temporal-replicate variance covariance
 matrix.
 
-\subsubsection{Temporal-Replicate Covariance Matrix Correction}
-\label{supp:matrix-correction}
+\DIFdelbegin \subsubsection{\DIFdel{Temporal-Replicate Covariance Matrix Correction}}
+%DIFAUXCMD
+\addtocounter{subsubsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \subsection{\DIFadd{Temporal-Replicate Covariance Matrix Correction}}
+\DIFaddend \label{supp:matrix-correction}
 
 In practice, we simultaneously estimate the temporal and replicate covariance
 matrices for each replicate, which we call the temporal-replicate covariance
@@ -1433,8 +1454,11 @@ for replicate $r$, $\mathbf{Q}_{r,r}$, we apply the following correction
 %
 where $b_{r,t}$ is element in row $r$ and column $t$ of $\mathbf{B}$.
 
-\subsubsection{\textcite{Barghi2019-qy} Temporal Covariances}
-\label{supp:barghi-covs}
+\DIFdelbegin \subsubsection{\DIFdel{\textcite{Barghi2019-qy} Temporal Covariances}}
+%DIFAUXCMD
+\addtocounter{subsubsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \section{\DIFadd{\textcite{Barghi2019-qy} Temporal Covariances}}
+\DIFaddend \label{supp:barghi-covs}
 
 Since each replicate population was sequenced every ten generations, the
 timepoints $t_0 = 0$ generations, $t_1 = 10$ generations, $t_2 = 20$
@@ -1456,8 +1480,11 @@ directly estimate the contribution of linked selection to the variance in
 allele frequency change here, the presence of a positive observed covariance
 between allele frequency change can only be caused linked selection. 
 
-\subsection{Block Bootstrap Procedure}
-\label{supp:block-bootstrap}
+\DIFdelbegin \subsection{\DIFdel{Block Bootstrap Procedure}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \section{\DIFadd{Block Bootstrap Procedure}}
+\DIFaddend \label{supp:block-bootstrap}
 
 % TODO: put equations in?
 
@@ -1491,8 +1518,11 @@ estimate the $1-\alpha = 95\%$ pivot confidence intervals (p. 33
 where $\widehat{\theta}$ is the estimate, and $q_x$ is bootstrap quantile for
 probability $x$.
 
-\subsection{Replicate \DIFdelbegin \DIFdel{$G$ }\DIFdelend \DIFaddbegin \DIFadd{$G(t)$ }\DIFaddend and Partitioning the Variance in Allele Frequency}
-\label{supp:replicate-g}
+\DIFdelbegin \subsection{\DIFdel{Replicate $G$ and Partitioning the Variance in Allele Frequency}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \section{\DIFadd{Replicate $G(t)$ and Partitioning the Variance in Allele Frequency}}
+\DIFaddend \label{supp:replicate-g}
 
 We define a statistic similar to \DIFdelbegin \DIFdel{$G$ }\DIFdelend \DIFaddbegin \DIFadd{$G(t)$ }\DIFaddend for estimating the proportion of allele
 frequency change common between two replicate populations due to linked
@@ -1612,7 +1642,10 @@ we can estimate the drift, unique selection effect, and shared selection effect
 terms using the fact that,
 }\DIFaddend 
 
-\DIFaddbegin \begin{align}
+\DIFdelbegin \subsection{\DIFdel{The Empirical Neutral Null Windowed Covariance Distribution}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \begin{align}
   \DIFadd{\Delta p_{t,\mathrm{LS1}} }&\DIFadd{= \Delta_{_D} p_{t,\mathrm{LS1}} + \Delta_{_{U}} p_{t,\mathrm{LS1}} + \Delta_{_\mathrm{LS}} p_t }\\ 
   \DIFadd{\Delta p_{t,\mathrm{LS2}} }&\DIFadd{= \Delta_{_D} p_{t,\mathrm{LS2}} + \Delta_{_{U}} p_{t,\mathrm{LS2}} + \Delta_{_\mathrm{LS}} p_t }\\ 
   \DIFadd{\Delta p_{t,\mathrm{Ctrl}} }&\DIFadd{= \Delta_{_D} p_{t,\mathrm{Ctrl}}.
@@ -1666,8 +1699,8 @@ of unique and shared effects of selection, we use a block bootstrap procedure
 as described in Supplementary Materials Section \ref{supp:block-bootstrap}.
 }
 
-\DIFaddend \subsection{The Empirical Neutral Null Windowed Covariance Distribution}
-\label{supp:empirical-null}
+\section{\DIFadd{The Empirical Neutral Null Windowed Covariance Distribution}}
+\DIFaddend \label{supp:empirical-null}
 
 To detect an excess of genomic regions with unusually high or low covariances,
 we need to compare the distribution of observed windowed covariances to a null
@@ -1725,8 +1758,11 @@ recapitulate the same pattern (Supplementary Figure
 %probabilities do still indicate a reverse in the direction of selection. }
 
 
-\subsection{\textcite{Bergland2014-ij} Re-Analysis}
-\label{supp:bergland-reanalysis}
+\DIFdelbegin \subsection{\DIFdel{\textcite{Bergland2014-ij} Re-Analysis}}
+%DIFAUXCMD
+\addtocounter{subsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \section{\DIFadd{\textcite{Bergland2014-ij} Re-Analysis}}
+\DIFaddend \label{supp:bergland-reanalysis}
 
 
 We also applied our temporal covariance approach to \textcite{Bergland2014-ij},
@@ -1879,10 +1915,15 @@ see strong evidence of selection (non-zero temporal covariances), yet the
 pattern does not follow that of seasonal fluctuating selection.  
 
 
-\DIFaddbegin \subsection{\DIFadd{Approximating the Reduction in Diversity from $G(t)$}}
+\DIFdelbegin %DIFDELCMD < \setcounter{section}{1}
+%DIFDELCMD < %%%
+\section*{\DIFdel{Supplementary Figures}}
+%DIFAUXCMD
+\DIFdelend \DIFaddbegin \section{\DIFadd{Approximating the Reduction in Diversity from $G(t)$}}
 \label{supp:reduction-approx}
+\DIFaddend 
 
-\DIFadd{To help reconcile our measure of linked selection, $G(t)$, with familiar
+\DIFaddbegin \DIFadd{To help reconcile our measure of linked selection, $G(t)$, with familiar
 expressions as a reduction in neutral diversity, as parameterized by $N_e$, we
 develop some rough approximations here. Note, however, that since linked
 selection generates temporal covariance, the overall effect is qualitatively
@@ -1995,7 +2036,7 @@ long timespans in a closely related species. }}
 
 
 
-\subsection{\DIFadd{Simulation Results}}
+\section{\DIFadd{Simulation Results}}
 \label{supp:forward}
 
 \DIFadd{We conducted extensive simulations to understand how temporal covariance,
@@ -2030,7 +2071,7 @@ routines are available in the Github repository
 }\url{https://github.com/vsbuffalo/cvtk/}\DIFadd{.
 }
 
-\subsubsection{\DIFadd{The Effects of the Genetic Architecture under Exponential Directional Selection}}
+\subsection{\DIFadd{The Effects of the Genetic Architecture under Exponential Directional Selection}}
 \label{supp:genetic-arch}
 
 \DIFadd{We first investigated the effects of the selected trait's genetic architecture
@@ -2123,7 +2164,7 @@ same qualitative result.
 %DIF > \vb{TODO: note about different burnin pops?}
 
 
-\subsubsection{\DIFadd{Temporal Covariances and $G(t)$ under Gaussian Stabilizing Selection}}
+\subsection{\DIFadd{Temporal Covariances and $G(t)$ under Gaussian Stabilizing Selection}}
 
 \begin{figure}[!ht]
   \centering
@@ -2232,7 +2273,7 @@ and the light gray points are before.}}
 \end{figure}
 
 
-\subsubsection{\DIFadd{Convergence Correlations}}
+\subsection{\DIFadd{Convergence Correlations}}
 
 \DIFadd{Using the same exponential fitness function simulations described above, we
 also investigated how the convergence correlation is impacted by (1) genetic
@@ -2327,7 +2368,7 @@ lines.}}
   \label{suppfig:convergence-corrs-gss}
 \end{figure}
 
-\subsubsection{\DIFadd{Sampling in Temporal Blocks}}
+\subsection{\DIFadd{Sampling in Temporal Blocks}}
 \label{supp:tempblocks}
 
 \begin{figure}[!ht]
@@ -2394,7 +2435,7 @@ block temporal covariance is the sum of 45 temporal covariances between
 adjacent generations (e.g. $10 \choose 2$).
 }
 
-\subsubsection{\DIFadd{Background Selection}}
+\subsection{\DIFadd{Background Selection}}
 
 \DIFadd{In our previous work, \textcite{Buffalo2019-io}, we did not investigate whether
 background selection can lead to temporal autocovariance. Here, using
@@ -2507,7 +2548,7 @@ extensively in a subsequent section, Supplementary Materials Section
 \end{figure}
 
 
-\subsubsection{\DIFadd{Truncation Selection.}} 
+\subsection{\DIFadd{Truncation Selection}} 
 
 \DIFadd{We also explored how directional truncation selection generates temporal
 covariances. In these simulations we select the top 10\%, 25\%, or 50\% of the
@@ -2559,7 +2600,7 @@ conclusions inferred from considering the $G(t)$ trajectories alone.
 
 
 
-\subsubsection{\DIFadd{The Effect of Fixations in the empirical datasets}}
+\subsection{\DIFadd{The Effect of Fixations in the Empirical Datasets}}
 \label{supp:fixation}
 
 \DIFadd{In our simulation results, we noticed the temporal covariances and $G(t)$
@@ -2625,10 +2666,12 @@ handled. We see no qualitative difference (Supplementary Material Figures
 when sites with frequency zero or one are excluded.
 }
 
-\DIFaddend \setcounter{section}{1}
-\section*{Supplementary Figures}
+\newpage
+\clearpage
 
-\subsection{PCA of \textcite{Barghi2019-qy} replicates}
+\section{\DIFadd{Supplementary Figures}}
+
+\DIFaddend \subsection{PCA of \textcite{Barghi2019-qy} replicates}
 
 \begin{figure}[!ht]
   \centering
@@ -2644,7 +2687,9 @@ when sites with frequency zero or one are excluded.
   \label{suppfig:barghi-pca}
 \end{figure}
 
-\subsection{Bias Correction for \textcite{Barghi2019-qy}}
+\DIFaddbegin \clearpage
+
+\DIFaddend \subsection{Bias Correction for \textcite{Barghi2019-qy}}
 
 We have investigated the effectiveness of our correction on real data by
 exploiting the relationship between sampling depth and the magnitude of the
@@ -2675,8 +2720,11 @@ right) from the regression due to large differences in average coverage.}
 
 \clearpage
 
-\subsubsection{\textcite{Barghi2019-qy} Temporal Covariances Per Replicate}
-\begin{figure}[!ht]
+\DIFdelbegin \subsubsection{\DIFdel{\textcite{Barghi2019-qy} Temporal Covariances Per Replicate}}
+%DIFAUXCMD
+\addtocounter{subsubsection}{-1}%DIFAUXCMD
+\DIFdelend \DIFaddbegin \subsection{\DIFadd{\textcite{Barghi2019-qy} Temporal Covariances Per Replicate}}
+\DIFaddend \begin{figure}[!ht]
   \centering
   \includegraphics[width=\textwidth]{figures/barghi-cov-panels.pdf}
 

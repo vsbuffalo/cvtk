@@ -207,7 +207,7 @@ temporal autocovariance (i.e. covariance between two timepoints) in allele
 frequency changes \parencite{Buffalo2019-io}.  These covariances are created
 when the loci that underly heritable fitness variation perturb the frequencies
 of linked alleles; in contrast, when genetic drift acts alone in a closed
-population, these covariances are zero in expectation for neutral alleles.
+population, these covariances are expected to be zero for neutral alleles.
 Mathematically, temporal covariances are useful because it is natural to
 decompose the total variance in allele frequency change across a time interval
 into the variances and covariances in allele frequency change between
@@ -977,6 +977,8 @@ to GC.
 \printbibliography
 
 \section*{Supplementary Material}
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
 \setcounter{equation}{0}
 \renewcommand{\theequation}{S\arabic{equation}}
 \setcounter{section}{0}

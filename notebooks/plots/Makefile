@@ -12,7 +12,7 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 	../../manuscript/figures/fig-bgs-covars.pdf  ../../manuscript/figures/fig-convergence-corrs.pdf \
 	../../manuscript/figures/fig-bgs-G.pdf \
 	../../manuscript/figures/fig-supp-blocks.pdf ../../manuscript/figures/castro_corr_cis.pdf \
-	../../manuscript/figures/kh_rep_corrs_cis.pdf ../../manuscript/figures/figure-2-revision.pdf \
+	../../manuscript/figures/kh_rep_corrs_cis.pdf ../../manuscript/figures/figure-2-pnas.pdf \
 	 ../../manuscript/figures/figure-1-revision.pdf ../../manuscript/figures/figure-3-revision.pdf \
 	 ../../manuscript/figures/fig-bgs-G-with-fixations.pdf ../../manuscript/figures/fig-bgs-G-without-fixations.pdf \
 	 ../../manuscript/figures/fig-bgs-covars-with-fixations.pdf ../../manuscript/figures/fig-bgs-covars-without-fixations.pdf \
@@ -109,7 +109,7 @@ all: ../../manuscript/figures/figure-1.pdf ../../manuscript/figures/figure-2.pdf
 ../../manuscript/figures/castro_corr_cis.pdf: castro_corr_cis.pdf
 		cp $< $@
 
-../../manuscript/figures/figure-2-revision.pdf: figure-2-revision.pdf
+../../manuscript/figures/figure-2-pnas.pdf: figure-2-pnas.pdf
 		cp $< $@
 
 ../../manuscript/figures/figure-1-revision.pdf: figure-1-revision.pdf

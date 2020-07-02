@@ -697,38 +697,37 @@ between adjacent generations. Furthermore, our estimation methods are
 intentionally conservative, for example they exclude the contribution of
 selection that does not persist across generations and selection that reverses
 sign; thus they can be seen as a lower bound of the effects of selection, which
-we have confirmed through forward-in-time simulations.  \vb{Future work could
-  refine our estimates by including selection's impact on the variance in
-  allele frequency terms (e.g. see equation 26 of \textcite{Buffalo2019-io}),
-  and possibly quantifying the covariances missed when sequencing is not done
-  each generation; both would lead to less conservative estimates that could
-  show a large impact of selection.  Finally, through simulation results, we
-  show that for a given level of additive genetic variance, the strengths of
-  temporal and replicate covariances depend on the mode of selection, the
-  details of the populations or selection experiment, and the level of linkage
-disequilibria, yet the level of temporal covariance is relatively invariant to
-the number of loci underlying fitness, as long as fitness is sufficiently
-polygenic.} 
+we have confirmed through forward-in-time simulations.  \vb{Finally, through
+  simulation results, we show that for a given level of additive genetic
+  variance, the strengths of temporal and replicate covariances depend on the
+  mode of selection, the details of the populations or selection experiment,
+  and the level of linkage disequilibria, yet the level of temporal covariance
+  is relatively invariant to the number of loci underlying fitness, as long as
+fitness is sufficiently polygenic.} 
 
 These estimates of the contribution of selection could be refined by using
-patterns of linkage disequilibria (LD) and recombination which would allow
-us to more fully parameterize a linked-selection model of temporal allele
-frequency change \cite{Buffalo2019-io}. The basic prediction is that
-regions of higher linkage disequilibrium and lower recombination should have
-greater temporal autocovariance than regions with lower LD and higher
-recombination. However, one limitation of these pooled sequence datasets is
-that none of the studies we reanalyzed estimated linkage disequilibria data for
-the evolved populations.  While there are LD data for a natural population of
-\emph{D. simulans} \cite{Signor2018-wg,Howie2018-ay},  we did not find a
-relationship between temporal covariance and LD.  We believe this is driven by
-the idiosyncratic nature of LD in evolve-and-resequence populations, which
-often extends over large genomic distances
-\cite{Nuzhdin2013-gf,Kelly2019-dc}. Future studies complete with LD data
-and recombination maps would allow one to disentangle the influence of closely
-linked sites from more distant sites in causing temporal autocovariance, and
-allow the fitting of more parametric models to estimate population parameters
-such as the additive genetic variance for fitness directly from temporal
-genomic data alone \cite{Buffalo2019-io}.
+patterns of linkage disequilibria (LD) and recombination which would allow us
+to more fully parameterize a linked-selection model of temporal allele
+frequency change \cite{Buffalo2019-io}. The basic prediction is that regions of
+higher linkage disequilibrium and lower recombination should have greater
+temporal autocovariance than regions with lower LD and higher recombination.
+However, one limitation of these pooled sequence datasets is that none of the
+studies we reanalyzed estimated linkage disequilibria data for the evolved
+populations.  While there are LD data for a natural population of \emph{D.
+simulans} \cite{Signor2018-wg,Howie2018-ay},  we did not find a relationship
+between temporal covariance and LD.  We believe this is driven by the
+idiosyncratic nature of LD in evolve-and-resequence populations, which often
+extends over large genomic distances \cite{Nuzhdin2013-gf,Kelly2019-dc}. Future
+studies complete with LD data and recombination maps would allow one to
+disentangle the influence of closely linked sites from more distant sites in
+causing temporal autocovariance, and allow the fitting of more parametric
+models to estimate population parameters such as the additive genetic variance
+for fitness directly from temporal genomic data alone \cite{Buffalo2019-io}.
+\vb{Future work could refine our $G(t)$ estimates by including selection's
+  impact on the variance in allele frequency terms (e.g. see equation 26 of
+\cite{Buffalo2019-io}), and possibly quantifying the covariances missed when
+sequencing is not done each generation; both would lead to less conservative
+estimates that could show a large impact of selection. }
 
 Our primary focus here has been on evolution in laboratory populations. It is
 unclear whether we should expect a similar impact of selection in natural

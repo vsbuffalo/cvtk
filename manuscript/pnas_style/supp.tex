@@ -872,7 +872,7 @@ routines are available in the Github repository
 We first investigated the effects of the selected trait's genetic architecture
 on temporal covariances and $G(t)$ by neutrally burning in a population for
 $10N$ generations, and selecting on the trait with an exponential fitness
-function \vb{(where fitness of a trait value $z$ is $w(z) \propto \exp(x)$)}.
+function \vb{(where fitness of a trait value $z$ is $w(z) \propto \exp(z)$)}.
 The exponential fitness function corresponds to multiplicative selection across
 sites and so serves as the simplest directional selection model of a trait to
 understand the effects of genetic architecture on the statistics we have used
@@ -906,7 +906,7 @@ $\pm \alpha$ with equal probability, where $\alpha$ was set to target a
 particular additive genetic variance for the trait, $V_A$, for the target
 number of selected sites $L$. 
 
-Overall, we \vb{again see a} finding in \textcite{Buffalo2019-io}: that the
+Overall, we \vb{again see a} finding of \textcite{Buffalo2019-io}: that the
 initial expected temporal covariance conditioned on $V_A$, is invariant to the
 number of loci determining the trait's value, $L$ (Supplementary Figure
 \ref{suppfig:sim-expfit-covs}). We do find some evidence that the decay in
@@ -1181,9 +1181,17 @@ $G(t)$ as a lower bound for two reasons: (1) the population is sequenced every
 ten generations, meaning the temporal covariances between adjacent generations
 cannot contribute to the numerator of $G(t)$ but contributes to the
 denominator, and (2) the estimate of $G(t)$ ignores linked selection's
-contribution to the per-generation variance in allele frequency change (this is
-the difference between our $G(t)$ and $G'(t)$ estimators, the latter of which
-\vb{is defined in \textcite{Buffalo2019-io} and} includes these variance terms.
+contribution to the per-generation variance in allele frequency change. \vb{ In
+\textcite{Buffalo2019-io}, we define an alternative estimator
+that includes selection's effects on these variance terms,
+
+\begin{equation}
+  G'(t) = 1 - \frac{t\E(p_0(1-p_0))}{2 {N_e}\var(p_t - p_0)},
+\end{equation}
+%
+which can be calculated when the drift-effective population size $N_e$ can
+be estimated (see equation 26 in \cite{Buffalo2019-io} for details).}
+
 To verify that $G(t)$ estimated every ten generations is indeed a lower bound,
 we used a simulation procedure similar to the exponential fitness function
 simulations (described in Supplementary Material Section
@@ -1198,17 +1206,14 @@ versus every ten generations, we confirm that the ten-generation block $G(t)$
 is a lower bound of the $G(t)$ trajectory when sampling is every generation
 (red and blue lines in Supplementary Figure \ref{suppfig:supp-blocks}A).
 Furthermore, since we control the population size \vb{and reproductive sampling
-scheme} in our simulations at $N = 1000$ diploids, we know the drift effective
-population size in the absence of selection. This allows us to estimate
-$G'(t)$, which is a measure of $G(t)$ that accounts for the linked selection's
-inflation of the variance in allele frequency change between two generations
-\vb{($G'(t) = 1 - \nicefrac{t\E(p_0(1-p_0))}{2 \hat{N}\var(p_t - p_0)}$  see
-equation 26 of \cite{Buffalo2019-io}} for more detail).  Plugging in the drift
-effective population size $N_e = 1000$ into the expression for $G'(t)$ and
-using the $\var(p_t - p_0)$ calculated for different $t$'s, we see that $G(t)$
-calculated every generation does not account for linked selection's inflation
-of $\var(\Delta p_t)$ and underestimates the true impact of linked selection as
-expected (dashed gray line in Supplementary Figure \ref{suppfig:supp-blocks}A).
+scheme} in our simulations at $N = 1000$ diploids, we know the drift-effective
+population size in the absence of selection, \vb{which allows us to estimate
+$G'(t)$}. Plugging in the drift-effective population size $N_e = 1000$ into
+the expression for $G'(t)$ and using the $\var(p_t - p_0)$ calculated for
+different $t$'s, we see that $G(t)$ calculated every generation does not
+account for linked selection's inflation of $\var(\Delta p_t)$ and
+underestimates the true impact of linked selection as expected (dashed gray
+line in Supplementary Figure \ref{suppfig:supp-blocks}A).
 
 To further understand the effects of calculating temporal covariances every ten
 generations rather than every generation, we also compared their magnitudes and

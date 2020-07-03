@@ -169,7 +169,7 @@ def replicate_average_het_matrix(hets, R, T, L):
     return avehet_min
 
 
-def var_by_group(groups, freqs, t=None, depths=None, diploids=None, 
+def var_by_group(groups, freqs, t=None, depths=None, diploids=None,
                  bias_correction=True, deltas=None, progress_bar=False,
                  standardize=True):
     group_depths, group_diploids, group_deltas = None, None, None
@@ -186,7 +186,7 @@ def var_by_group(groups, freqs, t=None, depths=None, diploids=None,
         if deltas is not None:
             group_deltas = view_along_axis(deltas, indices, 2)
         tile_vars = total_variance(group_freqs,
-                                   depths=group_depths, 
+                                   depths=group_depths,
                                    diploids=group_diploids,
                                    t=t, standardize=standardize,
                                    bias_correction=bias_correction)
@@ -195,7 +195,7 @@ def var_by_group(groups, freqs, t=None, depths=None, diploids=None,
 
 
 def cov_by_group(groups, freqs, depths=None, diploids=None, standardize=True,
-                 bias_correction=True, deltas=None, use_masked=False, 
+                 bias_correction=True, deltas=None, use_masked=False,
                  share_first=False, return_ratio_parts=False,
                  progress_bar=False):
     group_depths, group_deltas = None, None
@@ -213,9 +213,9 @@ def cov_by_group(groups, freqs, depths=None, diploids=None, standardize=True,
         if deltas is not None:
             group_deltas = view_along_axis(deltas, indices, 2)
         res = temporal_replicate_cov(group_freqs,
-                                     depths=group_depths, 
+                                     depths=group_depths,
                                      diploids=diploids,
-                                     bias_correction=bias_correction, 
+                                     bias_correction=bias_correction,
                                      standardize=standardize,
                                      use_masked=use_masked,
                                      share_first=share_first,
@@ -254,9 +254,10 @@ def stack_replicate_covs_by_group(covs, R, T, stack=True, **kwargs):
 
 
 
-def temporal_replicate_cov(freqs, depths=None, diploids=None, 
-                           bias_correction=True, standardize=True, deltas=None, 
-                           use_masked=False, share_first=False, 
+def temporal_replicate_cov(freqs, depths=None, diploids=None,
+                           bias_correction=True, standardize=True, deltas=None,
+                           use_masked=False, share_first=False,
+                           product_only=False,
                            return_ratio_parts=False, warn=False):
     """
     Params:
@@ -284,17 +285,17 @@ def temporal_replicate_cov(freqs, depths=None, diploids=None,
     het_denom = replicate_average_het_matrix(mean_hets, R, T, L) / 2.
 
     # With all the statistics above calculated, we can flatten the deltas
-    # matrix # for the next calculations. This simply rolls replicates and 
+    # matrix # for the next calculations. This simply rolls replicates and
     # timepoints into 'samples'.
     deltas = flatten_matrix(deltas, R, T, L)
 
     # Assert that the deltas matrix is 2D (i.e. if it's for replicate
     # temporal design, it's already been flattened to (R x T) x L matrix)
-    # and is of right dimension. 
+    # and is of right dimension.
     assert(deltas.ndim == 2)
     RxT, L = deltas.shape
     # The depths and diploids matrices are kept
-    # in 3D, as thse corrections only affect the temporal covariance 
+    # in 3D, as thse corrections only affect the temporal covariance
     # submatrices along the diagonal.
     if depths is not None:
         assert(depths.shape == (R, T+1, L))
@@ -304,9 +305,15 @@ def temporal_replicate_cov(freqs, depths=None, diploids=None,
     # calculate variance-covariance matrix
     if use_masked:
         deltas_masked = np.ma.masked_invalid(deltas)
-        cov = np.ma.cov(deltas_masked, bias=True).data
+        if product_only:
+            cov = np.ma.dot(deltas_masked, deltas_masked.T) / L
+        else:
+            cov = np.ma.cov(deltas_masked, bias=True).data
     else:
-        cov = np.cov(deltas, bias=True)
+        if product_only:
+            cov = deltas @ deltas.T / L
+        else:
+            cov = np.cov(deltas, bias=True)
 
     if not bias_correction:
         if return_ratio_parts:
@@ -315,7 +322,7 @@ def temporal_replicate_cov(freqs, depths=None, diploids=None,
             with np.errstate(divide=warn_type, invalid=warn_type):
                 cov = cov / het_denom
         return cov
-        
+
 
     # correction arrays — these are built up depending on input
     ave_bias = np.zeros((R, (T+1)))
@@ -340,7 +347,7 @@ def temporal_replicate_cov(freqs, depths=None, diploids=None,
     if share_first:
         #import pdb; pdb.set_trace()
         cov = cov - ave_bias[0, 0]
-    # the covariance correction is a bit trickier: it's off diagonal elements, but 
+    # the covariance correction is a bit trickier: it's off diagonal elements, but
     # after every Tth entry does not need a correction, as it's a between replicate
     # covariance. We append a zero column, and then remove the last element.
     covar_correction += np.hstack((ave_bias[:, 1:-1], np.zeros((R, 1)))).reshape(R*T)[:-1]
@@ -357,7 +364,7 @@ def temporal_replicate_cov(freqs, depths=None, diploids=None,
     return cov
 
 
-def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True, 
+def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True,
                    bias_correction=True, warn=False):
     """
     Calculate the Var(p_t - p_0) across all replicates.
@@ -367,12 +374,7 @@ def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True,
         t = ntimepoints-1
     assert(t < ntimepoints)
     pt_p0 = (freqs[:, t, :] - freqs[:, 0, :])
-    var_pt_p0 = pt_p0.var(axis=1)
-
-    if not bias_correction:
-        if standardize:
-            return var_pt_p0 / np.nanmean(hets[:, 0, :], axis=1)
-        return var_pt_p0 
+    var_pt_p0 = np.nanvar(pt_p0, axis=1)
 
     diploid_correction = 0.
     depth_correction = 0.
@@ -389,6 +391,13 @@ def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True,
                 diploid_correction = diploid_correction + b
     # the bias vector for all timepoints
     hets = calc_hets(freqs, depths=depths, diploids=diploids)[:, (0, t), :]
+
+    if not bias_correction:
+        if standardize:
+            # note: factor of two issue was found here in revisions and fixed
+            return var_pt_p0 / (0.5 * np.nanmean(hets[:, 0, :], axis=1))
+        return var_pt_p0
+
     ave_bias += np.nanmean(0.5 * hets * (diploid_correction + depth_correction), axis=2)
     var_correction += (- ave_bias[:, 0] - ave_bias[:, 1])
     out =  var_pt_p0 + var_correction
@@ -398,6 +407,7 @@ def total_variance(freqs, depths=None, diploids=None, t=None, standardize=True,
         msg = "Some bias-corrected variances were negative!"
         warnings.warn(msg)
     if standardize:
-        out = out / np.nanmean(hets[:, 0, :], axis=1)
+        # note: factor of two issue was found here in revisions and fixed
+        out = out / (0.5 * np.nanmean(hets[:, 0, :], axis=1))
     return out
- 
+

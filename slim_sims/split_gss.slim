@@ -1,0 +1,188 @@
+
+function (float)genic_va(float x, float a) {
+    return 2*sum(a^2 * x * (1-x));
+}
+
+function (float)ssh(float x) {
+  return 2*sum(x * (1-x));
+}
+
+function (void)write_freqs(string file, object<Subpopulation> subpop,
+                     object<MutationType> mut_type, integer generation) {
+  // this access sim from scope -- is this efficient?
+  fmt_freqs='applyValue.id + ";" + applyValue.position + ";" + sim.mutationFrequencies(subpop, applyValue);';
+  line = paste(sapply(sim.mutationsOfType(mut_type), fmt_freqs), sep="\t");
+  writeFile(file, generation + "\t" + line, append=T);
+}
+
+initialize() {
+  defineConstant("seed", getSeed());
+  defineConstant("data_dir", '../data/sims/split_gss/');
+  defineConstant("region_length", 50e6);
+
+  // Stabilizing selection variance
+  defineConstant("Vs", 1);
+
+  // fitness offset is a number added to the Gaussian fitness values
+  // that weakens the effect of selection (e.g. less hard selection).
+  defineConstant("fitness_offset", 0.0);
+
+  initializeMutationRate(nmu + tmu);
+  initializeMutationType("m1", 0.5, "s", "if (runif(1) < 0.5) -alpha; else alpha;");
+  initializeMutationType("m2", 0.5, "f", 0.0);
+  initializeGenomicElementType("g1", c(m1, m2), c(tmu, nmu));
+  initializeGenomicElement(g1, 0, region_length-1);
+  initializeRecombinationRate(rbp);
+  m1.convertToSubstitution = T;
+  m1.mutationStackPolicy = "f";
+  m2.convertToSubstitution = T;
+  m2.mutationStackPolicy = "f";
+
+  defineConstant("burnin", 10*N);
+
+  // initialize output file headers
+  bname = ("split_gss_" + N + "N_" + rbp + "rbp_" +
+            alpha + "alpha_" + nmu + "nmu_" + tmu + "tmu_" + 
+            shift + "shift_" + shifttime + "shifttime_" +
+            moving + "moving_" + shifttype + "shifttype_" + 
+            sampleN + "sampleN_");
+  defineConstant("basename", bname + nrep);
+  defineConstant("basename_1", bname + nrep + "_subpop1");
+  defineConstant("basename_2", bname + nrep + "_subpop2");
+  param_string = "#seed=" + seed + ";alpha=" + alpha + ";N=" + N + 
+                 ";rbp=" + rbp + ";region_length=" + region_length + 
+                 ";nmu=" + nmu + ";tmu=" + tmu + ";Vs=" + Vs +
+                 ";shift=" + shift + ";shifttime=" + shifttime +
+                 ";moving=" + moving + ";shifttype=" + shifttype + 
+                 ";sampleN=" + sampleN + ";nrep=" + nrep;
+
+  // ---- output files ---- 
+  // stats file
+  defineConstant("stats_file", data_dir + '/' + basename + '_stats.tsv');
+  // write header
+  writeFile(stats_file, param_string, append=F);
+  header = "generation\tzbar_nofix_1\tzbar_nofix_2\tzbar_1\tzbar_2\tgenic_va_1\tgenic_va_2\tssh_1\tssh_2\tzvar_1\tzvar_2\tneut_S_1\tneut_S_2\tsel_S_1\tsel_S_2";
+  writeFile(stats_file, header, append=T);
+
+  // neutral freqs
+  defineConstant("neutfreqs_file_1", data_dir + "/" + basename_1 + "_neutfreqs.tsv");
+  defineConstant("neutfreqs_file_2", data_dir + "/" + basename_2 + "_neutfreqs.tsv");
+  writeFile(neutfreqs_file_1, param_string + ";subpop=1", append=F);
+  writeFile(neutfreqs_file_2, param_string + ";subpop=2", append=F);
+}
+
+
+fitness(m1) {
+    // fitness is assigned based on phenotypic value through global
+    // fitness callback; this just multiplies each fitness by 1.
+    return 1.0;
+}
+
+fitness(NULL) {
+  return 1.0;
+}
+
+s3 fitness(NULL) {
+    return fitness_offset + dnorm(individual.tagF, mean=0.0, sd=sqrt(Vs));
+}
+
+
+// --- blocks
+1 early() {
+    end = burnin + 100 + shifttime;
+    sim.rescheduleScriptBlock(s1, start=burnin, end=end);
+    sim.rescheduleScriptBlock(s2, start=end, end=end);
+    sim.rescheduleScriptBlock(s3, start=burnin+1, end=end);
+
+}
+
+1 late() {   
+	sim.readFromPopulationFile(burninpop);
+    sim.addSubpopSplit("p2", sampleN, p1);
+    sim.addSubpopSplit("p3", sampleN, p1);
+    p1.setSubpopulationSize(0);
+}
+    
+
+
+s1 late() {
+    inds_1 = sim.subpopulations[0].individuals;
+    inds_2 = sim.subpopulations[1].individuals;
+    pheno_1 = inds_1.sumOfMutationsOfType(m1);
+    pheno_2 = inds_2.sumOfMutationsOfType(m1);
+
+    // TODO: pop-specific fixations?
+    // fixed_trait = sum(sim.substitutions.selectionCoeff);
+    // subpopulations for subpop-specific fitness
+    if (sim.generation >= burnin + shifttime) {
+      // we handle the optimum shifts here, but adjusting individual's tagF
+      // values.
+      if (moving) {
+        optimum = shift * (sim.generation - burnin - shifttime);
+        // print(optimum);
+      } else {
+        optimum = shift;
+      }
+
+      if (shifttype == "diverge") {
+        inds_1.tagF = pheno_1 - optimum;
+        inds_2.tagF = pheno_2 + optimum;
+      } else if (shifttype == "converge") {
+        inds_1.tagF = pheno_1 - optimum;
+        inds_2.tagF = pheno_2 - optimum;
+      } else if (shifttype == "single") {
+        inds_1.tagF = pheno_1 - optimum;
+        inds_2.tagF = pheno_2;
+      } else {
+        stop("shifttyp must be either 'diverge', 'converge', or 'single'.");
+      }
+    } else {
+      inds_1.tagF = pheno_1;
+      inds_2.tagF = pheno_2;
+    }
+
+
+    // print(sim.generation);
+    // ---- output recording ----
+    pheno_mean_1 = mean(pheno_1);
+    pheno_mean_2 = mean(pheno_2);
+    // population wide fixations
+    fixed_trait = sum(sim.substitutions.selectionCoeff);
+    zbar_1 = pheno_mean_1 + fixed_trait;
+    zbar_2 = pheno_mean_2 + fixed_trait;
+
+    // genic variance and sum of site heterozygosity
+    x_1 = sim.mutationFrequencies(p2, sim.mutationsOfType(m1));
+    x_2 = sim.mutationFrequencies(p3, sim.mutationsOfType(m1));
+    genic_va_1 = genic_va(x_1, alpha);
+    genic_va_2 = genic_va(x_2, alpha);
+    y_1 = sim.mutationFrequencies(p2, sim.mutationsOfType(m2));
+    y_2 = sim.mutationFrequencies(p3, sim.mutationsOfType(m2));
+    ssh_1 = ssh(y_1);
+    ssh_2 = ssh(y_2);
+
+    // genetic variance
+    zvar_1 = var(pheno_1);
+    zvar_2 = var(pheno_2);
+
+    // write status file
+    row = paste(c(sim.generation, 
+                  pheno_mean_1, pheno_mean_2,
+                  zbar_1, zbar_2,
+                  genic_va_1, genic_va_2,
+                  ssh_1, ssh_2,
+                  zvar_1, zvar_2,
+                  length(y_1), length(y_2),
+                  length(x_1), length(x_1)), sep="\t");
+    writeFile(stats_file, row, append=T);
+
+    // write neutral frequency trajectories
+    write_freqs(neutfreqs_file_1, p2, m2, sim.generation);
+    write_freqs(neutfreqs_file_2, p3, m2, sim.generation);
+
+}
+
+	
+s2 late() {
+  sim.simulationFinished();
+}

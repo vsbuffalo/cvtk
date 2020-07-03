@@ -1,0 +1,507 @@
+import itertools 
+import numpy as np
+import slper.slimfile as sf
+np.random.seed(1)
+
+region_length = 50e6
+
+def round_sig(x, sig=4):
+  if x == 0.:
+    return 0
+  return round(x, sig-int(np.floor(np.log10(np.abs(x))))-1)
+
+
+DATADIR = "../data/sims/"
+SLIM = "/home/vsb/src/SLiM_build/slim "
+
+## Parameters
+nreps = range(50)
+
+# ------- Shared Parameters -------
+Ns = [1000, 100]
+nmus = [1e-8]
+
+# ------- BGS Simulations -------
+# BGS paramters
+Us = [0.25, 0.5, 0.75, 1, 1.25, 1.5]
+bgs_rbps = [1e-8, 1e-7]
+selcoefs = [1e-1, 0.5e-1, 1e-2, 0]
+
+
+bgs_ouputs = ["stats.tsv", "neutfreqs.tsv"]
+
+bgs_pattern = ("bgs/bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{nrep}_{sim_output}")
+
+bgs_results = expand(DATADIR + bgs_pattern,
+                     s=selcoefs, nmu=nmus, U=Us, rbp=bgs_rbps,
+                     N=Ns, nrep=nreps,
+                     sim_output=bgs_ouputs)
+
+# this is a dummy rule so if we can run the BGS sims separately
+# (avoiding the "target may not contain wildcards" error 
+rule bgs_all:
+  input:
+    bgs_results
+
+rule bgs:
+  input:
+    "bgs.slim"
+  output:
+    DATADIR + bgs_pattern.replace("{sim_output}", "stats.tsv"),
+    DATADIR + bgs_pattern.replace("{sim_output}", "neutfreqs.tsv")
+  shell:
+    """
+    mkdir -p {DATADIR}/bgs/
+
+    # the output files are automatically generated from the SLiM script
+    {SLIM} -d N={wildcards.N} \
+     -d rbp={wildcards.rbp} -d nrep={wildcards.nrep} \
+     -d s={wildcards.s} -d nmu={wildcards.nmu} -d U={wildcards.U} \
+     -d run_generations=150 {input}
+    """
+
+rule bgs_clean:
+  shell:
+    "find ../data/sims/bgs/ -maxdepth 1 -name 'bgs_*'  | xargs rm -rf "
+
+
+# ------- BGS Split Pop Simlations -------
+# BGS paramters
+split_bgs_Us = [1]
+split_bgs_rbps = [1e-8]
+split_bgs_selcoefs = [0.05, 0.1]
+split_bgs_sampleN = [50, 100, 200, 500, 800, 1000]
+
+split_bgs_outputs = ["stats.tsv", "subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
+split_bgs_pattern = ("split_bgs/split_bgs_{N}N_{rbp}rbp_{s}s_{nmu}nmu_{U}U_{sampleN}sampleN_"
+                     "{nrep}_{sim_output}")
+
+split_bgs_results = expand(DATADIR + split_bgs_pattern,
+                     s=split_bgs_selcoefs, nmu=nmus, U=split_bgs_Us, rbp=split_bgs_rbps,
+                     N=Ns, nrep=nreps,
+                     sampleN=split_bgs_sampleN,
+                     sim_output = split_bgs_outputs)
+
+# this is a dummy rule so if we can run the BGS sims separately
+# (avoiding the "target may not contain wildcards" error 
+rule split_bgs_all:
+  input:
+    split_bgs_results
+
+rule split_bgs:
+  input:
+    "split_bgs.slim"
+  output:
+    DATADIR + split_bgs_pattern.replace("{sim_output}", split_bgs_outputs[0]),
+    DATADIR + split_bgs_pattern.replace("{sim_output}", split_bgs_outputs[1]),
+    DATADIR + split_bgs_pattern.replace("{sim_output}", split_bgs_outputs[2])
+  shell:
+    """
+    mkdir -p {DATADIR}/split_bgs/
+
+    # the output files are automatically generated from the SLiM script
+    {SLIM} -d N={wildcards.N} \
+     -d rbp={wildcards.rbp} -d nrep={wildcards.nrep} \
+     -d s={wildcards.s} -d nmu={wildcards.nmu} -d U={wildcards.U} \
+     -d sampleN={wildcards.sampleN} -d run_generations=150 {input}
+    """
+
+# ------- GSS Burnin Simlations -------
+# GSS paramters
+gss_rbps = [1e-8, 0.5e-8]    # rbp 
+alphas = [0.01]              # effect size
+tmus = [1e-8, 1e-9, 1e-10]   # trait mutation rate
+nmus = [1e-8]                # neutral mutation rate
+
+
+gss_burnin_outputs = ["fullsims.bin"]
+
+gss_burnin_pattern = ("gss_burnin/gss_burnin_{N}N_{rbp}rbp_{alpha}alpha_{nmu}nmu_"
+                      "{tmu}tmu_{nrep}_{sim_output}")
+
+gss_burnin_results = expand(DATADIR + gss_burnin_pattern,
+                     alpha=alphas, nmu=nmus, 
+                     tmu=tmus, rbp=gss_rbps,
+                     N=Ns, nrep=nreps,
+                     sim_output=gss_burnin_outputs)
+
+# dummy rule 
+rule gss_burnin_all:
+  input:
+    gss_burnin_results
+
+rule gss_burnin:
+  input:
+    "optimum_shift_burnin.slim"
+  output:
+    DATADIR + gss_burnin_pattern.replace("{sim_output}", "fullsims.bin"),
+  shell:
+    """
+    mkdir -p {DATADIR}/gss_burnin/
+
+    # the output files are automatically generated from the SLiM script
+    {SLIM} -d N={wildcards.N} -d rbp={wildcards.rbp} \
+     -d tmu={wildcards.tmu} -d nmu={wildcards.nmu} \
+     -d alpha={wildcards.alpha} -d nrep={wildcards.nrep} {input}
+    """
+
+rule gss_burnin_clean:
+  shell:
+    "find ../data/sims/gss_burnin/ -maxdepth 1 -name 'gss_burnin_*'  | xargs rm -rf "
+
+
+# ------- Neutral Burnin Simlations -------
+# We need some sims to address a concern raised by a reviewer: how does
+# altering the genetic architecture vary the covariance? While we alter trait
+# mutation rate above, we don't hold Va constant. We do that with the neutral
+# burnin sims above 
+
+
+def dict_product(dicts):
+    return (dict(zip(dicts, x)) for x in itertools.product(*dicts.values()))
+
+def Va_to_alphas(d):
+    "For a given target Va and number of loci, return alphas and trait mutation rate" 
+    # under neutrality, 
+    Va, L, N = [d[v] for v in ('Va', 'L', 'N')]
+    theta = L / (0.577 + np.log(2 * N))
+    tmu = theta / (4 * N * region_length) if Va > 0. else 0.
+    return dict(alpha = round_sig(np.sqrt(Va / theta)), tmu = round_sig(tmu))
+
+Ls = [1, 10, 100, 1000]
+Vas = [0, 0.001, 0.002, 0.005, 0.01]
+
+neut_burnin_outputs = ["fullsims.bin"]
+
+neut_burnin_pattern = ("neutral/neut_burnin_{N}N_{rbp}rbp_{Va}Va_{alpha}alpha_{nmu}nmu_"
+                      "{tmu}tmu_{L}L_{nrep}_{sim_output}")
+
+# we can't use expand -- we need to build up alpha from Va and other parmeters
+
+neut_burnin_params = list(dict_product(dict(Va = Vas, L = Ls, nmu=nmus, 
+                                            rbp = gss_rbps, N=Ns, nrep= nreps)))
+
+# add in the VA / tmu parameters as they're calculated
+neut_burnin_results = []
+for d in neut_burnin_params:
+  d.update(Va_to_alphas(d))
+  file = neut_burnin_pattern.format(**d, sim_output=neut_burnin_outputs[0])
+  neut_burnin_results.append(DATADIR + file)
+
+# expand(DATADIR + neut_burnin_pattern,
+#                              alpha=alphas, nmu=nmus, 
+#                              tmu=tmus, rbp=gss_rbps,
+#                              N=Ns, nrep=nreps,
+#                              sim_output=neut_burnin_outputs)
+
+# dummy rule 
+rule neut_burnin_all:
+  input:
+    neut_burnin_results
+
+rule neut_burnin:
+  input:
+    "neutral_burnin.slim"
+  output:
+    DATADIR + neut_burnin_pattern.replace("{sim_output}", "fullsims.bin"),
+  shell:
+    """
+    mkdir -p {DATADIR}/neutral/
+
+    # the output files are automatically generated from the SLiM script
+    {SLIM} -d N={wildcards.N} -d rbp={wildcards.rbp} \
+    -d tmu={wildcards.tmu} -d nmu={wildcards.nmu} \
+    -d Va={wildcards.Va} -d L={wildcards.L} \
+    -d alpha={wildcards.alpha} -d nrep={wildcards.nrep} {input}
+    """
+
+rule neut_burnin_clean:
+  shell:
+    "find ../data/sims -maxdepth 1 -name 'neut_burnin_*'  | xargs rm -rf "
+
+# ------- Exponential Fitness Function / Architecture Sims -------
+# Our first split population sims, 
+# we borrow the following parameters from the burnin:
+# alpha, gss_rbps, tmus, nmus, Ns
+# these parameters *need* to be borrowed, since these files rely on those files.
+shifttime = [5]
+#sampleN = [50, 100, 200, 1000]
+sampleN = [50, 500, 1000]
+shifttype = ['converge', 'single', 'diverge']
+# parameters just for exp fit function
+#mag = [1, 0.1]
+mag = [1]
+
+expfit_outputs = ["stats.tsv", "subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
+
+expfit_pattern = ("split_exp/split_exp_{N}N_{rbp}rbp_" + 
+                   "{Va}Va_{alpha}alpha_{nmu}nmu_{tmu}tmu_" + 
+                   "{L}L_{mag}mag_{shifttime}shifttime_" + 
+                   "{shifttype}shifttype_{sampleN}sampleN_{nrep}_{sim_output}")
+ 
+# we run more reps for these
+expfit_params = list(dict_product(dict(Va = Vas, L = Ls, nmu=nmus, 
+                                       mag = mag, shifttime = shifttime,
+                                       sampleN = sampleN,
+                                       shifttype = shifttype,
+                                       sim_output = expfit_outputs,
+                                       rbp = gss_rbps, N=Ns, nrep= range(50))))
+
+# add in some special runs for block covariances
+block_runs = list(dict_product(dict(Va = [0.01], L=[1000], nmu=nmus,
+                               mag=[1], shifttime=[0],
+                               sampleN=[1000], shifttype=['single'],
+                               sim_output=expfit_outputs,
+                               rbp=[1e-8], N=[1000], nrep=range(50))))
+# add in these runs
+expfit_params.extend(block_runs)
+
+# add in the VA / tmu parameters as they're calculated
+expfit_results = []
+for d in expfit_params:
+  d.update(Va_to_alphas(d))
+  file = expfit_pattern.format(**d)
+  expfit_results.append(DATADIR + file)
+
+# print('\n'.join(expfit_results))
+
+# dummy rule 
+rule expfit_all:
+  input:
+    expfit_results
+
+rule split_exp:
+  input:
+    "split_exp.slim", neut_burnin_results
+  output:
+    DATADIR + expfit_pattern.replace("{sim_output}", expfit_outputs[0]),
+    DATADIR + expfit_pattern.replace("{sim_output}", expfit_outputs[1]),
+    DATADIR + expfit_pattern.replace("{sim_output}", expfit_outputs[2]),
+  params:
+    # build up the corresponding burnin file from the parameters
+    burnin_pop = DATADIR + neut_burnin_pattern.replace("{sim_output}", "fullsims.bin")
+  shell:
+    """
+    mkdir -p {DATADIR}/split_exp/
+
+    # the output files are automatically generated from the SLiM script
+    {SLIM} -d \"burninpop='{params.burnin_pop}'\" \
+    -d N={wildcards.N} -d rbp={wildcards.rbp} \
+    -d Va={wildcards.Va} -d L={wildcards.L} \
+    -d tmu={wildcards.tmu} -d nmu={wildcards.nmu} \
+    -d alpha={wildcards.alpha} -d nrep={wildcards.nrep} \
+    -d shifttime={wildcards.shifttime} -d mag={wildcards.mag} \
+    -d sampleN={wildcards.sampleN} \
+    -d \"shifttype='{wildcards.shifttype}'\" {input[0]}
+    """
+
+rule expfit_clean:
+  shell:
+    "find ../data/sims/split_exp/ -maxdepth 1 -name 'split_exp_*' | xargs rm -rf "
+
+
+# ------- Three pop Exponential Fitness Function / Architecture Sims -------
+# Our first split population sims, 
+# we borrow the following parameters from the burnin:
+# alpha, gss_rbps, tmus, nmus, Ns, mag, sampleN,
+# these parameters *need* to be borrowed, since these files rely on those files.
+
+three_pop_outputs = ["stats.tsv", "subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
+
+three_pop_pattern = ("three_pop/three_pop_{N}N_{rbp}rbp_" + 
+                   "{Va}Va_{alpha}alpha_{nmu}nmu_{tmu}tmu_" + 
+                   "{L}L_{mag}mag_{shifttime}shifttime_" + 
+                   "{shifttype}shifttype_{sampleN}sampleN_{nrep}_{sim_output}")
+ 
+# we run more reps for these
+three_pop_params = list(dict_product(dict(Va = Vas, L = Ls, nmu=nmus, 
+                                       mag = mag, shifttime = shifttime,
+                                       sampleN = sampleN,
+                                       shifttype = shifttype,
+                                       sim_output = three_pop_outputs,
+                                       rbp = gss_rbps, N=Ns, nrep=range(50))))
+
+# add in the VA / tmu parameters as they're calculated
+three_pop_results = []
+for d in three_pop_params:
+  d.update(Va_to_alphas(d))
+  file = three_pop_pattern.format(**d)
+  three_pop_results.append(DATADIR + file)
+
+# dummy rule 
+rule three_pop_all:
+  input:
+    three_pop_results
+
+rule three_pop:
+  input:
+    "three_pop.slim", neut_burnin_results
+  output:
+    DATADIR + three_pop_pattern.replace("{sim_output}", three_pop_outputs[0]),
+    DATADIR + three_pop_pattern.replace("{sim_output}", three_pop_outputs[1]),
+    DATADIR + three_pop_pattern.replace("{sim_output}", three_pop_outputs[2]),
+  params:
+    # build up the corresponding burnin file from the parameters
+    burnin_pop = DATADIR + neut_burnin_pattern.replace("{sim_output}", "fullsims.bin")
+  shell:
+    """
+    mkdir -p {DATADIR}/three_pop/
+
+    # the output files are automatically generated from the SLiM script
+    {SLIM} -d \"burninpop='{params.burnin_pop}'\" \
+    -d N={wildcards.N} -d rbp={wildcards.rbp} \
+    -d Va={wildcards.Va} -d L={wildcards.L} \
+    -d tmu={wildcards.tmu} -d nmu={wildcards.nmu} \
+    -d alpha={wildcards.alpha} -d nrep={wildcards.nrep} \
+    -d shifttime={wildcards.shifttime} -d mag={wildcards.mag} \
+    -d sampleN={wildcards.sampleN} \
+    -d \"shifttype='{wildcards.shifttype}'\" {input[0]}
+    """
+
+
+
+# ------- Sampled Line Simualtions, Optimum Shift -------
+# Optimum shift parameters
+shift_moving = [0.001, 0.01]
+shift_sudden = [0.1, 0.5, 1]
+
+optshift_outputs = ["stats.tsv", "subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
+
+optshift_pattern = ("split_gss/split_gss_{N}N_{rbp}rbp_{alpha}alpha_{nmu}nmu_" + 
+                    "{tmu}tmu_{shift}shift_{shifttime}shifttime_{moving}moving_" + 
+                    "{shifttype}shifttype_{sampleN}sampleN_{nrep}_{sim_output}")
+ 
+
+optshift_results_moving = expand(DATADIR + optshift_pattern,
+                                alpha=alphas, nmu=nmus, 
+                                tmu=tmus, rbp=gss_rbps,
+                                N=Ns, nrep=nreps,
+                                moving=['T'], 
+                                sampleN=sampleN,
+                                shifttype=shifttype,
+                                shifttime=shifttime,
+                                shift=shift_moving,
+                                sim_output=optshift_outputs)
+
+optshift_results_sudden = expand(DATADIR + optshift_pattern,
+                                 alpha=alphas, nmu=nmus, 
+                                 tmu=tmus, rbp=gss_rbps,
+                                 N=Ns, nrep=nreps,
+                                 moving=['F'], 
+                                 sampleN=sampleN,
+                                 shifttype=shifttype,
+                                 shifttime=shifttime,
+                                 shift=shift_sudden,
+                                 sim_output=optshift_outputs)
+ 
+optshift_results = (optshift_results_moving + optshift_results_sudden)
+
+#print("** " + "\n** ".join(optshift_results)) 
+
+# dummy rule 
+rule optshift_all:
+  input:
+    optshift_results
+
+rule optshift:
+  input:
+    "split_gss.slim", gss_burnin_results
+  output:
+    DATADIR + optshift_pattern.replace("{sim_output}", optshift_outputs[0]),
+    DATADIR + optshift_pattern.replace("{sim_output}", optshift_outputs[1]),
+    DATADIR + optshift_pattern.replace("{sim_output}", optshift_outputs[2]),
+  params:
+    # build up the corresponding burnin file from the parameters
+    burnin_pop = DATADIR + gss_burnin_pattern.replace("{sim_output}", "fullsims.bin")
+  shell:
+    """
+    mkdir -p {DATADIR}/split_gss/
+
+    # the output files are automatically generated from the SLiM script
+    {SLIM} -d \"burninpop='{params.burnin_pop}'\" \
+    -d N={wildcards.N} -d rbp={wildcards.rbp} \
+    -d tmu={wildcards.tmu} -d nmu={wildcards.nmu} \
+    -d alpha={wildcards.alpha} -d nrep={wildcards.nrep} \
+    -d shift={wildcards.shift} -d moving={wildcards.moving} \
+    -d sampleN={wildcards.sampleN} -d shifttime={wildcards.shifttime} \
+    -d \"shifttype='{wildcards.shifttype}'\" {input[0]}
+    """
+
+rule optshift_clean:
+  shell:
+    "find ../data/sims/split_gss/ -maxdepth 1 -name 'split_gss_*'  | xargs rm -rf "
+
+
+# ------- Sampled Line Simualtions, Truncation Selection -------
+# Truncation selection parameters
+# we borrow the following parameters from the burnin:
+# alpha, gss_rbps, tmus, nmus, Ns
+# parameters borrowed from optimum shift:
+# sampleN, shifttype, shifttime
+# these parameters *need* to be borrowed, since these files rely on those files.
+
+# tail probabilities
+tail = [0.01, 0.1, 0.25, 0.5]
+
+trunc_outputs = ["stats.tsv", "subpop1_neutfreqs.tsv", "subpop2_neutfreqs.tsv"]
+
+trunc_pattern = ("split_trunc/split_trunc_{N}N_{rbp}rbp_{alpha}alpha_{nmu}nmu_" + 
+                 "{tmu}tmu_{tail}tail_{shifttime}shifttime_" + 
+                 "{shifttype}shifttype_{sampleN}sampleN_{nrep}_{sim_output}")
+ 
+
+trunc_results = expand(DATADIR + trunc_pattern,
+                       alpha=alphas, nmu=nmus, 
+                       tmu=tmus, rbp=gss_rbps,
+                       N=Ns, nrep=nreps,
+                       shifttime=shifttime,
+                       shifttype=shifttype,
+                       sampleN=sampleN,
+                       tail=tail,
+                       sim_output=optshift_outputs)
+
+# dummy rule 
+rule trunc_all:
+  input:
+    trunc_results
+
+rule trunc:
+  input:
+    "split_trunc.slim", gss_burnin_results
+  output:
+    DATADIR + trunc_pattern.replace("{sim_output}", trunc_outputs[0]),
+    DATADIR + trunc_pattern.replace("{sim_output}", trunc_outputs[1]),
+    DATADIR + trunc_pattern.replace("{sim_output}", trunc_outputs[2]),
+  params:
+    # build up the corresponding burnin file from the parameters
+    burnin_pop = DATADIR + gss_burnin_pattern.replace("{sim_output}", "fullsims.bin")
+  shell:
+    """
+    mkdir -p {DATADIR}/split_trunc/
+
+    # the output files are automatically generated from the SLiM script
+    {SLIM} -d \"burninpop='{params.burnin_pop}'\" \
+    -d N={wildcards.N} -d rbp={wildcards.rbp} \
+    -d tmu={wildcards.tmu} -d nmu={wildcards.nmu}  \
+    -d alpha={wildcards.alpha} -d nrep={wildcards.nrep}  \
+    -d tail={wildcards.tail} -d sampleN={wildcards.sampleN}  \
+    -d shifttime={wildcards.shifttime} \
+    -d \"shifttype='{wildcards.shifttype}'\" {input[0]}
+    """
+
+rule trunc_clean:
+  shell:
+    "find ../data/sims/split_trunc/ -maxdepth 1 -name 'split_trunc_*'  | xargs rm -rf "
+
+
+
+# ------- All Simulations -------
+all_results = bgs_results + optshift_results + trunc_results
+#print(all_results)
+
+rule all:
+  input: 
+    all_results
+
+
+

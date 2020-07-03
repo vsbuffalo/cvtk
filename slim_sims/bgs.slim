@@ -1,0 +1,92 @@
+initialize() {
+  defineConstant("seed", getSeed());
+  defineConstant("data_dir", '../data/sims/bgs/');
+  defineConstant("region_length", 50e6);
+  // U is mutations per diploid genome.
+  // U = 2 * region_length * smu 
+  // U / (2 * region_length) = smu
+  smu = U / (2 * region_length);
+  initializeMutationRate(nmu + smu);
+  initializeMutationType("m1", 0.5, "f", -s);
+  initializeMutationType("m2", 0.5, "f", 0.0);
+  initializeGenomicElementType("g1", c(m1, m2), c(smu, nmu));
+  initializeGenomicElement(g1, 0, region_length-1);
+  initializeRecombinationRate(rbp);
+  m1.convertToSubstitution = T;
+  m1.mutationStackPolicy = "f";
+  m2.convertToSubstitution = T;
+  m2.mutationStackPolicy = "f";
+
+  // simulation results basename
+  bname = ("bgs_" + N + "N_" +
+           rbp + "rbp_" + s + "s_" +  
+           nmu + "nmu_" + 
+           U + "U_" + nrep);
+  defineConstant("basename", bname);
+  defineConstant("stats_file", data_dir + '/' + basename + '_stats.tsv');
+  defineConstant("selfreqs_file", data_dir + '/' + basename + '_selfreqs.tsv');
+  // 
+  param_string = "#seed=" + seed + ";s=" + s + ";N=" + N + 
+     	         ";rbp=" + rbp + ";region_length=" + region_length + 
+                 ";nmu=" + nmu + 
+                 ";smu=" + smu + ";U=" + U;
+  writeFile(stats_file, param_string, append=F);
+  writeFile(stats_file, "gen\tneut_het\tneut_S\tsel_het\tsel_S", append=T);
+
+  defineConstant("record_neutmuts", nmu > 0);
+  if (record_neutmuts) {
+    defineConstant("neutfreqs_file", data_dir + '/' + basename + '_neutfreqs.tsv');
+    writeFile(neutfreqs_file, param_string, append=F);
+  }
+
+}
+
+1 early() {
+    sim.addSubpop("p1", N);
+    // --- block schedule --- 
+    // whole sims: calc phenotypes to propogate breeding value in tagF
+    burnin = 10*N;
+    end = burnin + run_generations;
+    sim.rescheduleScriptBlock(s1, start=2, end=end);
+    // period over which to record selected site frequencies. 
+    sim.rescheduleScriptBlock(s2, start=burnin, end=end);
+    // end point
+    sim.rescheduleScriptBlock(s3, start=end);
+}
+
+s1 late() {
+    // post-burnin: start recording
+    y = sim.mutationFrequencies(p1, sim.mutationsOfType(m2));
+    neut_ssh = 2*sum(y * (1-y));
+    z = sim.mutationFrequencies(p1, sim.mutationsOfType(m1));
+    sel_ssh = 2*sum(z * (1-z));
+    // TODO add fixed trait?
+    row = paste(c(sim.generation, neut_ssh, length(y), sel_ssh, length(z)), sep="\t");
+    writeFile(stats_file, row, append=T);
+}
+
+s2 late() {
+  // This block is the epoch overw which frequencies are recorded
+  fmt_freqs='applyValue.id + ";" + applyValue.position + ";" + sim.mutationFrequencies(p1, applyValue);';
+  // record every 1/10th of N generations
+  // record = sim.generation % (N/10) == 0;
+  record = 1;
+  if (record & record_neutmuts) {
+    // ---- Output selected site frequencies.
+    //  our apply function:
+    line = paste(sapply(sim.mutationsOfType(m2), fmt_freqs), sep="\t");
+    writeFile(neutfreqs_file, sim.generation + "\t" + line, append=T);
+  }
+
+   // sim progress reporting
+  if (sim.generation % 500 == 0) {
+    cat("generation: " + sim.generation + "\n");
+  }
+  if (sim.generation == 10*N) {
+    cat("BURNIN COMPLETE\n");
+  }
+}
+
+s3 late() {
+  sim.simulationFinished();
+}

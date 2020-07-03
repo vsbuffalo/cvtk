@@ -1,0 +1,77 @@
+initialize() {
+  defineConstant("seed", getSeed());
+  defineConstant("data_dir", '../data/sims/neutral/');
+  defineConstant("region_length", 50e6);
+
+  initializeMutationRate(nmu + tmu);
+  initializeMutationType("m1", 0.5, "s", "if (runif(1) < 0.5) -alpha; else alpha;");
+  initializeMutationType("m2", 0.5, "f", 0.0);
+  initializeGenomicElementType("g1", c(m1, m2), c(tmu, nmu));
+  initializeGenomicElement(g1, 0, region_length-1);
+  initializeRecombinationRate(rbp);
+  m1.convertToSubstitution = T;
+  m1.mutationStackPolicy = "f";
+  m2.convertToSubstitution = T;
+  m2.mutationStackPolicy = "f";
+
+  // initialize output file headers
+  bname = ("neut_burnin_" + N + "N_" + rbp + "rbp_" + 
+            Va + "Va_" + alpha + "alpha_" + nmu + "nmu_" + 
+            tmu + "tmu_" + L + "L_" + nrep);
+  defineConstant("basename", bname);
+  defineConstant("stats_file", data_dir + '/' + basename + '_stats.tsv');
+  // write header
+  param_string = "#seed=" + seed + ";alpha=" + alpha + ";N=" + N + 
+     	         ";rbp=" + rbp + ";region_length=" + region_length + 
+                 ";nmu=" + nmu + ";tmu=" + tmu;
+  writeFile(stats_file, param_string, append=F);
+  writeFile(stats_file, "gen\tzbar\tzbar_nofix\tzvar\tgenic_var\tneut_het\tS", append=T);
+}
+
+// --- fitness function definitions
+// even there there are sites with fitness effects, these during the burnin
+// have no effect on fitness (yet)
+
+fitness(m1) {
+  return 1.0;
+}
+
+fitness(m2) {
+  return 1.0;
+}
+
+// --- blocks
+1 early() {
+    sim.addSubpop("p1", N);
+    // --- block schedule --- 
+    // whole sims: calc phenotypes to propogate breeding value in tagF
+    burnin = 10*N;
+    end = burnin;
+    sim.rescheduleScriptBlock(s1, start=2, end=end);
+    // end point
+    sim.rescheduleScriptBlock(s2, start=end);
+}
+
+s1 late() {
+    inds = sim.subpopulations.individuals;
+    phenotypes = inds.sumOfMutationsOfType(m1);
+    fixed_trait = sum(sim.substitutions.selectionCoeff);
+    inds.tagF = phenotypes;
+
+    // post-burnin: start recording
+    pheno_mean = mean(inds.tagF);
+    zbar = pheno_mean + fixed_trait;
+    x = sim.mutationFrequencies(p1, sim.mutationsOfType(m1));
+    genic_var = 2*sum(alpha^2 * x * (1-x));
+    y = sim.mutationFrequencies(p1, sim.mutationsOfType(m2));
+    ssh = 2*sum(y * (1-y));
+
+    row = paste(c(sim.generation, zbar, pheno_mean, 
+                  var(inds.tagF), genic_var, ssh, length(y)), sep="\t");
+    writeFile(stats_file, row, append=T);
+}
+
+s2 late() {
+  sim.simulationFinished();
+  sim.outputFull(data_dir + '/' + basename + "_fullsims.bin", binary=T);
+}

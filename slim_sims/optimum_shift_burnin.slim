@@ -1,0 +1,95 @@
+initialize() {
+  defineConstant("seed", getSeed());
+  defineConstant("data_dir", '../data/sims/gss_burnin/');
+  defineConstant("region_length", 50e6);
+
+  // Stabilizing selection variance
+  defineConstant("Vs", 1);
+
+  // The SLiM uses a fitness offset, where fitness is offset + z_i where z_i =
+  // Σ α_i g_i.  In contrast, most GSS models don't do this. A fitness offset
+  // of 1 buffers the differences in breeding values, e.g. z_1 = 0.01 and z_2 =
+  // 0.03 relative fitness are 1 and 1/3 --- fairly large fitness differences,
+  // versus 1 and 0.98 if we have a fitness offset of one.
+  defineConstant("fitness_offset", 0.0);
+
+  initializeMutationRate(nmu + tmu);
+  initializeMutationType("m1", 0.5, "s", "if (runif(1) < 0.5) -alpha; else alpha;");
+  initializeMutationType("m2", 0.5, "f", 0.0);
+  initializeGenomicElementType("g1", c(m1, m2), c(tmu, nmu));
+  initializeGenomicElement(g1, 0, region_length-1);
+  initializeRecombinationRate(rbp);
+  m1.convertToSubstitution = T;
+  m1.mutationStackPolicy = "f";
+  m2.convertToSubstitution = T;
+  m2.mutationStackPolicy = "f";
+
+  // initialize output file headers
+  bname = ("gss_burnin_" + N + "N_" + rbp + "rbp_" + 
+            alpha + "alpha_" + nmu + "nmu_" + 
+            tmu + "tmu_" + nrep);
+  defineConstant("basename", bname);
+  defineConstant("stats_file", data_dir + '/' + basename + '_stats.tsv');
+  // write header
+  param_string = "#seed=" + seed + ";alpha=" + alpha + ";N=" + N + 
+     	         ";rbp=" + rbp + ";region_length=" + region_length + 
+                 ";nmu=" + nmu + ";tmu=" + tmu + ";Vs=" + Vs;
+  writeFile(stats_file, param_string, append=F);
+  writeFile(stats_file, "gen\tzbar\tzbar_nofix\tzvar\tgenic_var\tneut_het\tS", append=T);
+}
+
+// --- fitness function definitions
+
+fitness(m1) {
+    // fitness is assigned based on phenotypic value through global
+    // fitness callback; this just multiplies each fitness by 1.
+    return 1.0;
+}
+
+fitness(NULL) {
+  return 1.0;
+}
+
+s4 fitness(NULL) {
+    return fitness_offset + dnorm(individual.tagF, mean=0.0, sd=sqrt(Vs));
+}
+
+// --- blocks
+1 early() {
+    sim.addSubpop("p1", N);
+    // --- block schedule --- 
+    // whole sims: calc phenotypes to propogate breeding value in tagF
+    burnin = 10*N;
+    end = burnin;
+    sim.rescheduleScriptBlock(s1, start=2, end=end);
+    // end point
+    sim.rescheduleScriptBlock(s2, start=end);
+
+    // --- fitness blocks epochs ---
+    // burnin: reach optimum of 0
+    sim.rescheduleScriptBlock(s4, start=2, end=end);
+}
+
+s1 late() {
+    inds = sim.subpopulations.individuals;
+    phenotypes = inds.sumOfMutationsOfType(m1);
+    fixed_trait = sum(sim.substitutions.selectionCoeff);
+    inds.tagF = phenotypes;
+
+    // post-burnin: start recording
+    pheno_mean = mean(inds.tagF);
+    zbar = pheno_mean + fixed_trait;
+    x = sim.mutationFrequencies(p1, sim.mutationsOfType(m1));
+    genic_var = 2*sum(alpha^2 * x * (1-x));
+    y = sim.mutationFrequencies(p1, sim.mutationsOfType(m2));
+    ssh = 2*sum(y * (1-y));
+
+    row = paste(c(sim.generation, zbar, pheno_mean, 
+                  var(inds.tagF), genic_var, ssh, length(y)), sep="\t");
+    writeFile(stats_file, row, append=T);
+}
+
+s2 late() {
+  sim.simulationFinished();
+  sim.outputFull(data_dir + '/' + basename + "_fullsims.bin", binary=T);
+}

@@ -1411,6 +1411,17 @@ we found by trying all these approaches that not removing fixed or lost sites
 was the best way to deal with sample allele frequencies that could be missing
 from some timepoints.
 
+To ensure that our findings were robust to handling sites with a frequency of
+zero or one differently, we regenerated Figures \ref{fig:figure-1} and Figure
+\ref{fig:figure-3} but excluded frequencies of zero or one. Specifically, we
+wanted to ensure that our finding that temporal covariances were negative at
+later timepoints was not spuriously caused by the way fixed or lost sites are
+handled. We see no qualitative difference (Supplementary Material Figures
+\ref{suppfig:supp-fig-1-nofix} and \ref{suppfig:supp-fig-3-nofix}) that emerges
+when sites with frequency zero or one are excluded.
+
+
+
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=0.6\textwidth]{figure-1-G-covs-nofix2.pdf}
@@ -1438,14 +1449,6 @@ covariances at more distant timepoints ($k=2$). }
 \end{figure}
 
 
-To ensure that our findings were robust to handling sites with a frequency of
-zero or one differently, we regenerated Figures \ref{fig:figure-1} and Figure
-\ref{fig:figure-3} but excluded frequencies of zero or one. Specifically, we
-wanted to ensure that our finding that temporal covariances were negative at
-later timepoints was not spuriously caused by the way fixed or lost sites are
-handled. We see no qualitative difference (Supplementary Material Figures
-\ref{suppfig:supp-fig-1-nofix} and \ref{suppfig:supp-fig-3-nofix}) that emerges
-when sites with frequency zero or one are excluded.
 
 \newpage
 \clearpage
